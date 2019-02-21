@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d45"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginRight="@dimen/d24">
+
+        <TextView
+            android:id="@+id/tv_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="取消"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s15"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="编辑姓名"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s17"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_sure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="提交"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s15"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d9"
+        android:background="@color/FC_F8F8F8" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/d18"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginRight="@dimen/d24">
+
+        <EditText
+            android:id="@+id/et_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:hint="请输入昵称"
+            android:textColor="@color/FC_333333"
+            android:textSize="@dimen/s14" />
+        <ImageView
+            android:id="@+id/image_username_del"
+            android:layout_width="@dimen/d15"
+            android:layout_height="@dimen/d15"
+            android:src="@mipmap/personal_delate"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d1"
+        android:background="@color/FC_E8E9EB"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginTop="@dimen/d18"/>
+
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d45">
+        <!--返回按钮，增大点击区域-->
+        <RelativeLayout
+            android:id="@+id/relative_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/d24">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/back" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="账号安全"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s17"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_sure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d24"
+            android:text="提交"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s15"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d9"
+        android:background="@color/FC_F8F8F8" />
+    <com.tbs.sales.widget.AccountSecurityWidget
+        android:id="@+id/asw_old_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:left_text="原密码:"
+        app:input_hint_text="请输入旧密码"/>
+    <com.tbs.sales.widget.AccountSecurityWidget
+        android:id="@+id/asw_new_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:left_text="新密码:"
+        app:input_hint_text="请输入新密码"/>
+    <com.tbs.sales.widget.AccountSecurityWidget
+        android:id="@+id/asw_sure_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:left_text="确认密码:"
+        app:input_hint_text="请再次确认密码"/>
+
+
+</LinearLayout>

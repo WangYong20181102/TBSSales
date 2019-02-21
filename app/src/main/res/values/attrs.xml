@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AccountSecurityWidget">
+        <attr name="left_text" format="string"/>
+        <attr name="input_hint_text" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="ClientItemWidget">
+        <!--左侧显示文案-->
+        <attr name="left_show_text" format="string"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d24"
+            android:layout_marginTop="@dimen/d18"
+            android:text="客户"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s17"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d9"
+            android:layout_marginTop="@dimen/d18"
+            android:background="@color/FC_F8F8F8" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d22"
+            android:layout_marginTop="@dimen/d14">
+
+            <ImageView
+                android:id="@+id/image_benyuepaihang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/benyuepaihang" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/d5"
+                android:layout_toRightOf="@+id/image_benyuepaihang"
+                android:text="本月排行"
+                android:textColor="@color/black"
+                android:textSize="@dimen/s15"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/d13"
+                android:layout_toLeftOf="@+id/image_right_side"
+                android:text="成交榜"
+                android:textColor="@color/FC_999999"
+                android:textSize="@dimen/s12" />
+
+            <ImageView
+                android:id="@+id/image_right_side"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/d27"
+                android:src="@mipmap/side" />
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v4.view.ViewPager>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d9"
+            android:layout_marginTop="@dimen/d18"
+            android:background="@color/FC_F8F8F8" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/d11"
+            android:layout_marginTop="@dimen/d16"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d23"
+                android:src="@mipmap/kehuguanli" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d6"
+                android:text="客户管理"
+                android:textColor="@color/black"
+                android:textSize="@dimen/s15"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <com.tbs.sales.widget.ClientItemWidget
+            android:id="@+id/ciw_my_client"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_show_text="我的客户" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:background="@color/FC_E8E9EB"
+            android:layout_marginLeft="@dimen/d24"/>
+        <com.tbs.sales.widget.ClientItemWidget
+            android:id="@+id/ciw_public_client"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_show_text="公共客户" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:background="@color/FC_E8E9EB"
+            android:layout_marginLeft="@dimen/d24"/>
+        <com.tbs.sales.widget.ClientItemWidget
+            android:id="@+id/ciw_invalid_customer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_show_text="无效客户" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:background="@color/FC_E8E9EB"
+            android:layout_marginLeft="@dimen/d24"/>
+        <com.tbs.sales.widget.ClientItemWidget
+            android:id="@+id/ciw_follow_up_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_show_text="跟进记录" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d9"
+            android:background="@color/FC_F8F8F8" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/d11"
+            android:layout_marginTop="@dimen/d16"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d23"
+                android:src="@mipmap/shujitongji" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d6"
+                android:text="数据统计"
+                android:textColor="@color/black"
+                android:textSize="@dimen/s15"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <com.tbs.sales.widget.ClientItemWidget
+            android:id="@+id/ciw_customer_follow_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_show_text="客户跟进" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:background="@color/FC_E8E9EB"
+            android:layout_marginLeft="@dimen/d24"/>
+        <com.tbs.sales.widget.ClientItemWidget
+            android:id="@+id/ciw_outbound_statistics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_show_text="外呼统计" />
+
+    </LinearLayout>
+</ScrollView>

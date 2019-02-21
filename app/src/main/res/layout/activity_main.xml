@@ -1,18 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0" />
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/d1"
+                android:background="#D8D8D8"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/d47"
+                android:layout_gravity="bottom"
+                android:background="@mipmap/white_bg"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <RelativeLayout
+                    android:id="@+id/relative_home"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/d6"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/image_home"
+                        android:layout_width="@dimen/d27"
+                        android:layout_height="@dimen/d27"
+                        android:layout_centerHorizontal="true" />
+
+                    <TextView
+                        android:id="@+id/text_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image_home"
+                        android:layout_centerHorizontal="true"
+                        android:text="首页"
+                        android:textColor="#107BFD"
+                        android:textSize="@dimen/s10" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_client"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/d6"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/image_client"
+                        android:layout_width="@dimen/d27"
+                        android:layout_height="@dimen/d27"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:id="@+id/text_client"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image_client"
+                        android:layout_centerHorizontal="true"
+                        android:text="客户"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/s10" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <RelativeLayout
+                    android:id="@+id/relative_application"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/d6"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/image_application"
+                        android:layout_width="@dimen/d27"
+                        android:layout_height="@dimen/d27"
+                        android:layout_centerHorizontal="true" />
+
+                    <TextView
+                        android:id="@+id/text_application"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image_application"
+                        android:layout_centerHorizontal="true"
+                        android:text="应用"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/s10" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relative_mine"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/d6"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/image_mine"
+                        android:layout_width="@dimen/d27"
+                        android:layout_height="@dimen/d27"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:id="@+id/text_mine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image_mine"
+                        android:layout_centerHorizontal="true"
+                        android:text="我的"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/s10" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/relative_add"
+            android:layout_width="@dimen/d70"
+            android:layout_height="@dimen/d70"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/d12.5"
+            android:background="@drawable/home_add_bg">
+            <ImageView
+                android:layout_width="@dimen/d66"
+                android:layout_height="@dimen/d66"
+                android:src="@mipmap/add"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</TabHost>

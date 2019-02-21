@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d24"
+            android:layout_marginTop="@dimen/d18"
+            android:text="应用"
+            android:textColor="#000000"
+            android:textSize="@dimen/s17"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/image_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/d13"
+            android:scaleType="centerCrop"
+            android:src="@drawable/result_banner" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d23"
+            android:layout_marginTop="@dimen/d24"
+            android:text="订单管理"
+            android:textColor="#000000"
+            android:textSize="@dimen/s15"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d29"
+            android:layout_marginTop="@dimen/d16"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_pending_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/d54"
+                    android:layout_height="@dimen/d54"
+                    android:src="@mipmap/pending_order" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="待分单"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/s13" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_already_divided"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d35"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/d54"
+                    android:layout_height="@dimen/d54"
+                    android:src="@mipmap/already_divided" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已分单"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/s13" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_withdrawn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d35"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/d54"
+                    android:layout_height="@dimen/d54"
+                    android:src="@mipmap/withdrawn" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已撤单"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/s13" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d23"
+            android:layout_marginTop="@dimen/d24"
+            android:text="审批管理"
+            android:textColor="#000000"
+            android:textSize="@dimen/s15"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d29"
+            android:layout_marginTop="@dimen/d16"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_contract_filing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/d54"
+                    android:layout_height="@dimen/d54"
+                    android:src="@mipmap/contract_filing" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="合同报备"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/s13" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_collection_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d35"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/d54"
+                    android:layout_height="@dimen/d54"
+                    android:src="@mipmap/collection_report" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="收款报备"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/s13" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_approval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/d35"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/d54"
+                    android:layout_height="@dimen/d54"
+                    android:src="@mipmap/approval" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="审批"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/s13" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d23"
+            android:layout_marginTop="@dimen/d24"
+            android:text="工具"
+            android:textColor="#000000"
+            android:textSize="@dimen/s15"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/ll_calculator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d29"
+            android:layout_marginTop="@dimen/d16"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/d54"
+                android:layout_height="@dimen/d54"
+                android:src="@mipmap/calculator" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="计算器"
+                android:textColor="#333333"
+                android:textSize="@dimen/s13" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
