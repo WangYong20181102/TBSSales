@@ -1,9 +1,11 @@
 package com.tbs.sales;
 
+import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,6 +17,7 @@ import com.tbs.sales.activity.ApplicationActivity;
 import com.tbs.sales.activity.ClientActivity;
 import com.tbs.sales.activity.HomePagerActivity;
 import com.tbs.sales.activity.MineActivity;
+import com.tbs.sales.manager.AppManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +51,7 @@ public class MainActivity extends TabActivity {
     RelativeLayout relativeMine;
     @BindView(R.id.relative_add)
     RelativeLayout relativeAdd;
-    private  static TabHost tabHost;
+    private static TabHost tabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +117,7 @@ public class MainActivity extends TabActivity {
     }
 
     private void setActivityPosition(int activityPosition) {
-        switch (activityPosition){
+        switch (activityPosition) {
             case 0:
                 tabHost.setCurrentTab(activityPosition);
                 tabHost.setCurrentTabByTag("ONE");
@@ -186,5 +189,48 @@ public class MainActivity extends TabActivity {
 
                 break;
         }
+    }
+
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//            /**
+//             * 退出应用
+//             */
+//            AppManager.getInstances().AppExit(MainActivity.this);
+//        }
+//        return false;
+//    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+//            CustomDialog.Builder builder = new CustomDialog.Builder(this);
+//            builder.setMessage("你确定退出吗？")
+//                    .setPositiveButton("确定",
+//                            new DialogInterface.OnClickListener() {
+//
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    dialog.cancel();
+//                                    //关闭时上传数据
+//                                    Util.HttpPostUserUseInfo();
+//                                    finish();
+//                                    System.exit(0);//                                }
+//                            })
+//                    .setNegativeButton("再看看",
+//                            new DialogInterface.OnClickListener() {
+//
+//                                @Override
+//                                public void onClick(DialogInterface dialog,
+//                                                    int id) {
+//                                    dialog.cancel();
+//                                }
+//                            });
+//            builder.create().show();
+
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

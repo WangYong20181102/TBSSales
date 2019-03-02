@@ -51,6 +51,7 @@
                 android:layout_marginLeft="@dimen/d15"
                 android:background="@null"
                 android:hint="账号"
+                android:maxLines="1"
                 android:textColor="#bbbbbb"
                 android:textSize="@dimen/s13" />
 
@@ -100,6 +101,7 @@
                 android:background="@null"
                 android:hint="密码"
                 android:inputType="textPassword"
+                android:maxLines="1"
                 android:textColor="#bbbbbb"
                 android:textSize="@dimen/s13" />
 
@@ -124,16 +126,22 @@
         android:layout_marginTop="@dimen/d15"
         android:background="#bbbbbb" />
 
-    <Button
-        android:id="@+id/btn_login"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/d43"
         android:background="@drawable/login_bottom_btn_bg"
         android:layout_marginLeft="@dimen/d38"
         android:layout_marginRight="@dimen/d38"
         android:layout_marginTop="@dimen/d47"
-        android:text="登录"
-        android:textSize="@dimen/s12"
-        android:textColor="#ffffff" 
-        android:textStyle="bold"/>
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:text="登录"
+            android:textSize="@dimen/s12"
+            android:textColor="#ffffff"
+            android:textStyle="bold"/>
+    </LinearLayout>
 </LinearLayout>

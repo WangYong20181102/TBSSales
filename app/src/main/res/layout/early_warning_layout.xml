@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/d22"
+    android:paddingRight="@dimen/d25"
+    android:paddingTop="@dimen/d19">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_city"
+            android:layout_width="@dimen/d21"
+            android:layout_height="@dimen/d21"
+            android:src="@mipmap/company" />
+
+        <TextView
+            android:id="@+id/text_company_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d7"
+            android:layout_toRightOf="@+id/image_city"
+            android:text="土拨鼠网络科技" />
+
+        <TextView
+            android:id="@+id/text_remarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="意向客户"
+            android:textColor="@color/FC_FF8400"
+            android:textSize="@dimen/s12" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/d29"
+        android:layout_marginTop="@dimen/d14"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID:"
+            android:textColor="@color/FC_999999"
+            android:textSize="@dimen/s13" />
+
+        <TextView
+            android:id="@+id/text_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d10"
+            android:text="123456"
+            android:textColor="@color/FC_999999"
+            android:textSize="@dimen/s13" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/d29"
+        android:layout_marginTop="@dimen/d13"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="姓名:"
+            android:textColor="@color/FC_666666"
+            android:textSize="@dimen/s13" />
+
+        <TextView
+            android:id="@+id/text_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d10"
+            android:text="土拨鼠"
+            android:textColor="@color/FC_666666"
+            android:textSize="@dimen/s13" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/d29"
+        android:layout_marginTop="@dimen/d13"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="预警:"
+            android:textColor="@color/FC_666666"
+            android:textSize="@dimen/s13" />
+
+        <TextView
+            android:id="@+id/text_early_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d10"
+            android:text="1天22小时20分"
+            android:textColor="@color/FC_FF0000"
+            android:textSize="@dimen/s13" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d1"
+        android:layout_marginLeft="@dimen/d4"
+        android:layout_marginRight="@dimen/d1"
+        android:layout_marginTop="@dimen/d19"
+        android:background="@color/FC_D8D8D8" />
+</LinearLayout>

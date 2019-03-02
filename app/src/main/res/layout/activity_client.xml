@@ -74,16 +74,30 @@
                 android:src="@mipmap/side" />
         </RelativeLayout>
 
-        <android.support.v4.view.ViewPager
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/d183">
 
-        </android.support.v4.view.ViewPager>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager_client"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v4.view.ViewPager>
+            <LinearLayout
+                android:id="@+id/linear_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/d17"
+                android:orientation="horizontal"
+                android:gravity="center">
+            </LinearLayout>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/d9"
-            android:layout_marginTop="@dimen/d18"
             android:background="@color/FC_F8F8F8" />
 
         <LinearLayout

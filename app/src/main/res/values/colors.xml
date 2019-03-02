@@ -64,6 +64,7 @@
     <color name="FC_66D6Ff">#66D6Ff</color>
     <color name="FC_F7F7F7">#F7F7F7</color>
     <color name="FC_FF8F00">#FF8F00</color>
+    <color name="FC_FF8400">#FF8400</color>
     <color name="FC_FE6918">#FE6918</color>
     <color name="FC_FAFAFA">#fafafa</color>
     <color name="FC_F4F4F4">#f4f4f4</color>
@@ -71,6 +72,7 @@
     <color name="FC_F5F6F8">#f5f6f8</color>
     <color name="FC_A5A5A5">#a5a5a5</color>
     <color name="FC_FF9900">#FF9900</color>
+    <color name="FC_FF0000">#FF0000</color>
     <color name="FC_FCB672">#FCB672</color>
     <color name="FC_FFC62A">#FFC62A</color>
     <color name="FC_FFC629">#FFC629</color>
@@ -107,6 +109,7 @@
     <color name="FC_PRESSED">#FAA90D</color>
     <color name="FC_SELECT">#FF5A00</color>
     <color name="FC_B7DE7D">#B7DE7D</color>
+    <color name="FC_107BFD">#107BFD</color>
 
     <color name="FC_FF8D6A">#FF8D6A</color>
 
@@ -115,6 +118,9 @@
     <color name="FC_FFDC36">#FFDC36</color>
     <color name="FC_E8E9EB">#E8E9EB</color>
     <color name="FC_B3B3B3">#B3B3B3</color>
+    <color name="FC_DDDDDD">#DDDDDD</color>
+    <color name="FC_AAAAAA">#AAAAAA</color>
+    <color name="FC_D8D8D8">#D8D8D8</color>
 
 
 

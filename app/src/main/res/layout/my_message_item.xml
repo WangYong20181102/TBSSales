@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/FC_F8F8F8"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/d9"
+        android:background="@drawable/my_message_item_bg"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/d17">
+
+            <ImageView
+                android:id="@+id/image_icon"
+                android:layout_width="@dimen/d19"
+                android:layout_height="@dimen/d19"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/d18"
+                android:src="@mipmap/message_client" />
+
+            <TextView
+                android:id="@+id/text_tittle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/d40"
+                android:text="客户"
+                android:textColor="@color/FC_333333"
+                android:textSize="@dimen/s15"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d40"
+            android:layout_marginTop="@dimen/d5"
+            android:text="2019/3/1 13:54"
+            android:textColor="@color/FC_999999"
+            android:textSize="@dimen/s11" />
+
+        <TextView
+            android:id="@+id/text_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d40"
+            android:layout_marginTop="@dimen/d17"
+            android:text="你有一个新的意向客户"
+            android:textColor="@color/FC_333333"
+            android:textSize="@dimen/s13"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d40"
+            android:layout_marginTop="@dimen/d13"
+            android:text="城市: 深圳市"
+            android:textColor="@color/FC_666666"
+            android:textSize="@dimen/s13" />
+
+        <TextView
+            android:id="@+id/text_client_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d40"
+            android:layout_marginTop="@dimen/d14"
+            android:text="客户ID: 27845"
+            android:textColor="@color/FC_666666"
+            android:textSize="@dimen/s13" />
+
+        <RelativeLayout
+            android:id="@+id/relative_look_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/d17"
+            android:layout_marginLeft="@dimen/d40"
+            android:layout_marginTop="@dimen/d36">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="查看详情"
+                android:textColor="@color/FC_107BFD"
+                android:textSize="@dimen/s13" />
+
+            <ImageView
+                android:layout_width="@dimen/d10"
+                android:layout_height="@dimen/d10"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/d10"
+                android:src="@mipmap/side" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

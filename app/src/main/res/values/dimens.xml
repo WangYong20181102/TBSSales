@@ -45,6 +45,7 @@
     <dimen name="d34">34dp</dimen>
     <dimen name="d35">35dp</dimen>
     <dimen name="d36">36dp</dimen>
+    <dimen name="d36.5">36.5dp</dimen>
     <dimen name="d37">37dp</dimen>
     <dimen name="d38">38dp</dimen>
     <dimen name="d39">39dp</dimen>
@@ -150,6 +151,7 @@
     <dimen name="d175">175dp</dimen>
     <dimen name="d450">450dp</dimen>
     <dimen name="d180">180dp</dimen>
+    <dimen name="d183">183dp</dimen>
     <dimen name="d190">190dp</dimen>
     <dimen name="d192">192dp</dimen>
     <dimen name="d195">195dp</dimen>
