@@ -330,4 +330,14 @@ public class AppInfoUtils {
         context.getSharedPreferences("userInfo", 0).edit().putString("user_md5_password", user_md5_password).commit();
     }
 
+    /**
+     * 判断用户是否是第一次启动app
+     */
+    public static boolean getFirstLaunch(Context context){
+        return context.getSharedPreferences("firstLaunch",0).getBoolean("storage",false);
+    }
+    public static void setFirstLaunch(Context context,boolean b){
+        context.getSharedPreferences("firstLaunch",0).edit().putBoolean("storage",b).commit();
+    }
+
 }

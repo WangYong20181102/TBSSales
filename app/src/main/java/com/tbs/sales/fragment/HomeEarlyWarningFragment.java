@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -50,8 +50,8 @@ public class HomeEarlyWarningFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     Unbinder unbinder;
-    @BindView(R.id.image_no_message)
-    ImageView imageNoMessage;
+    @BindView(R.id.linear_no_data)
+    LinearLayout linearNoData;
     private LinearLayoutManager layoutManager;
     private HomeEarlyWarningFragmentAdapter adapter;
     private Gson gson;
@@ -79,8 +79,10 @@ public class HomeEarlyWarningFragment extends BaseFragment {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", mPage);
         params.put("page_size", pageSize);
-        params.put("list_type", "today");
+        params.put("list_type", "warn");
         params.put("co_type", "-1");
+        params.put("plat", "mm");
+        params.put("device", "h5");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
         OkHttpUtils.post(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,7 +21,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Mr.Wang on 2019/3/1 13:43.
@@ -31,7 +31,7 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context context;
     private Activity activity;
 
-    public MyMessageAdapter(Context context,List<MyMessageBean> beanList) {
+    public MyMessageAdapter(Context context, List<MyMessageBean> beanList) {
         this.beanList = beanList;
         this.context = context;
         activity = (Activity) context;
@@ -48,12 +48,22 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MyViewHolder){
+        if (holder instanceof MyViewHolder) {
             ((MyViewHolder) holder).textTittle.setText(beanList.get(position).getName());
             ((MyViewHolder) holder).textData.setText(beanList.get(position).getDate());
             ((MyViewHolder) holder).textContent.setText(beanList.get(position).getContent());
             ((MyViewHolder) holder).textCity.setText(beanList.get(position).getCity());
             ((MyViewHolder) holder).textClientId.setText(beanList.get(position).getClientId());
+
+            if (position == 3||position == 8||position == 12||position == 15){
+                ((MyViewHolder) holder).linearAction.setVisibility(View.GONE);
+                ((MyViewHolder) holder).textAction.setVisibility(View.VISIBLE);
+                ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_notice);
+            }else {
+                ((MyViewHolder) holder).linearAction.setVisibility(View.VISIBLE);
+                ((MyViewHolder) holder).textAction.setVisibility(View.GONE);
+                ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_client);
+            }
         }
     }
 
@@ -82,9 +92,14 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView textClientId;
         @BindView(R.id.relative_look_detail)
         RelativeLayout relativeLookDetail;
+        @BindView(R.id.text_action)
+        TextView textAction;
+        @BindView(R.id.linear_action)
+        LinearLayout linearAction;
+
         public MyViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_man"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d45"
+            android:gravity="center"
+            android:text="男"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s20" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:background="@color/FC_F8F8F8" />
+
+        <TextView
+            android:id="@+id/text_woman"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d45"
+            android:gravity="center"
+            android:text="女"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s20" />
+
+    </LinearLayout>
+
+</RelativeLayout>

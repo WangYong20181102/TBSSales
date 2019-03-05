@@ -111,8 +111,8 @@ public class MineActivity extends BaseActivity {
      */
     private void exitHttpRequest() {
 
-        HashMap<String,Object> params = new HashMap<>();
-        params.put("token",AppInfoUtils.getToekn(this));
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(this));
         OkHttpUtils.post(Constant.LOGIN_DOLOGOUT, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -124,20 +124,18 @@ public class MineActivity extends BaseActivity {
                 String json = new String(response.body().string());
                 try {
                     final JSONObject jsonObject = new JSONObject(json);
-                    String code = jsonObject.optString("code");
-                    if (code.equals("0")){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(MineActivity.this,jsonObject.optString("message"),Toast.LENGTH_SHORT).show();
-                                getSharedPreferences("userInfo", 0).edit().clear().commit();
-                                onResume();
-                            }
-                        });
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MineActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                            getSharedPreferences("userInfo", 0).edit().clear().commit();
+                            onResume();
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
         });
     }

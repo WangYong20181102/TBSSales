@@ -1,5 +1,6 @@
 package com.tbs.sales.activity;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -164,6 +166,7 @@ public class LoginActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                hideSystemKeyBroad();
                                 saveUserInfo(successBean);
                             }
                         });
@@ -190,6 +193,12 @@ public class LoginActivity extends BaseActivity {
         AppInfoUtils.setUserNickname(this, successBean.getUserinfo().getReal_name());
         EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_HOME_DATA));
         this.finish();
+    }
+    /**
+     * 隐藏系统键盘
+     */
+    private void hideSystemKeyBroad() {
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }

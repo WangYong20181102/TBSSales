@@ -65,7 +65,6 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
 
     /*********筛选控件************/
     private PopupWindow popupWindow;
-    private View view;
     private LinearLayout linearPopBg;   //筛选弹框父布局
     //客户类型
     private GridView gridViewClientType;
@@ -75,8 +74,6 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     //城市
     private GridView gridViewCity;
     private FilterCityAdapter adapterCity;
-    //    private List<String> listCity;
-    private String[] strCity = {"全部", "深圳", "广州", "上海", "天津", "北京", "石家庄", "黑龙江", "大连", "河北"};
     private List<CityListBean> beanList;
     //下次拜访
     private GridView gridViewNextVisit;
@@ -88,6 +85,10 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     //确定
     private TextView textSure;
     private boolean bLine = false;//用于控制标题栏下划线
+    private HomeMyFragment myFragment;
+    private String clientType = "";//客户类型
+    private String city = "";//城市
+    private String timeRange = "";//下次拜访
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,14 +106,19 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
      */
     private void initCity() {
         beanList = new ArrayList<>();
+        //获取登录成功保存到本地的城市id
         String strCity = AppInfoUtils.getUserCity(this);
         if (!TextUtils.isEmpty(strCity)) {
+            //默认第一个为 全部 按钮
             beanList.add(new CityListBean("01", "全部", "", "", ""));
+            //字符串转化为集合
             String regex = "^,*|,*$";
             String string = strCity.replace("|", ",");
             String str1 = string.replaceAll(regex, "");
             final List<String> list = Arrays.asList(str1.split(","));
+            //本地assets城市列表
             final List<CityListBean> cityListBeans = CityUtils.getAllCity(HomePagerActivity.this);
+            //跟本地保存城市信息对比，得到对应城市名称放入集合中
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -129,13 +135,13 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     }
 
     /**
-     * 初始化popupwindow
+     * 初始化popupWindow
      */
     private void initPopupWindow() {
         //筛选回调事件
         HomeMineFragmentAdapter.setOnFilterClickListener(this);
         //筛选弹框布局
-        view = LayoutInflater.from(this).inflate(R.layout.filter_client_layout, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.filter_client_layout, null);
         linearPopBg = view.findViewById(R.id.linear_bg);
         gridViewClientType = view.findViewById(R.id.grid_view_client_type);
         gridViewCity = view.findViewById(R.id.grid_view_city);
@@ -158,17 +164,18 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
      * popup数据
      */
     private void initPopupData() {
+        //客户类型数据集
         listClientType = new ArrayList<>();
         for (int i = 0; i < strClientType.length; i++) {
             listClientType.add(strClientType[i]);
         }
+        //下次拜访数据集
         listNextVisit = new ArrayList<>();
         for (int i = 0; i < strNextVisit.length; i++) {
             listNextVisit.add(strNextVisit[i]);
         }
         adapterClientType = new FilterClientTypeAdapter(this, listClientType, 0);
         adapterCity = new FilterCityAdapter(this, beanList, 0);
-        Log.e("aaaaaaaaaaaaaaa", beanList.toString());
         adapterNextVisit = new FilterNextVisitAdapter(this, listNextVisit, 0);
         gridViewClientType.setAdapter(adapterClientType);
         gridViewCity.setAdapter(adapterCity);
@@ -179,6 +186,11 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapterNextVisit.setSelectPosition(position);
                 adapterNextVisit.notifyDataSetChanged();
+                if (position == 0) {
+                    timeRange = "";
+                } else {
+                    timeRange = position + "";
+                }
             }
         });
         //客户类型点击事件
@@ -187,14 +199,32 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapterClientType.setSelectPosition(position);
                 adapterClientType.notifyDataSetChanged();
+                if (position == 0) { //全部
+                    clientType = "-1";
+                } else if (position == 1) {  //新客户
+                    clientType = "0";
+                } else if (position == 2) {//潜在客户
+                    clientType = "1";
+                } else if (position == 3) {//意向客户
+                    clientType = "3";
+                } else if (position == 4) {//待签约
+                    clientType = "8";
+                }
             }
         });
         //城市点击事件
         gridViewCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //==0全部
+                if (position == 0) {
+                    city = "";
+                } else {
+                    city = ((CityListBean) adapterCity.getItem(position)).getId();
+                }
+                //大于6显示更多按钮
                 if (beanList.size() > 6) {
-                    if (position == 5) {
+                    if (position == 5) {    //更多按钮点击弹出城市列表对话框
                         DialogUtils.getInstances().showCityMessage(HomePagerActivity.this, beanList);
                         DialogUtils.getInstances().setOnCityResultListener(onCityResultListener);
                     } else {
@@ -218,7 +248,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
                 if (city.equals(beanList.get(i))) {
                     if (i < 5) {
                         adapterCity.changeCityMessage(beanList, i);
-                    } else {
+                    } else {    //移除集合中指定位置item，并添加到第一个显示
                         beanList.remove(i);
                         beanList.add(1, city);
                         adapterCity.changeCityMessage(beanList, 1);
@@ -234,8 +264,9 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
      * 初始化视图
      */
     private void initView() {
+        myFragment = new HomeMyFragment();
         fragmentList = new ArrayList<>();
-        fragmentList.add(new HomeMyFragment());
+        fragmentList.add(myFragment);
         fragmentList.add(new HomeTodayFragment());
         fragmentList.add(new HomeEarlyWarningFragment());
         fragmentList.add(new HomeBriefingFragment());
@@ -348,7 +379,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     @Override
     public void onFilterClick(View view) {
         switch (view.getId()) {
-            case R.id.image_filter:
+            case R.id.image_filter: //筛选按钮回调
                 popupWindow.showAsDropDown(viewTop);
                 break;
         }
@@ -357,17 +388,40 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.linear_bg:
+            case R.id.linear_bg:    //筛选功能灰色背景
                 if (popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
                 break;
 
             case R.id.text_reset://重置
+                if (adapterClientType != null) {
+                    adapterClientType.setSelectPosition(0);
+                    adapterClientType.notifyDataSetChanged();
+                    clientType = "-1";
+                }
+                if (adapterCity != null) {
+                    adapterCity.setSelectPosition(0);
+                    adapterCity.notifyDataSetChanged();
+                    city = "";
+                }
+                if (adapterNextVisit != null) {
+                    adapterNextVisit.setSelectPosition(0);
+                    adapterNextVisit.notifyDataSetChanged();
+                    timeRange = "";
+                }
+//                if (popupWindow.isShowing()) {
+//                    popupWindow.dismiss();
+//                }
+//                myFragment.filterHttpRequest("-1", "", "");
+
 
                 break;
             case R.id.text_sure:    //确定
-
+                if (popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+                myFragment.filterHttpRequest(clientType, city, timeRange);
                 break;
         }
     }
@@ -375,7 +429,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     @OnClick(R.id.image_right_message)
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.image_right_message:
+            case R.id.image_right_message:  //消息通知
                 startActivity(new Intent(HomePagerActivity.this, MyMessageActivity.class));
                 break;
         }

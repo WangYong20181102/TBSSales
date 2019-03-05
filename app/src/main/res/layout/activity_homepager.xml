@@ -13,7 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/d35"
-        android:layout_marginTop="@dimen/d15"
+        android:layout_marginTop="@dimen/d10"
         android:layout_marginBottom="@dimen/d17">
 
         <android.support.design.widget.TabLayout

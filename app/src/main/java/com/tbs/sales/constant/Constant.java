@@ -10,18 +10,12 @@ public class Constant {
     public static final String HTTP_URL = "http://bip.test.tobosu.cn";
 
 
-
-
-
-
-
     //首页信息
     public static final String SALE_GETCOMLIST = HTTP_URL + "/api/sale/getcomlist";
     //登录
     public static final String LOGIN_DOLOGIN = HTTP_URL + "/api/login/dologin";
     //退出登录
     public static final String LOGIN_DOLOGOUT = HTTP_URL + "/api/login/dologout";
-
 
 
     /*****************************************************     应用     ****************************************************************/
@@ -52,10 +46,27 @@ public class Constant {
 //    public static final String WXDISTRIBUTE_customer_my = "https://m.tobosu.com/wxdistribute/#/customer/my";
     //外呼统计
 //    public static final String WXDISTRIBUTE_customer_my = "https://m.tobosu.com/wxdistribute/#/customer/my";
+    //排行榜
+    public static final String STATS_GETSTATSINDEX = HTTP_URL + "/api/stats/getStatsIndex";
+
+    /********************************************************           榜单         ****************************************************************/
+
+
+    //成交榜
+    public static final String WXDISTRIBUTE_FINISH ="https://m.tobosu.com/wxdistribute/#/customer/count/list?type=finish";
+    //跟进榜
+    public static final String WXDISTRIBUTE_FOLLOW ="https://m.tobosu.com/wxdistribute/#/customer/count/list?type=follow";
+    //新增榜
+    public static final String WXDISTRIBUTE_ADD ="https://m.tobosu.com/wxdistribute/#/customer/count/list?type=add";
+
 
 
     //简报
     public static final String WXDISTRIBUTE_CUSTOMER_COUNT = "https://m.tobosu.com/wxdistribute/#/customer/count";
+    //添加
+    public static final String WXDISTRIBUTE_CUSTOMER_ADD = "https://m.tobosu.com/wxdistribute/#/customer/add";
+    //图片上传
+    public static final String UPLOAD_DYNAMIC_IMAGE = "";
 
 
 }

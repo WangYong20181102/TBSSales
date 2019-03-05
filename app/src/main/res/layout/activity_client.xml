@@ -15,18 +15,17 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/d45"
             android:layout_marginLeft="@dimen/d24"
-            android:layout_marginTop="@dimen/d18"
             android:text="客户"
             android:textColor="@color/black"
+            android:gravity="center"
             android:textSize="@dimen/s17"
             android:textStyle="bold" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/d9"
-            android:layout_marginTop="@dimen/d18"
             android:background="@color/FC_F8F8F8" />
 
         <RelativeLayout

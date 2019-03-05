@@ -1,10 +1,13 @@
 package com.tbs.sales;
 
-import android.app.Dialog;
+import android.Manifest;
 import android.app.TabActivity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,12 +15,13 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.tbs.sales.activity.AddActivity;
 import com.tbs.sales.activity.ApplicationActivity;
 import com.tbs.sales.activity.ClientActivity;
 import com.tbs.sales.activity.HomePagerActivity;
 import com.tbs.sales.activity.MineActivity;
-import com.tbs.sales.manager.AppManager;
+import com.tbs.sales.activity.WebViewActivity;
+import com.tbs.sales.constant.Constant;
+import com.tbs.sales.utils.AppInfoUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +63,18 @@ public class MainActivity extends TabActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
+        initData();
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        if (!AppInfoUtils.getFirstLaunch(this)){
+            AppInfoUtils.setFirstLaunch(this,true);
+            //获取存储权限
+            writerReadSDcard();
+        }
     }
 
     /**
@@ -75,10 +91,6 @@ public class MainActivity extends TabActivity {
         intent = new Intent().setClass(this, ClientActivity.class);
         spec = tabHost.newTabSpec("TWO").setIndicator("客户").setContent(intent);
         tabHost.addTab(spec);
-//        //添加
-//        intent = new Intent().setClass(this, AddActivity.class);
-//        spec = tabHost.newTabSpec("THREE").setIndicator("添加").setContent(intent);
-//        tabHost.addTab(spec);
         //应用
         intent = new Intent().setClass(this, ApplicationActivity.class);
         spec = tabHost.newTabSpec("FOUR").setIndicator("应用").setContent(intent);
@@ -112,6 +124,9 @@ public class MainActivity extends TabActivity {
                 setActivityPosition(4);
                 break;
             case R.id.relative_add: //添加
+                Intent intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_ADD);
+                startActivity(intent);
                 break;
         }
     }
@@ -146,20 +161,6 @@ public class MainActivity extends TabActivity {
                 textMine.setTextColor(Color.parseColor("#000000"));
 
                 break;
-//            case 2:
-//                tabHost.setCurrentTab(activityPosition);
-//                tabHost.setCurrentTabByTag("THREE");
-//                imageHome.setBackgroundResource(R.mipmap.common_homepage_select);
-//                imageClient.setBackgroundResource(R.mipmap.common_client);
-//                imageApplication.setBackgroundResource(R.mipmap.common_application);
-//                imageMine.setBackgroundResource(R.mipmap.common_mine);
-//
-//                textHome.setTextColor(Color.parseColor("#107BFD"));
-//                textClient.setTextColor(Color.parseColor("#000000"));
-//                textApplication.setTextColor(Color.parseColor("#000000"));
-//                textMine.setTextColor(Color.parseColor("#000000"));
-//
-//                break;
             case 3:
                 tabHost.setCurrentTab(activityPosition);
                 tabHost.setCurrentTabByTag("FOUR");
@@ -191,7 +192,7 @@ public class MainActivity extends TabActivity {
         }
     }
 
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 //            /**
 //             * 退出应用
@@ -232,5 +233,19 @@ public class MainActivity extends TabActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 动态获取6.0版本以上手机存储权限
+     */
+    public void writerReadSDcard() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                //权限还没有授予，需要在这里写申请权限的代码
+                requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+            }
+        }
     }
 }

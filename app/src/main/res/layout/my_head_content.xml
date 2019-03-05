@@ -43,6 +43,7 @@
 
     </RelativeLayout>
     <View
+        android:id="@+id/view_bg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/d9"
         android:background="@color/FC_F8F8F8"/>

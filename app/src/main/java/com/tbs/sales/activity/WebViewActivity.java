@@ -1,6 +1,5 @@
 package com.tbs.sales.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,29 +35,26 @@ public class WebViewActivity extends BaseActivity {
     RelativeLayout newWebviewBannerRl;
     @BindView(R.id.web_view)
     WebView webView;
-    private Context mContext;
     private Intent mIntent;
     private String mLoadingUrl = "";//加载数据的URL
-    private boolean b = false;  //false不拼接，true拼接
-    private String tittle = "";//标题
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         ButterKnife.bind(this);
-        mContext = this;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         initViewEvent();
     }
+
     private void initViewEvent() {
         mIntent = getIntent();
         newWebviewBannerRl.setBackgroundColor(Color.parseColor("#ffffff"));
         mLoadingUrl = mIntent.getStringExtra("mLoadingUrl");
-        b = mIntent.getBooleanExtra("bAnswer", false);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
@@ -82,6 +78,7 @@ public class WebViewActivity extends BaseActivity {
 //        }
         webView.loadUrl(mLoadingUrl);
     }
+
     private WebViewClient webViewClient = new WebViewClient() {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -92,7 +89,6 @@ public class WebViewActivity extends BaseActivity {
     private WebChromeClient webChromeClient = new WebChromeClient() {
         @Override
         public void onReceivedTitle(WebView view, String title) {
-            tittle = title;
             newWebviewTitle.setText(title);
         }
     };
@@ -118,6 +114,7 @@ public class WebViewActivity extends BaseActivity {
         }
         super.onDestroy();
     }
+
     @OnClick({R.id.new_webview_back, R.id.ll_share})
     public void onViewClicked(View view) {
         switch (view.getId()) {

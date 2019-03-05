@@ -24,6 +24,8 @@ import com.tbs.sales.utils.AppInfoUtils;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by Mr.Wang on 2019/2/27 13:51.
  */
@@ -56,6 +58,11 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
             View view = LayoutInflater.from(context).inflate(R.layout.my_head_content, parent, false);
             MyViewHolder1 holder1 = new MyViewHolder1(view);
             holder1.imageFilter.setOnClickListener(this);
+            if (beanList.size() == 0){
+                holder1.viewBg.setVisibility(View.GONE);
+            }else {
+                holder1.viewBg.setVisibility(View.VISIBLE);
+            }
             return holder1;
         } else {
             View view = LayoutInflater.from(context).inflate(R.layout.my_content, parent, false);
@@ -118,11 +125,13 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         private RelativeLayout relativeClick;
         private LinearLayout imageFilter;//筛选
+        private View viewBg;
 
         public MyViewHolder1(View itemView) {
             super(itemView);
             relativeClick = itemView.findViewById(R.id.relative_click);
             imageFilter = itemView.findViewById(R.id.image_filter);
+            viewBg = itemView.findViewById(R.id.view_bg);
         }
     }
 

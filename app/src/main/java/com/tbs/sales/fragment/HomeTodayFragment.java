@@ -11,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.tbs.sales.R;
-import com.tbs.sales.adapter.HomeMineFragmentAdapter;
 import com.tbs.sales.adapter.HomeTodayFragmentAdapter;
 import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.HomeDataBean;
@@ -49,6 +49,8 @@ public class HomeTodayFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     Unbinder unbinder;
+    @BindView(R.id.linear_no_data)
+    LinearLayout linearNoData;
     private LinearLayoutManager layoutManager;
     private HomeTodayFragmentAdapter adapter;
     private Gson gson;
@@ -68,6 +70,7 @@ public class HomeTodayFragment extends BaseFragment {
         initHttpRequest();
         return view;
     }
+
     @Override
     public boolean isRegisterEventBus() {
         return true;
@@ -83,15 +86,18 @@ public class HomeTodayFragment extends BaseFragment {
                 break;
         }
     }
+
     /**
      * 初始化网络请求
      */
     private void initHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", mPage);
+        params.put("plat", "mm");
         params.put("page_size", pageSize);
         params.put("list_type", "today");
         params.put("co_type", "-1");
+        params.put("device", "h5");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
         OkHttpUtils.post(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
@@ -131,11 +137,11 @@ public class HomeTodayFragment extends BaseFragment {
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });
-                    }else{
+                    } else {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(),jsonObject.optString("message"),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });

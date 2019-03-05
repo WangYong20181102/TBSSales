@@ -51,7 +51,7 @@
                 android:layout_marginLeft="@dimen/d15"
                 android:background="@null"
                 android:hint="账号"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="#bbbbbb"
                 android:textSize="@dimen/s13" />
 
@@ -101,7 +101,7 @@
                 android:background="@null"
                 android:hint="密码"
                 android:inputType="textPassword"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="#bbbbbb"
                 android:textSize="@dimen/s13" />
 

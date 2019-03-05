@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -48,6 +49,8 @@ public class HomeMyFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     Unbinder unbinder;
+    @BindView(R.id.linear_no_data)
+    LinearLayout linearNoData;
     private LinearLayoutManager layoutManager;
     private HomeMineFragmentAdapter adapter;
     private Gson gson;
@@ -55,6 +58,9 @@ public class HomeMyFragment extends BaseFragment {
     private int pageSize = 20;
     private boolean isDownRefresh = false;//是否是下拉刷新
     private List<HomeDataBean.ListBean> beanList;
+    private String coType = "-1"; //客户类型
+    private String city = "";//城市
+    private String timeRange = "";//下次拜访
 
     @Nullable
     @Override
@@ -72,6 +78,7 @@ public class HomeMyFragment extends BaseFragment {
     public boolean isRegisterEventBus() {
         return true;
     }
+
     @Subscribe
     @Override
     public void receiveEvent(Event event) {
@@ -84,14 +91,41 @@ public class HomeMyFragment extends BaseFragment {
     }
 
     /**
+     * 筛选确定按钮网络请求
+     *
+     * @param coType
+     * @param city
+     * @param timeRange
+     */
+    public void filterHttpRequest(String coType, String city, String timeRange) {
+        this.coType = coType;
+        this.city = city;
+        this.timeRange = timeRange;
+        mPage = 1;
+        isDownRefresh = true;
+        swipeRefreshLayout.setRefreshing(true);
+        if (adapter != null) {
+            adapter = null;
+        }
+        if (!beanList.isEmpty()) {
+            beanList.clear();
+        }
+        initHttpRequest();
+    }
+
+    /**
      * 初始化网络请求
      */
     private void initHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", mPage);
+        params.put("plat", "mm");
         params.put("page_size", pageSize);
         params.put("list_type", "all");
-        params.put("co_type", "-1");
+        params.put("city", city);
+        params.put("time_range", timeRange);
+        params.put("co_type", coType);
+        params.put("device", "h5");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
         OkHttpUtils.post(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
@@ -128,6 +162,22 @@ public class HomeMyFragment extends BaseFragment {
                                 } else {
                                     adapter.notifyItemInserted(beanList.size() - pageSize);
                                 }
+
+//                                if (beanList.size() == 0){
+//                                    linearNoData.setVisibility(View.VISIBLE);
+//                                }else {
+//                                    linearNoData.setVisibility(View.GONE);
+//                                }
+//
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+                    } else if (code.equals("2001")) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getActivity().getSharedPreferences("userInfo", 0).edit().clear().commit();
+                                Toast.makeText(getActivity(), jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });
