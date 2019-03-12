@@ -21,22 +21,38 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_width="@dimen/d73"
+                android:layout_width="@dimen/d79"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="@dimen/d73"
-                    android:layout_height="@dimen/d73"
+                <RelativeLayout
+                    android:layout_width="@dimen/d75"
+                    android:layout_height="@dimen/d75"
                     android:layout_marginTop="@dimen/d4"
-                    app:cardCornerRadius="@dimen/d36.5"
-                    app:cardElevation="@dimen/d0">
+                    android:background="@drawable/client_viewpager_icon_bg">
 
-                    <ImageView
-                        android:id="@+id/image_no_two"
+                    <android.support.v7.widget.CardView
                         android:layout_width="@dimen/d73"
                         android:layout_height="@dimen/d73"
-                        android:src="@mipmap/add" />
-                </android.support.v7.widget.CardView>
+                        android:layout_centerInParent="true"
+                        app:cardCornerRadius="@dimen/d36.5"
+                        app:cardElevation="@dimen/d0">
+
+                        <ImageView
+                            android:id="@+id/image_no_two"
+                            android:layout_width="@dimen/d73"
+                            android:layout_height="@dimen/d73"
+                            android:layout_gravity="center"
+                            android:src="@mipmap/add" />
+                    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/tv_no2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/s20"/>
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="@dimen/d19"
@@ -77,20 +93,34 @@
                 android:layout_width="@dimen/d95"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.CardView
+                <RelativeLayout
                     android:layout_width="@dimen/d95"
                     android:layout_height="@dimen/d95"
-                    android:background="@drawable/client_viewpager_icon_bg"
-                    app:cardCornerRadius="@dimen/d50"
-                    app:cardElevation="@dimen/d0">
+                    android:background="@drawable/client_viewpager_icon_bg">
 
-                    <ImageView
-                        android:id="@+id/image_no_one"
+                    <android.support.v7.widget.CardView
                         android:layout_width="@dimen/d87"
                         android:layout_height="@dimen/d87"
-                        android:layout_margin="@dimen/d4"
-                        android:src="@mipmap/add" />
-                </android.support.v7.widget.CardView>
+                        android:layout_centerInParent="true"
+                        app:cardCornerRadius="@dimen/d43.5"
+                        app:cardElevation="@dimen/d0">
+
+                        <ImageView
+                            android:id="@+id/image_no_one"
+                            android:layout_width="@dimen/d87"
+                            android:layout_height="@dimen/d87"
+                            android:layout_gravity="center"
+                            android:src="@mipmap/add" />
+                    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/tv_no1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/s20"/>
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="@dimen/d19"
@@ -130,22 +160,38 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_width="@dimen/d62"
+                android:layout_width="@dimen/d68"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="@dimen/d62"
-                    android:layout_height="@dimen/d62"
+                <RelativeLayout
+                    android:layout_width="@dimen/d64"
+                    android:layout_height="@dimen/d64"
                     android:layout_marginTop="@dimen/d4"
-                    app:cardCornerRadius="@dimen/d31"
-                    app:cardElevation="@dimen/d0">
+                    android:background="@drawable/client_viewpager_icon_bg">
 
-                    <ImageView
-                        android:id="@+id/image_no_three"
+                    <android.support.v7.widget.CardView
                         android:layout_width="@dimen/d62"
                         android:layout_height="@dimen/d62"
-                        android:src="@mipmap/add" />
-                </android.support.v7.widget.CardView>
+                        android:layout_centerInParent="true"
+                        app:cardCornerRadius="@dimen/d31"
+                        app:cardElevation="@dimen/d0">
+
+                        <ImageView
+                            android:id="@+id/image_no_three"
+                            android:layout_width="@dimen/d62"
+                            android:layout_height="@dimen/d62"
+                            android:layout_gravity="center"
+                            android:src="@mipmap/add" />
+                    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/tv_no3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/s20"/>
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="@dimen/d19"

@@ -49,6 +49,15 @@ public class ClientLeaderboardBean {
         private String member;
         private String area_name;
         private int finish_num;
+        private String icon;
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
 
         public int getSort() {
             return sort;
@@ -95,6 +104,15 @@ public class ClientLeaderboardBean {
         private String member;
         private String area_name;
         private int follow_num;
+        private String icon;
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
 
         public int getSort() {
             return sort;
@@ -141,6 +159,15 @@ public class ClientLeaderboardBean {
         private String member;
         private String area_name;
         private int add_num;
+        private String icon;
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
 
         public int getSort() {
             return sort;

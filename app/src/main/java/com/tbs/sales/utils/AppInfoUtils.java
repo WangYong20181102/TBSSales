@@ -222,7 +222,7 @@ public class AppInfoUtils {
     }
 
     public static void setToken(Context context, String token) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("token", token).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("token", token).apply();
     }
 
     //用户的昵称
@@ -231,7 +231,7 @@ public class AppInfoUtils {
     }
 
     public static void setUserNickname(Context context, String nickname) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("nickname", nickname).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("nickname", nickname).apply();
     }
 
     //用户的头像
@@ -240,7 +240,23 @@ public class AppInfoUtils {
     }
 
     public static void setUserIcon(Context context, String icon) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("icon", icon).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("icon", icon).apply();
+    }
+    //用户的性别
+    public static int getUserSex(Context context) {
+        return context.getSharedPreferences("userInfo", 0).getInt("sex", 0);
+    }
+
+    public static void setUserSex(Context context, int icon) {
+        context.getSharedPreferences("userInfo", 0).edit().putInt("sex", icon).apply();
+    }
+    //用户的职位
+    public static String getUserRoleDesc(Context context) {
+        return context.getSharedPreferences("userInfo", 0).getString("roledesc", "");
+    }
+
+    public static void setUserRoleDesc(Context context, String icon) {
+        context.getSharedPreferences("userInfo", 0).edit().putString("roledesc", icon).apply();
     }
 
     //用户所在的城市
@@ -249,7 +265,7 @@ public class AppInfoUtils {
     }
 
     public static void setUserCity(Context context, String cityname) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("cityname", cityname).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("cityname", cityname).apply();
     }
     //用户所在的省份
     public static String getUserProvince(Context context) {
@@ -257,7 +273,7 @@ public class AppInfoUtils {
     }
 
     public static void setUserProvince(Context context, String province) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("province", province).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("province", province).apply();
     }
 
     //用户的Uuid
@@ -266,7 +282,7 @@ public class AppInfoUtils {
     }
 
     public static void setUuid(Context context, String id) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("id", id).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("id", id).apply();
     }
 
     //用户的id
@@ -275,7 +291,7 @@ public class AppInfoUtils {
     }
 
     public static void setId(Context context, String id) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("id", id).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("id", id).apply();
     }
     //用户绑定的手机号码
     public static String getCellPhone(Context context) {
@@ -283,7 +299,7 @@ public class AppInfoUtils {
     }
 
     public static void setCellPhone(Context context, String cellphone) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("cellphone", cellphone).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("cellphone", cellphone).apply();
     }
 
     //用户身份的标识  其效果和type id 一致
@@ -292,7 +308,7 @@ public class AppInfoUtils {
     }
 
     public static void setMark(Context context, String mark) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("mark", mark).commit();
+        context.getSharedPreferences("userInfo", 0).edit().putString("mark", mark).apply();
     }
 
     //用户的Userid
@@ -338,6 +354,16 @@ public class AppInfoUtils {
     }
     public static void setFirstLaunch(Context context,boolean b){
         context.getSharedPreferences("firstLaunch",0).edit().putBoolean("storage",b).commit();
+    }
+    // TODO: 2018/3/1  统计相关的数据**********************************************************************************************************↑
+    //存储推送的唯一标识
+    public static String getPushRegisterId(Context context) {
+        return context.getSharedPreferences("PushRegisterId", 0).getString("mPushRegisterId", "");
+    }
+
+    //获取推送的唯一标识
+    public static void setPushRegisterId(Context context, String mPushRegisterId) {
+        context.getSharedPreferences("PushRegisterId", 0).edit().putString("mPushRegisterId", mPushRegisterId).commit();
     }
 
 }

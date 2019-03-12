@@ -1,6 +1,5 @@
 package com.tbs.sales.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;

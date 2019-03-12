@@ -19,7 +19,9 @@ import android.widget.TextView;
 import com.tbs.sales.R;
 import com.tbs.sales.activity.HomeSearchActivity;
 import com.tbs.sales.activity.LoginActivity;
+import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.bean.HomeDataBean;
+import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 
 import java.util.List;
@@ -58,9 +60,9 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
             View view = LayoutInflater.from(context).inflate(R.layout.my_head_content, parent, false);
             MyViewHolder1 holder1 = new MyViewHolder1(view);
             holder1.imageFilter.setOnClickListener(this);
-            if (beanList.size() == 0){
+            if (beanList.size() == 0) {
                 holder1.viewBg.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder1.viewBg.setVisibility(View.VISIBLE);
             }
             return holder1;
@@ -72,7 +74,7 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder1) {
             //获取输入框高度
             ((MyViewHolder1) holder).relativeClick.post(new Runnable() {
@@ -103,6 +105,15 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
             ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName());
             //地址
             ((MyViewHolder2) holder).textAddress.setText(beanList.get(position - 1).getAddress());
+            ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    String mLoadingUrl = Constant.CUSTOMER_MY_DETAIL + "?co_id=" + beanList.get(position - 1).getCo_id() + "&co_type=" + beanList.get(position - 1).getCo_type() + "&warn_state=" + beanList.get(position - 1).getWarn_state() + "&delay=" + beanList.get(position - 1).getDelay_state() + "&menu=my";
+                    intent.putExtra("mLoadingUrl", mLoadingUrl);
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }
@@ -142,6 +153,7 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
         private TextView textId;//id
         private TextView textUserName;//姓名
         private TextView textAddress;//地址
+        private LinearLayout linearClick;   //背景
 
         public MyViewHolder2(View itemView) {
             super(itemView);
@@ -150,6 +162,7 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
             textRemarks = itemView.findViewById(R.id.text_remarks);
             textId = itemView.findViewById(R.id.text_id);
             textUserName = itemView.findViewById(R.id.text_user_name);
+            linearClick = itemView.findViewById(R.id.linear_click);
         }
     }
 

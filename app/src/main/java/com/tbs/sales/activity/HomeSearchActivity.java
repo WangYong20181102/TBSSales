@@ -26,6 +26,7 @@ import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,9 +131,9 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.image_search: //搜索
-                if (TextUtils.isEmpty(editSearch.getText().toString().trim())){
-                    Toast.makeText(this,"请输入搜索内容",Toast.LENGTH_SHORT).show();
-                }else {
+                if (TextUtils.isEmpty(editSearch.getText().toString().trim())) {
+                    ToastUtils.toastShort(this, "请输入搜索内容");
+                } else {
                     initData();
                     hideSystemKeyBroad();
                 }
@@ -165,7 +166,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
         params.put("keywords", editSearch.getText().toString().trim());
         params.put("token", AppInfoUtils.getToekn(this));
         params.put("device", "h5");
-        OkHttpUtils.post(Constant.SALE_GETCOMLIST, params, new Callback() {
+        OkHttpUtils.get(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {
@@ -182,18 +183,29 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
                     final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
                     if (code.equals("0")) {
-                        HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
+                        final HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
                         beanList.addAll(dataBean.getList());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 recyclerView.setVisibility(View.VISIBLE);
                                 linearCanSearch.setVisibility(View.GONE);
-                                if (adapter == null) {
-                                    adapter = new SearchResultAdapter(HomeSearchActivity.this, beanList);
-                                    recyclerView.setAdapter(adapter);
+                                if (dataBean.getList().size() != 0) {
+                                    if (adapter == null) {
+                                        adapter = new SearchResultAdapter(HomeSearchActivity.this, beanList);
+                                        recyclerView.setAdapter(adapter);
+                                    } else {
+                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    }
                                 } else {
-                                    adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    if (mPage != 1) {
+                                        ToastUtils.toastShort(HomeSearchActivity.this, "暂无更多数据");
+                                    }
+                                }
+                                if (beanList.size() == 0) {
+                                    linearNoData.setVisibility(View.VISIBLE);
+                                } else {
+                                    linearNoData.setVisibility(View.GONE);
                                 }
                             }
                         });
@@ -201,7 +213,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(HomeSearchActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                                ToastUtils.toastShort(HomeSearchActivity.this, jsonObject.optString("message"));
                             }
                         });
                     }

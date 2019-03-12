@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 import okhttp3.Call;
@@ -25,6 +26,7 @@ import okhttp3.Response;
  */
 public class OkHttpUtils {
     private static OkHttpClient client;
+    private static String TAG="OKHttpUtils";
 
     public OkHttpUtils() {
     }
@@ -52,6 +54,45 @@ public class OkHttpUtils {
                 .build();
         Call call = getInstance().newCall(request);
         call.enqueue(callback);
+    }
+
+    /**
+     * get请求
+     *
+     * @param url
+     * @param paramsMap
+     * @param callback
+     */
+    public static void get(String url, HashMap<String, Object> paramsMap, Callback callback) {
+        StringBuilder tempParams = new StringBuilder();
+        try {
+            //处理参数
+            int pos = 0;
+            for (String key : paramsMap.keySet()) {
+                if (pos > 0) {
+                    tempParams.append("&");
+                }
+                //对参数进行URLEncoder
+                tempParams.append(String.format("%s=%s", key, URLEncoder.encode(String.valueOf(paramsMap.get(key)), "utf-8")));
+                pos++;
+            }
+            //补全请求地址
+            String requestUrl = String.format("%s?%s", url, tempParams.toString());
+
+            Request request = new Request.Builder()
+                    .url(requestUrl)
+                    .build();
+            Call call = getInstance().newCall(request);
+            call.enqueue(callback);
+
+
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+
+
+
+
     }
 
 

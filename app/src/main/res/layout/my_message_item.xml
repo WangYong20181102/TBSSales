@@ -103,7 +103,6 @@
                 android:textSize="@dimen/s13"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:text="新的一年即将到来，祖国大地一片祥和，全国人民载歌载舞，准备迎接新的征程。值此新春佳节，公司放假15，嗨翻天！"
                 android:textStyle="bold"
                 android:visibility="gone"/>
 

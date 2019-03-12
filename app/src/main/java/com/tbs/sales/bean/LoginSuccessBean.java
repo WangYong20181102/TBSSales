@@ -81,6 +81,25 @@ public class LoginSuccessBean {
         private String organ_role;
         private String organ_area_ids;
         private int is_maintain;
+        private String icon;
+        private int sex;
+        private String role_desc;
+
+        public int getSex() {
+            return sex;
+        }
+
+        public void setSex(int sex) {
+            this.sex = sex;
+        }
+
+        public String getRole_desc() {
+            return role_desc;
+        }
+
+        public void setRole_desc(String role_desc) {
+            this.role_desc = role_desc;
+        }
 
         public String getId() {
             return id;
@@ -256,6 +275,14 @@ public class LoginSuccessBean {
 
         public void setOrgan_role(String organ_role) {
             this.organ_role = organ_role;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
         }
 
         public String getOrgan_area_ids() {

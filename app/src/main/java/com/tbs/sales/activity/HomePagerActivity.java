@@ -27,6 +27,7 @@ import com.tbs.sales.adapter.FilterNextVisitAdapter;
 import com.tbs.sales.adapter.HomeMineFragmentAdapter;
 import com.tbs.sales.adapter.HomeViewPagerAdapter;
 import com.tbs.sales.bean.CityListBean;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.fragment.HomeBriefingFragment;
 import com.tbs.sales.fragment.HomeEarlyWarningFragment;
 import com.tbs.sales.fragment.HomeMyFragment;
@@ -34,7 +35,10 @@ import com.tbs.sales.fragment.HomeTodayFragment;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.CityUtils;
 import com.tbs.sales.utils.DialogUtils;
+import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.TabLayoutUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,6 +135,28 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
                     }
                 }
             });
+        }
+    }
+    @Subscribe
+    @Override
+    public boolean isRegisterEventBus() {
+        return true;
+    }
+    @Subscribe
+    @Override
+    public void receiveEvent(Event event) {
+        super.receiveEvent(event);
+        switch (event.getCode()) {
+            case EC.EventCode.UPDATE_HOME_DATA: //登录成功更新城市信息
+                if (beanList != null) {
+                    beanList = null;
+                    initCity();
+                }
+                if (adapterCity != null){
+                    adapterCity.setChangeCityData(beanList);
+                    adapterCity.notifyDataSetChanged();
+                }
+                break;
         }
     }
 
@@ -243,14 +269,15 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     //城市   更多点击回调更改listview数据结构
     DialogUtils.OnCityResultListener onCityResultListener = new DialogUtils.OnCityResultListener() {
         @Override
-        public void onCityResult(CityListBean city) {
+        public void onCityResult(CityListBean cityData) {
+            city = cityData.getId();
             for (int i = 0; i < beanList.size(); i++) {
-                if (city.equals(beanList.get(i))) {
+                if (cityData.equals(beanList.get(i))) {
                     if (i < 5) {
                         adapterCity.changeCityMessage(beanList, i);
                     } else {    //移除集合中指定位置item，并添加到第一个显示
                         beanList.remove(i);
-                        beanList.add(1, city);
+                        beanList.add(1, cityData);
                         adapterCity.changeCityMessage(beanList, 1);
                     }
                     adapterCity.notifyDataSetChanged();
@@ -430,7 +457,11 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.image_right_message:  //消息通知
-                startActivity(new Intent(HomePagerActivity.this, MyMessageActivity.class));
+                if (TextUtils.isEmpty(AppInfoUtils.getId(this))){
+                    startActivity(new Intent(HomePagerActivity.this,LoginActivity.class));
+                }else {
+                    startActivity(new Intent(HomePagerActivity.this, MyMessageActivity.class));
+                }
                 break;
         }
     }

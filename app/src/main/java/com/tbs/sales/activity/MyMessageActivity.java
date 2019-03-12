@@ -9,17 +9,31 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.MyMessageAdapter;
 import com.tbs.sales.bean.MyMessageBean;
+import com.tbs.sales.constant.Constant;
+import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.OkHttpUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/3/1 13:28.
@@ -35,14 +49,17 @@ public class MyMessageActivity extends BaseActivity {
     private MyMessageAdapter adapter;
     private List<MyMessageBean> beanList;
     private LinearLayoutManager layoutManager;
-    private int mPage = 0;
+    private int mPage = 1;
     private int pageSize = 20;
+    private Gson gson;
+    private boolean isDownRefresh = false;//是否是下拉刷新
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_message);
         ButterKnife.bind(this);
+        gson = new Gson();
         initView();
         initData();
     }
@@ -51,6 +68,7 @@ public class MyMessageActivity extends BaseActivity {
      * 初始化视图
      */
     private void initView() {
+        beanList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
@@ -70,7 +88,7 @@ public class MyMessageActivity extends BaseActivity {
     private SwipeRefreshLayout.OnRefreshListener swipeLister = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-//            initData();
+            initData();
         }
     };
     //上拉加载更多
@@ -89,7 +107,75 @@ public class MyMessageActivity extends BaseActivity {
     //加载更多数据
     private void LoadMore() {
         mPage++;
-//        initHttpRequest();
+        initHttpRequest();
+    }
+
+    /**
+     * 网络请求
+     */
+    private void initHttpRequest() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(this));
+        params.put("plat", "android");
+//        params.put("device_id", AppInfoUtils.getPushRegisterId(this));
+        params.put("page", mPage);
+        params.put("page_size", pageSize);
+        OkHttpUtils.get(Constant.PUSH_RECORD, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isDownRefresh = false;
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    final JSONObject jsonObject = new JSONObject(json);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {
+                        JSONObject jsonObject1 = jsonObject.optJSONObject("data");
+                        final JSONArray jsonArray = new JSONArray(jsonObject1.optString("list"));
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            MyMessageBean myMessageBean = gson.fromJson(jsonArray.get(i).toString(), MyMessageBean.class);
+                            beanList.add(myMessageBean);
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (adapter == null) {
+                                    adapter = new MyMessageAdapter(MyMessageActivity.this, beanList);
+                                    recyclerView.setAdapter(adapter);
+                                }
+                                if (isDownRefresh) {
+                                    isDownRefresh = false;
+                                    recyclerView.scrollToPosition(0);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    adapter.notifyItemInserted(beanList.size() - pageSize);
+                                }
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MyMessageActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
@@ -109,19 +195,17 @@ public class MyMessageActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        beanList = new ArrayList<>();
-        MyMessageBean myMessageBean = null;
-        for (int i = 0; i < 15; i++) {
-            myMessageBean = new MyMessageBean();
-            myMessageBean.setCity("城市: 深圳市");
-            myMessageBean.setClientId("客户ID: 123456");
-            myMessageBean.setContent("你有一个合同审批待处理");
-            myMessageBean.setDate("2019/3/1 14:09");
-            myMessageBean.setName("客户");
-            beanList.add(myMessageBean);
+        mPage = 1;
+        isDownRefresh = true;
+        swipeRefreshLayout.setRefreshing(true);
+        if (adapter != null) {
+            adapter = null;
         }
-        adapter = new MyMessageAdapter(this, beanList);
-        recyclerView.setAdapter(adapter);
+        if (beanList.size() != 0) {
+            beanList.clear();
+        }
+        initHttpRequest();
+
     }
 
     @OnClick(R.id.linear_back)

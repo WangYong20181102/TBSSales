@@ -1,15 +1,19 @@
 package com.tbs.sales.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.bean.HomeDataBean;
+import com.tbs.sales.constant.Constant;
 
 import java.util.List;
 
@@ -40,7 +44,7 @@ public class HomeEarlyWarningFragmentAdapter extends RecyclerView.Adapter<Recycl
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof HomeEarlyWarningFragmentAdapter.MyViewHolder2) {
             //公司名称
             ((MyViewHolder2) holder).textCompanyName.setText(beanList.get(position - 1).getCo_name());
@@ -52,7 +56,15 @@ public class HomeEarlyWarningFragmentAdapter extends RecyclerView.Adapter<Recycl
             ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName());
             //地址
             ((MyViewHolder2) holder).textEarlyWarning.setText(beanList.get(position - 1).getWarn_state_desc());
-
+            ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    String mLoadingUrl = Constant.CUSTOMER_MY_DETAIL + "?co_id=" + beanList.get(position - 1).getCo_id() + "&co_type=" + beanList.get(position - 1).getCo_type() + "&warn_state=" + beanList.get(position - 1).getWarn_state() + "&delay=" + beanList.get(position - 1).getDelay_state() + "&menu=my";
+                    intent.putExtra("mLoadingUrl", mLoadingUrl);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -83,6 +95,7 @@ public class HomeEarlyWarningFragmentAdapter extends RecyclerView.Adapter<Recycl
         private TextView textId;//id
         private TextView textUserName;//姓名
         private TextView textEarlyWarning;//预警
+        private LinearLayout linearClick;
 
         public MyViewHolder2(View itemView) {
             super(itemView);
@@ -91,6 +104,7 @@ public class HomeEarlyWarningFragmentAdapter extends RecyclerView.Adapter<Recycl
             textRemarks = itemView.findViewById(R.id.text_remarks);
             textId = itemView.findViewById(R.id.text_id);
             textUserName = itemView.findViewById(R.id.text_user_name);
+            linearClick = itemView.findViewById(R.id.linear_click);
         }
     }
 }

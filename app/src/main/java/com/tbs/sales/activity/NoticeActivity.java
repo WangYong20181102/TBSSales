@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.bean.MyMessageBean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,12 +26,21 @@ public class NoticeActivity extends BaseActivity {
     TextView textData;
     @BindView(R.id.text_content)
     TextView textContent;
+    private MyMessageBean messageBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice);
         ButterKnife.bind(this);
+        initEvent();
+    }
+
+    private void initEvent() {
+        messageBean = (MyMessageBean) getIntent().getSerializableExtra(MyMessageBean.class.getName());
+        textTittle.setText(messageBean.getTitle());
+        textData.setText(messageBean.getCreate_time());
+        textContent.setText(messageBean.getContent());
     }
 
     @OnClick(R.id.linear_back)

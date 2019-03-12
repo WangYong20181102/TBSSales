@@ -84,6 +84,14 @@ public class FilterCityAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * 登录成功更改
+     * @param changeCityData
+     */
+    public void setChangeCityData(List<CityListBean> changeCityData) {
+        listCity = changeCityData;
+    }
+
     class MyViewHolder {
         private TextView BtntextView;
     }

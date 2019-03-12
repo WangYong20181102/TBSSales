@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -54,7 +55,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#bbbbbb" />
+        android:background="@color/FC_F8F8F8" />
 
     <WebView
         android:id="@+id/web_view"

@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.utils.AppInfoUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +56,11 @@ public class WebViewActivity extends BaseActivity {
         mIntent = getIntent();
         newWebviewBannerRl.setBackgroundColor(Color.parseColor("#ffffff"));
         mLoadingUrl = mIntent.getStringExtra("mLoadingUrl");
+        if (mLoadingUrl.contains("?")) {
+            mLoadingUrl = mLoadingUrl + "&token=" + AppInfoUtils.getToekn(this);
+        } else {
+            mLoadingUrl = mLoadingUrl + "?token=" + AppInfoUtils.getToekn(this);
+        }
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
@@ -68,14 +74,6 @@ public class WebViewActivity extends BaseActivity {
 
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
-//        if (!b) {
-//            //统计用
-//            if (mLoadingUrl.contains("?")) {
-//                mLoadingUrl = mLoadingUrl + "&equipmentInfo=" + mGson.toJson(mAppEvent) + "&app_ref=" + AppManager.lastSecoundActivityName();
-//            } else {
-//                mLoadingUrl = mLoadingUrl + "?equipmentInfo=" + mGson.toJson(mAppEvent) + "&app_ref=" + AppManager.lastSecoundActivityName();
-//            }
-//        }
         webView.loadUrl(mLoadingUrl);
     }
 

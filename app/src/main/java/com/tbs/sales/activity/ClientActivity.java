@@ -108,9 +108,9 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
                             @Override
                             public void run() {
                                 if (adapter == null) {
-                                    adapter = new ClientViewPagerAdapter(ClientActivity.this,listList);
+                                    adapter = new ClientViewPagerAdapter(ClientActivity.this, listList);
                                     viewpagerClient.setAdapter(adapter);
-                                }else {
+                                } else {
                                     viewpagerClient.notify();
                                 }
                             }
@@ -155,7 +155,7 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
 
     }
 
-    @OnClick({R.id.ciw_my_client, R.id.ciw_public_client, R.id.ciw_invalid_customer, R.id.ciw_follow_up_record,R.id.tv_list,R.id.image_right_side, R.id.ciw_customer_follow_up, R.id.ciw_outbound_statistics})
+    @OnClick({R.id.ciw_my_client, R.id.ciw_public_client, R.id.ciw_invalid_customer, R.id.ciw_follow_up_record, R.id.tv_list, R.id.image_right_side, R.id.ciw_customer_follow_up, R.id.ciw_outbound_statistics})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ciw_my_client:    //我的客户
@@ -163,7 +163,8 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
                 intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_MY);
                 break;
             case R.id.ciw_public_client://公共客户
-
+                intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_COMMON);
                 break;
             case R.id.ciw_invalid_customer://无效客户
                 intent = new Intent(this, WebViewActivity.class);
@@ -181,11 +182,11 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
             case R.id.image_right_side:
                 intent = new Intent(this, WebViewActivity.class);
                 String str = tvList.getText().toString().trim();
-                if (str.equals("成交榜")){
+                if (str.equals("成交榜")) {
                     intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_FINISH);
-                }else if (str.equals("跟进榜")){
+                } else if (str.equals("跟进榜")) {
                     intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_FOLLOW);
-                }else {
+                } else {
                     intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_ADD);
                 }
                 break;
@@ -206,11 +207,11 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
 
-
     @Override
     public void onPageScrollStateChanged(int state) {
 
     }
+
     /**
      * 设置当前选中点
      *

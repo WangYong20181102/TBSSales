@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,17 +17,36 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.tbs.sales.activity.ApplicationActivity;
 import com.tbs.sales.activity.ClientActivity;
 import com.tbs.sales.activity.HomePagerActivity;
 import com.tbs.sales.activity.MineActivity;
 import com.tbs.sales.activity.WebViewActivity;
+import com.tbs.sales.application.MyApplication;
+import com.tbs.sales.bean.Event;
+import com.tbs.sales.bean.LoginSuccessBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.EventBusUtil;
+import com.tbs.sales.utils.OkHttpUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends TabActivity {
 
@@ -56,22 +77,85 @@ public class MainActivity extends TabActivity {
     @BindView(R.id.relative_add)
     RelativeLayout relativeAdd;
     private static TabHost tabHost;
+    private LoginSuccessBean.UserinfoBean successBean;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBusUtil.register(this);
         ButterKnife.bind(this);
+        gson = new Gson();
         initView();
         initData();
+        initGetUserInfo();
+    }
+
+    /**
+     * 初始化用户信息
+     */
+    private void initGetUserInfo() {
+        if (!TextUtils.isEmpty(AppInfoUtils.getId(this))) {   //用户登录
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("token", AppInfoUtils.getToekn(this));
+            OkHttpUtils.post(Constant.USER_GETINFO, params, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String json = Objects.requireNonNull(response.body().string());
+                    try {
+                        JSONObject jsonObject = new JSONObject(json);
+                        String code = jsonObject.optString("code");
+                        if (code.equals("0")) {
+                            successBean = gson.fromJson(jsonObject.optString("data"), LoginSuccessBean.UserinfoBean.class);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    saveUserInfo(successBean);
+                                }
+                            });
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+
+    }
+
+    /**
+     * 保存用户信息
+     *
+     * @param successBean
+     */
+    private void saveUserInfo(LoginSuccessBean.UserinfoBean successBean) {
+        AppInfoUtils.setId(this, successBean.getId());
+        AppInfoUtils.setUserMd5PassWord(this, successBean.getPassword());
+        AppInfoUtils.setUserCity(this, successBean.getCity_id_list());
+        AppInfoUtils.setCellPhone(this, successBean.getPhone());
+        AppInfoUtils.setUserNickname(this, successBean.getReal_name());
+        AppInfoUtils.setUserSex(this, successBean.getSex());
+        AppInfoUtils.setUserIcon(this, successBean.getIcon());
+        AppInfoUtils.setUserRoleDesc(this, successBean.getRole_desc());
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        if (!AppInfoUtils.getFirstLaunch(this)){
-            AppInfoUtils.setFirstLaunch(this,true);
+        //将推送的唯一标识存入本地
+        AppInfoUtils.setPushRegisterId(this, JPushInterface.getRegistrationID(getApplicationContext()));
+        if (!AppInfoUtils.getFirstLaunch(this)) {
+            AppInfoUtils.setFirstLaunch(this, true);
             //获取存储权限
             writerReadSDcard();
         }
@@ -102,6 +186,15 @@ public class MainActivity extends TabActivity {
 
         setActivityPosition(0);
 
+    }
+
+    @Subscribe
+    public void onEventBus(Event event) {
+        switch (event.getCode()) {
+            case EC.EventCode.UPDATE_USERINFO://更新用户信息
+                initGetUserInfo();
+                break;
+        }
     }
 
     @OnClick({R.id.relative_home, R.id.relative_client, R.id.relative_application, R.id.relative_mine, R.id.relative_add})
@@ -247,5 +340,11 @@ public class MainActivity extends TabActivity {
                 requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBusUtil.unregister(this);
     }
 }

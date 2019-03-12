@@ -17,8 +17,10 @@ import android.widget.Toast;
 import com.tbs.sales.R;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.GlideUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.StringUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +60,7 @@ public class MineActivity extends BaseActivity {
     TextView textVersionCode;
     @BindView(R.id.btn_exit_login)
     Button btnExitLogin;
+    private String userIcon = "";   //用户头像
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,8 +75,15 @@ public class MineActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         tvNickname.setText(AppInfoUtils.getUserNickname(this));
-        tvPosition.setText(AppInfoUtils.getUserNickname(this));
+        tvPosition.setText(AppInfoUtils.getUserRoleDesc(this));
         textVersionCode.setText("v" + AppInfoUtils.getAppVersionName(this));
+        userIcon = AppInfoUtils.getUserIcon(this);
+        if (TextUtils.isEmpty(userIcon)) {
+            imageHead.setImageResource(R.mipmap.img_moren);
+        } else {
+            GlideUtils.glideLoader(this, userIcon, imageHead);
+        }
+
     }
 
     @OnClick({R.id.image_head, R.id.relative_change_head, R.id.relative_help_center, R.id.relative_number_safety, R.id.btn_exit_login})
@@ -88,10 +98,14 @@ public class MineActivity extends BaseActivity {
                 }
                 break;
             case R.id.relative_help_center: //帮助中心
-
+                startActivity(new Intent(MineActivity.this, HelpCenterActivity.class));
                 break;
             case R.id.relative_number_safety:   //账号安全
-                startActivity(new Intent(MineActivity.this, AccountSecurityActivity.class));
+                if (TextUtils.isEmpty(AppInfoUtils.getId(this))) {
+                    startActivity(new Intent(MineActivity.this, LoginActivity.class));
+                } else {
+                    startActivity(new Intent(MineActivity.this, AccountSecurityActivity.class));
+                }
                 break;
             case R.id.btn_exit_login:   //退出登录
                 new AlertDialog.Builder(this)
@@ -113,6 +127,7 @@ public class MineActivity extends BaseActivity {
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("token", AppInfoUtils.getToekn(this));
+        params.put("plat", "android");
         OkHttpUtils.post(Constant.LOGIN_DOLOGOUT, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -127,7 +142,7 @@ public class MineActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(MineActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                            ToastUtils.toastShort(MineActivity.this, jsonObject.optString("message"));
                             getSharedPreferences("userInfo", 0).edit().clear().commit();
                             onResume();
                         }

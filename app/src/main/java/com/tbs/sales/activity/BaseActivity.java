@@ -27,7 +27,7 @@ public class BaseActivity extends AppCompatActivity {
      *
      * @return true绑定EventBus事件分发，默认不绑定，子类需要绑定的话复写此方法返回true.
      */
-    protected boolean isRegisterEventBus() {
+    public boolean isRegisterEventBus() {
         return false;
     }
 
@@ -44,7 +44,7 @@ public class BaseActivity extends AppCompatActivity {
      *
      * @param event 事件
      */
-    protected void receiveEvent(Event event) {
+    public void receiveEvent(Event event) {
 
     }
 }

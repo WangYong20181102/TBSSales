@@ -95,6 +95,7 @@
         <activity android:name=".activity.HomeSearchActivity" />
         <activity android:name=".activity.MyMessageActivity" />
         <activity android:name=".activity.NoticeActivity" />
+        <activity android:name=".activity.HelpCenterActivity" />
     </application>
 
 </manifest>

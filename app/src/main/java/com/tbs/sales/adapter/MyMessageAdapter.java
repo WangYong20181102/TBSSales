@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Mr.Wang on 2019/3/1 13:43.
  */
-public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
+public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private List<MyMessageBean> beanList;
     private Context context;
@@ -42,39 +42,64 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.my_message_item, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
-        holder.relativeLookDetail.setOnClickListener(this);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder) {
-            ((MyViewHolder) holder).textTittle.setText(beanList.get(position).getName());
-            ((MyViewHolder) holder).textData.setText(beanList.get(position).getDate());
-            ((MyViewHolder) holder).textContent.setText(beanList.get(position).getContent());
-            ((MyViewHolder) holder).textCity.setText(beanList.get(position).getCity());
-            ((MyViewHolder) holder).textClientId.setText(beanList.get(position).getClientId());
-
-            if (position == 3||position == 8||position == 12||position == 15){
+            switch (beanList.get(position).getNotice_type()) {
+                case 1://新订单推送
+                    ((MyViewHolder) holder).textTittle.setText("订单");
+                    ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_order);
+                    ((MyViewHolder) holder).textClientId.setText("订单号: "+beanList.get(position).getOrder_id());
+                    break;
+                case 10://客户消息
+                    ((MyViewHolder) holder).textTittle.setText("客户");
+                    ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_client);
+                    ((MyViewHolder) holder).textClientId.setText("客户ID: "+beanList.get(position).getCo_id());
+                    break;
+                case 11://审批消息
+                    ((MyViewHolder) holder).textTittle.setText("审批");
+                    ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_approval);
+                    ((MyViewHolder) holder).textClientId.setText("申请人: "+beanList.get(position).getAudit_name());
+                    break;
+                case 12://系统通知
+                    ((MyViewHolder) holder).textTittle.setText(beanList.get(position).getTitle());
+                    ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_notice);
+                    break;
+            }
+            if (beanList.get(position).getNotice_type() == 12) {
                 ((MyViewHolder) holder).linearAction.setVisibility(View.GONE);
                 ((MyViewHolder) holder).textAction.setVisibility(View.VISIBLE);
-                ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_notice);
-            }else {
+                ((MyViewHolder) holder).textAction.setText(beanList.get(position).getContent());
+            } else {
                 ((MyViewHolder) holder).linearAction.setVisibility(View.VISIBLE);
                 ((MyViewHolder) holder).textAction.setVisibility(View.GONE);
-                ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_client);
+                ((MyViewHolder) holder).textContent.setText(beanList.get(position).getTitle());
             }
+            //时间
+            ((MyViewHolder) holder).textData.setText(beanList.get(position).getCreate_time());
+            //城市
+            ((MyViewHolder) holder).textCity.setText("城市: "+beanList.get(position).getCity_name());
+            ((MyViewHolder) holder).relativeLookDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra(MyMessageBean.class.getName(),beanList.get(position));
+                    intent.setClass(context,NoticeActivity.class);
+                    activity.startActivity(intent);
+                }
+            });
+
+
+
         }
     }
 
     @Override
     public int getItemCount() {
         return beanList.size();
-    }
-
-    @Override
-    public void onClick(View v) {
-        activity.startActivity(new Intent(context, NoticeActivity.class));
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

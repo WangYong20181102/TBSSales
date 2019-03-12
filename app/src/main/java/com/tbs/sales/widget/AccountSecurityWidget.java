@@ -105,4 +105,8 @@ public class AccountSecurityWidget extends LinearLayout implements View.OnClickL
                 break;
         }
     }
+
+    public String getText(){
+        return etPassword.getText().toString().trim();
+    }
 }

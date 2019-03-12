@@ -22,7 +22,9 @@ import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.LogUtils;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
@@ -54,7 +56,7 @@ public class HomeMyFragment extends BaseFragment {
     private LinearLayoutManager layoutManager;
     private HomeMineFragmentAdapter adapter;
     private Gson gson;
-    private int mPage = 0;
+    private int mPage = 1;
     private int pageSize = 20;
     private boolean isDownRefresh = false;//是否是下拉刷新
     private List<HomeDataBean.ListBean> beanList;
@@ -127,7 +129,7 @@ public class HomeMyFragment extends BaseFragment {
         params.put("co_type", coType);
         params.put("device", "h5");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
-        OkHttpUtils.post(Constant.SALE_GETCOMLIST, params, new Callback() {
+        OkHttpUtils.get(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -145,8 +147,9 @@ public class HomeMyFragment extends BaseFragment {
                 try {
                     final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
+                    LogUtils.logE("==========>>请求成功" + jsonObject.toString());
                     if (code.equals("0")) {
-                        HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
+                        final HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
                         beanList.addAll(dataBean.getList());
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -155,20 +158,25 @@ public class HomeMyFragment extends BaseFragment {
                                     adapter = new HomeMineFragmentAdapter(getActivity(), beanList);
                                     recyclerView.setAdapter(adapter);
                                 }
-                                if (isDownRefresh) {
-                                    isDownRefresh = false;
-                                    recyclerView.scrollToPosition(0);
-                                    adapter.notifyDataSetChanged();
+                                if (dataBean.getList().size() != 0) {
+                                    linearNoData.setVisibility(View.GONE);
+                                    if (isDownRefresh) {
+                                        isDownRefresh = false;
+                                        recyclerView.scrollToPosition(0);
+                                        adapter.notifyDataSetChanged();
+                                    } else {
+                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    }
                                 } else {
-                                    adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    if (mPage != 1) {
+                                        ToastUtils.toastShort(getActivity(), "暂无更多数据");
+                                    }
                                 }
-
-//                                if (beanList.size() == 0){
-//                                    linearNoData.setVisibility(View.VISIBLE);
-//                                }else {
-//                                    linearNoData.setVisibility(View.GONE);
-//                                }
-//
+                                if (beanList.size() == 0) {
+                                    linearNoData.setVisibility(View.VISIBLE);
+                                } else {
+                                    linearNoData.setVisibility(View.GONE);
+                                }
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });
@@ -177,15 +185,21 @@ public class HomeMyFragment extends BaseFragment {
                             @Override
                             public void run() {
                                 getActivity().getSharedPreferences("userInfo", 0).edit().clear().commit();
-                                Toast.makeText(getActivity(), jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                                ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
                                 swipeRefreshLayout.setRefreshing(false);
+                                //主要用于显示搜索框
+                                if (adapter == null) {
+                                    adapter = new HomeMineFragmentAdapter(getActivity(), beanList);
+                                    recyclerView.setAdapter(adapter);
+                                }
                             }
                         });
                     } else {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(), jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                                getActivity().getSharedPreferences("userInfo", 0).edit().clear().commit();
+                                ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });
@@ -233,41 +247,6 @@ public class HomeMyFragment extends BaseFragment {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
         swipeRefreshLayout.setOnRefreshListener(swipeLister);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
-
-        //计算recycleView滑动距离
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();//获取LayoutManager
-                //找到即将移出屏幕Item的position,position是移出屏幕item的数量
-                int firstPosition = ((LinearLayoutManager) manager).findFirstVisibleItemPosition();
-                //根据position找到这个Item
-                View firstVisiableChildView = manager.findViewByPosition(firstPosition);
-                //获取Item的高
-                int itemHeight = firstVisiableChildView.getHeight();
-                //算出该Item还未移出屏幕的高度
-                int itemTop = firstVisiableChildView.getTop();
-                //position移出屏幕的数量*高度得出移动的距离
-                int iposition = firstPosition * itemHeight;
-                //减去该Item还未移出屏幕的部分可得出滑动的距离
-                int iResult = iposition - itemTop;
-                if (adapter != null) {
-                    int tittleHeight = adapter.getTittleHeight();
-                    if (iResult > tittleHeight + 50) {
-                        if (onLineShowHint != null) {
-                            onLineShowHint.onLineShowHint(true);
-                        }
-                    } else if (iResult < tittleHeight + 50) {
-                        if (onLineShowHint != null) {
-                            onLineShowHint.onLineShowHint(false);
-                        }
-                    }
-                }
-
-            }
-        });
-
     }
 
 
@@ -289,6 +268,33 @@ public class HomeMyFragment extends BaseFragment {
                     LoadMore();
                 }
             }
+            RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();//获取LayoutManager
+            //找到即将移出屏幕Item的position,position是移出屏幕item的数量
+            int firstPosition = ((LinearLayoutManager) manager).findFirstVisibleItemPosition();
+            //根据position找到这个Item
+            View firstVisiableChildView = manager.findViewByPosition(firstPosition);
+            //获取Item的高
+            int itemHeight = firstVisiableChildView.getHeight();
+            //算出该Item还未移出屏幕的高度
+            int itemTop = firstVisiableChildView.getTop();
+            //position移出屏幕的数量*高度得出移动的距离
+            int iposition = firstPosition * itemHeight;
+            //减去该Item还未移出屏幕的部分可得出滑动的距离
+            int iResult = iposition - itemTop;
+            if (adapter != null) {
+                int tittleHeight = adapter.getTittleHeight();
+                if (iResult > tittleHeight + 50) {
+                    if (onLineShowHint != null) {
+                        onLineShowHint.onLineShowHint(true);
+                    }
+                } else if (iResult < tittleHeight + 50) {
+                    if (onLineShowHint != null) {
+                        onLineShowHint.onLineShowHint(false);
+                    }
+                }
+            }
+
+
         }
     };
 

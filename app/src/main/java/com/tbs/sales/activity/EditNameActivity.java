@@ -9,12 +9,29 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tbs.sales.R;
+import com.tbs.sales.bean.Event;
+import com.tbs.sales.constant.Constant;
+import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.EventBusUtil;
+import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/2/21 15:03.
@@ -49,9 +66,9 @@ public class EditNameActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s.toString().trim())){
+                if (!TextUtils.isEmpty(s.toString().trim())) {
                     imageUsernameDel.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     imageUsernameDel.setVisibility(View.GONE);
                 }
             }
@@ -63,17 +80,69 @@ public class EditNameActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.tv_cancle, R.id.tv_sure,R.id.image_username_del})
+    @OnClick({R.id.tv_cancle, R.id.tv_sure, R.id.image_username_del})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_cancle:    //取消
                 finish();
                 break;
             case R.id.tv_sure:
+                if (TextUtils.isEmpty(etNickname.getText().toString().trim())) {
+                    Toast.makeText(this, "请输入昵称", Toast.LENGTH_SHORT).show();
+                } else {
+//                    initHttpRequest();
+                    EventBusUtil.sendEvent(new Event(EC.EventCode.CHANGE_USERNAME, etNickname.getText().toString().trim()));
+                    finish();
+                }
                 break;
             case R.id.image_username_del:   //清除
                 etNickname.setText("");
                 break;
         }
+    }
+
+    /**
+     * 更改姓名
+     */
+    private void initHttpRequest() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(this));
+        params.put("field", "real_name");
+        params.put("value", etNickname.getText().toString().trim());
+        OkHttpUtils.post(Constant.USER_EDITACCOUNTALONE, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    final JSONObject jsonObject = new JSONObject(json);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_USERINFO));
+                                ToastUtils.toastShort(EditNameActivity.this, jsonObject.optString("message"));
+                                finish();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(EditNameActivity.this, jsonObject.optString("message"));
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 }

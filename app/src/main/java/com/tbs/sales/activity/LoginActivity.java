@@ -24,6 +24,7 @@ import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +36,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -127,11 +129,11 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.btn_login:    //登录
                 if (TextUtils.isEmpty(editUsername.getText().toString().trim())) {
-                    Toast.makeText(this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+                    ToastUtils.toastShort(this, "用户名不能为空");
                     return;
                 }
                 if (TextUtils.isEmpty(editPassword.getText().toString().trim())) {
-                    Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+                    ToastUtils.toastShort(this, "密码不能为空");
                     return;
                 }
 
@@ -148,6 +150,8 @@ public class LoginActivity extends BaseActivity {
         HashMap<String, Object> params = new HashMap<>();
         params.put("username", editUsername.getText().toString().trim());
         params.put("password", editPassword.getText().toString().trim());
+        params.put("plat", "android");
+        params.put("device_id", AppInfoUtils.getPushRegisterId(this));
         OkHttpUtils.post(Constant.LOGIN_DOLOGIN, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -159,7 +163,7 @@ public class LoginActivity extends BaseActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String json = Objects.requireNonNull(response.body().string());
                 try {
-                    JSONObject jsonObject = new JSONObject(json);
+                    final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
                     if (code.equals("0")) {
                         successBean = gson.fromJson(jsonObject.optString("data"), LoginSuccessBean.class);
@@ -171,6 +175,13 @@ public class LoginActivity extends BaseActivity {
                             }
                         });
 
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(LoginActivity.this, jsonObject.optString("message"));
+                            }
+                        });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -190,10 +201,15 @@ public class LoginActivity extends BaseActivity {
         AppInfoUtils.setToken(this, successBean.getToken());
         AppInfoUtils.setUserMd5PassWord(this, successBean.getUserinfo().getPassword());
         AppInfoUtils.setUserCity(this, successBean.getUserinfo().getCity_id_list());
+        AppInfoUtils.setCellPhone(this, successBean.getUserinfo().getPhone());
         AppInfoUtils.setUserNickname(this, successBean.getUserinfo().getReal_name());
+        AppInfoUtils.setUserSex(this, successBean.getUserinfo().getSex());
+        AppInfoUtils.setUserIcon(this, successBean.getUserinfo().getIcon());
+        AppInfoUtils.setUserRoleDesc(this, successBean.getUserinfo().getRole_desc());
         EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_HOME_DATA));
         this.finish();
     }
+
     /**
      * 隐藏系统键盘
      */

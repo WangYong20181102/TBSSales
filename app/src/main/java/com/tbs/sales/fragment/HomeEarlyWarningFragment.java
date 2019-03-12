@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.tbs.sales.R;
+import com.tbs.sales.activity.MineActivity;
 import com.tbs.sales.adapter.HomeEarlyWarningFragmentAdapter;
 import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.HomeDataBean;
@@ -23,6 +24,7 @@ import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
@@ -55,7 +57,7 @@ public class HomeEarlyWarningFragment extends BaseFragment {
     private LinearLayoutManager layoutManager;
     private HomeEarlyWarningFragmentAdapter adapter;
     private Gson gson;
-    private int mPage = 0;
+    private int mPage = 1;
     private int pageSize = 20;
     private boolean isDownRefresh = false;//是否是下拉刷新
     private List<HomeDataBean.ListBean> beanList;
@@ -84,7 +86,7 @@ public class HomeEarlyWarningFragment extends BaseFragment {
         params.put("plat", "mm");
         params.put("device", "h5");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
-        OkHttpUtils.post(Constant.SALE_GETCOMLIST, params, new Callback() {
+        OkHttpUtils.get(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -103,7 +105,7 @@ public class HomeEarlyWarningFragment extends BaseFragment {
                     final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
                     if (code.equals("0")) {
-                        HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
+                        final HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
                         beanList.addAll(dataBean.getList());
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -112,12 +114,23 @@ public class HomeEarlyWarningFragment extends BaseFragment {
                                     adapter = new HomeEarlyWarningFragmentAdapter(getActivity(), beanList);
                                     recyclerView.setAdapter(adapter);
                                 }
-                                if (isDownRefresh) {
-                                    isDownRefresh = false;
-                                    recyclerView.scrollToPosition(0);
-                                    adapter.notifyDataSetChanged();
+                                if (dataBean.getList().size() != 0) {
+                                    if (isDownRefresh) {
+                                        isDownRefresh = false;
+                                        recyclerView.scrollToPosition(0);
+                                        adapter.notifyDataSetChanged();
+                                    } else {
+                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    }
                                 } else {
-                                    adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    if (mPage != 1) {
+                                        ToastUtils.toastShort(getActivity(), "暂无更多数据");
+                                    }
+                                }
+                                if (beanList.size() == 0) {
+                                    linearNoData.setVisibility(View.VISIBLE);
+                                } else {
+                                    linearNoData.setVisibility(View.GONE);
                                 }
                                 swipeRefreshLayout.setRefreshing(false);
                             }
@@ -126,7 +139,7 @@ public class HomeEarlyWarningFragment extends BaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(), jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                                ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });

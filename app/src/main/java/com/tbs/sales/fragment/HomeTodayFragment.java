@@ -23,6 +23,7 @@ import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
@@ -54,7 +55,7 @@ public class HomeTodayFragment extends BaseFragment {
     private LinearLayoutManager layoutManager;
     private HomeTodayFragmentAdapter adapter;
     private Gson gson;
-    private int mPage = 0;
+    private int mPage = 1;
     private int pageSize = 20;
     private boolean isDownRefresh = false;//是否是下拉刷新
     private List<HomeDataBean.ListBean> beanList;
@@ -99,7 +100,7 @@ public class HomeTodayFragment extends BaseFragment {
         params.put("co_type", "-1");
         params.put("device", "h5");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
-        OkHttpUtils.post(Constant.SALE_GETCOMLIST, params, new Callback() {
+        OkHttpUtils.get(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {
@@ -118,7 +119,7 @@ public class HomeTodayFragment extends BaseFragment {
                     final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
                     if (code.equals("0")) {
-                        HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
+                        final HomeDataBean dataBean = gson.fromJson(jsonObject.optString("data"), HomeDataBean.class);
                         beanList.addAll(dataBean.getList());
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -127,12 +128,23 @@ public class HomeTodayFragment extends BaseFragment {
                                     adapter = new HomeTodayFragmentAdapter(getActivity(), beanList);
                                     recyclerView.setAdapter(adapter);
                                 }
-                                if (isDownRefresh) {
-                                    isDownRefresh = false;
-                                    recyclerView.scrollToPosition(0);
-                                    adapter.notifyDataSetChanged();
+                                if (dataBean.getList().size() != 0) {
+                                    if (isDownRefresh) {
+                                        isDownRefresh = false;
+                                        recyclerView.scrollToPosition(0);
+                                        adapter.notifyDataSetChanged();
+                                    } else {
+                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    }
                                 } else {
-                                    adapter.notifyItemInserted(beanList.size() - pageSize);
+                                    if (mPage != 1) {
+                                        Toast.makeText(getActivity(), "暂无更多数据", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                if (beanList.size() == 0) {
+                                    linearNoData.setVisibility(View.VISIBLE);
+                                } else {
+                                    linearNoData.setVisibility(View.GONE);
                                 }
                                 swipeRefreshLayout.setRefreshing(false);
                             }
@@ -141,7 +153,7 @@ public class HomeTodayFragment extends BaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(), jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                                ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });
