@@ -83,8 +83,7 @@ public class HomeEarlyWarningFragment extends BaseFragment {
         params.put("page_size", pageSize);
         params.put("list_type", "warn");
         params.put("co_type", "-1");
-        params.put("plat", "mm");
-        params.put("device", "h5");
+        params.put("plat", "android");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
         OkHttpUtils.get(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override

@@ -20,7 +20,7 @@ import android.widget.ListView;
 
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.CityMessageAdapter;
-import com.tbs.sales.bean.CityListBean;
+import com.tbs.sales.bean.CityBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
     private CityMessageAdapter adapter;
     private static DialogUtils dialogUtils = null;
     private Dialog dialog;
-    private List<CityListBean> listResult;
+    private List<CityBean> listResult;
     private OnCityResultListener onCityResultListener = null;
     private Activity activity;
     private LinearLayout linearLayout;
@@ -61,7 +61,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
      * @param listCity
      * @return
      */
-    public Dialog showCityMessage(Context context, final List<CityListBean> listCity) {
+    public Dialog showCityMessage(Context context, final List<CityBean> listCity) {
         activity = (Activity) context;
         adapter = new CityMessageAdapter(context, listCity);
         listResult = new ArrayList<>();
@@ -84,7 +84,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         editCityMessage.addTextChangedListener(this);
         adapter.setListener(new CityMessageAdapter.FilterListener() {
             @Override
-            public void getFilterData(List<CityListBean> list) {
+            public void getFilterData(List<CityBean> list) {
                 listResult = list;
             }
         });
@@ -159,7 +159,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
 
 
     public interface OnCityResultListener {
-        void onCityResult(CityListBean city);
+        void onCityResult(CityBean city);
     }
 
     public void setOnCityResultListener(OnCityResultListener onCityResultListener) {

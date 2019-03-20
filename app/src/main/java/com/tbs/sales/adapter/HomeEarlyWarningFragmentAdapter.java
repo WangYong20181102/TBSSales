@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,6 +17,9 @@ import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Mr.Wang on 2019/2/27 15:19.
@@ -45,17 +49,21 @@ public class HomeEarlyWarningFragmentAdapter extends RecyclerView.Adapter<Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof HomeEarlyWarningFragmentAdapter.MyViewHolder2) {
+        if (holder instanceof MyViewHolder2) {
             //公司名称
             ((MyViewHolder2) holder).textCompanyName.setText(beanList.get(position - 1).getCo_name());
             //右侧信息
-            ((MyViewHolder2) holder).textRemarks.setText(beanList.get(position - 1).getCo_type_name());
+            ((MyViewHolder2) holder).textRemarks.setText(beanList.get(position - 1).getWarn_state_desc());
             //id
             ((MyViewHolder2) holder).textId.setText(beanList.get(position - 1).getCo_id() + "");
             //姓名
-            ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName());
-            //地址
-            ((MyViewHolder2) holder).textEarlyWarning.setText(beanList.get(position - 1).getWarn_state_desc());
+            if (beanList.get(position - 1).getSex() == 2) { //女
+                ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName() + "(女)");
+            } else {
+                ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName() + "(男)");
+            }
+            //预警
+            ((MyViewHolder2) holder).textEarlyWarning.setText(beanList.get(position - 1).getFm_warn_time());
             ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,22 +97,23 @@ public class HomeEarlyWarningFragmentAdapter extends RecyclerView.Adapter<Recycl
         }
     }
 
-    private class MyViewHolder2 extends RecyclerView.ViewHolder {
-        private TextView textCompanyName;   //公司名称
-        private TextView textRemarks;//标注
-        private TextView textId;//id
-        private TextView textUserName;//姓名
-        private TextView textEarlyWarning;//预警
-        private LinearLayout linearClick;
+    public class MyViewHolder2 extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_company_name)
+        TextView textCompanyName;
+        @BindView(R.id.text_remarks)
+        TextView textRemarks;
+        @BindView(R.id.text_id)
+        TextView textId;
+        @BindView(R.id.text_user_name)
+        TextView textUserName;
+        @BindView(R.id.text_early_warning)
+        TextView textEarlyWarning;
+        @BindView(R.id.linear_click)
+        LinearLayout linearClick;
 
         public MyViewHolder2(View itemView) {
             super(itemView);
-            textEarlyWarning = itemView.findViewById(R.id.text_early_warning);
-            textCompanyName = itemView.findViewById(R.id.text_company_name);
-            textRemarks = itemView.findViewById(R.id.text_remarks);
-            textId = itemView.findViewById(R.id.text_id);
-            textUserName = itemView.findViewById(R.id.text_user_name);
-            linearClick = itemView.findViewById(R.id.linear_click);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

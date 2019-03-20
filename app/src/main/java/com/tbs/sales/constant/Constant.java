@@ -4,6 +4,15 @@ package com.tbs.sales.constant;
  * Created by Mr.Wang on 2019/2/20 16:36.
  */
 public class Constant {
+
+
+    /**
+     * 正式环境
+     */
+//    public static final String HTTP_URL = "http://bip.tobosu.cn";
+//    public static final String HTTP_URL_H5 = "http://m.tobosu.com";
+
+
     /**
      * 测试环境
      */
@@ -27,32 +36,32 @@ public class Constant {
 
     /*****************************************************     应用     ****************************************************************/
     //待分单
-    public static final String WXDISTRIBUTE_WAIT = HTTP_URL_H5 + "/wxdistribute/#/wait";
+    public static final String WXDISTRIBUTE_WAIT = HTTP_URL_H5 + "/wxdistribute#/order/wait";
     //已分单
-    public static final String WXDISTRIBUTE_ALREADY = HTTP_URL_H5 + "/wxdistribute/#/already";
+    public static final String WXDISTRIBUTE_ALREADY = HTTP_URL_H5 + "/wxdistribute#/order/already";
     //撤单
-    public static final String WXDISTRIBUTE_REVOKE = HTTP_URL_H5 + "/wxdistribute/#/revoke";
+    public static final String WXDISTRIBUTE_REVOKE = HTTP_URL_H5 + "/wxdistribute#/order/revoke";
     //合同报备
-    public static final String WXDISTRIBUTE_CONTRACT = HTTP_URL_H5 + "/wxdistribute/#/business/contract";
-    //收款报备
-    public static final String WXDISTRIBUTE_RECEIPT = HTTP_URL_H5 + "/wxdistribute/#/business/receipt";
+    public static final String WXDISTRIBUTE_CONTRACT = HTTP_URL_H5 + "/wxdistribute#/business/contract";
+    //续费充值
+    public static final String WXDISTRIBUTE_RECEIPT = HTTP_URL_H5 + "/wxdistribute#/business/receipt";
     //审批
-    public static final String WXDISTRIBUTE_APPROVE = HTTP_URL_H5 + "/wxdistribute/#/business/approve";
+    public static final String WXDISTRIBUTE_APPROVE = HTTP_URL_H5 + "/wxdistribute#/business/approve";
     //计算器
-    public static final String WXDISTRIBUTE_COMPUTE = HTTP_URL_H5 + "/wxdistribute/#/tool/compute";
+    public static final String WXDISTRIBUTE_COMPUTE = HTTP_URL_H5 + "/wxdistribute#/tool/compute";
     /*****************************************************     客户     ****************************************************************/
     //我的客户
     public static final String WXDISTRIBUTE_CUSTOMER_MY = HTTP_URL_H5 + "/wxdistribute/#/customer/my";
-    //公共客户
-    public static final String WXDISTRIBUTE_CUSTOMER_COMMON = HTTP_URL_H5 + "/wxdistribute#/customer/common";
+    //综合查询
+    public static final String WXDISTRIBUTE_CUSTOMER_COMMON = HTTP_URL_H5 + "/wxdistribute/#/customer/scan";
     //无效客户
     public static final String WXDISTRIBUTE_CUSTOMER_INVALID = HTTP_URL_H5 + "/wxdistribute/#/customer/invalid";
     //跟进记录
     public static final String WXDISTRIBUTE_CUSTOMER_FOLLOW = HTTP_URL_H5 + "/wxdistribute/#/customer/follow";
-    //客户跟进
-//    public static final String WXDISTRIBUTE_customer_my = HTTP_URL_H5 + "/wxdistribute/#/customer/my";
+    //数据概览
+    public static final String WXDISTRIBUTE_CALL_FOLLOW = HTTP_URL_H5 + "/wxdistribute/#/customer/count";
     //外呼统计
-//    public static final String WXDISTRIBUTE_customer_my = HTTP_URL_H5 + "/wxdistribute/#/customer/my";
+    public static final String WXDISTRIBUTE_CUSTOMER_CALL_COM = HTTP_URL_H5 + "/wxdistribute#/customer/count/call?type=call_com";
     //排行榜
     public static final String STATS_GETSTATSINDEX = HTTP_URL + "/api/stats/getStatsIndex";
 
@@ -86,6 +95,8 @@ public class Constant {
     public static final String USER_GETINFO = HTTP_URL + "/api/user/getinfo";
     //我的消息
     public static final String PUSH_RECORD = HTTP_URL + "/api/push/record";
+    //获取城市信息
+    public static final String USER_GETUSERCITYLIST = HTTP_URL + "/api/user/getusercitylist";
 
 
 }

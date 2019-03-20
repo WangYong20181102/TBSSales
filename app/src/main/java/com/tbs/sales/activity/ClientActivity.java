@@ -1,24 +1,33 @@
 package com.tbs.sales.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.tbs.sales.MainActivity;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.ClientViewPagerAdapter;
 import com.tbs.sales.bean.ClientLeaderboardBean;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.constant.Constant;
+import com.tbs.sales.manager.AppManager;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.DateTimeUtils;
+import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 import com.tbs.sales.widget.ClientItemWidget;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,8 +66,8 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
     ClientItemWidget ciwFollowUpRecord;
     @BindView(R.id.ciw_customer_follow_up)
     ClientItemWidget ciwCustomerFollowUp;
-    @BindView(R.id.ciw_outbound_statistics)
-    ClientItemWidget ciwOutboundStatistics;
+    //    @BindView(R.id.ciw_outbound_statistics)
+//    ClientItemWidget ciwOutboundStatistics;
     @BindView(R.id.viewpager_client)
     ViewPager viewpagerClient;
     @BindView(R.id.linear_point)
@@ -80,6 +89,26 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
         initNetWork();
     }
 
+    @Subscribe
+    @Override
+    public boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Subscribe
+    @Override
+    public void receiveEvent(Event event) {
+        super.receiveEvent(event);
+        switch (event.getCode()) {
+            case EC.EventCode.UPDATE_CLIENT_DATA:
+                if (listList != null) {
+                    listList.clear();
+                }
+                initNetWork();
+                break;
+        }
+    }
+
     /**
      * 初始化网络请求
      */
@@ -88,7 +117,7 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
         params.put("area_id", "-1");
         params.put("time", time);
         params.put("token", AppInfoUtils.getToekn(this));
-        params.put("device", "h5");
+        params.put("plat", "android");
         OkHttpUtils.post(Constant.STATS_GETSTATSINDEX, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -99,7 +128,7 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
             public void onResponse(Call call, Response response) throws IOException {
                 String json = new String(response.body().string());
                 try {
-                    JSONObject jsonObject = new JSONObject(json);
+                    final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
                     if (code.equals("0")) {
                         JSONObject jsonObject1 = jsonObject.getJSONObject("data");
@@ -111,8 +140,15 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
                                     adapter = new ClientViewPagerAdapter(ClientActivity.this, listList);
                                     viewpagerClient.setAdapter(adapter);
                                 } else {
-                                    viewpagerClient.notify();
+                                    adapter.notifyDataSetChanged();
                                 }
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(ClientActivity.this, jsonObject.optString("message"));
                             }
                         });
                     }
@@ -135,7 +171,8 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
             view.setBackgroundResource(R.drawable.unselect_point);
             //为view对象设置容器
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(20, 20);
-            params.leftMargin = 26;
+            params.leftMargin = 13;
+            params.rightMargin = 13;
             view.setLayoutParams(params);
             linearPoint.addView(view);
         }
@@ -155,14 +192,14 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
 
     }
 
-    @OnClick({R.id.ciw_my_client, R.id.ciw_public_client, R.id.ciw_invalid_customer, R.id.ciw_follow_up_record, R.id.tv_list, R.id.image_right_side, R.id.ciw_customer_follow_up, R.id.ciw_outbound_statistics})
+    @OnClick({R.id.ciw_my_client, R.id.ciw_public_client, R.id.ciw_invalid_customer, R.id.ciw_follow_up_record, R.id.tv_list, R.id.image_right_side, R.id.ciw_customer_follow_up})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ciw_my_client:    //我的客户
                 intent = new Intent(this, WebViewActivity.class);
                 intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_MY);
                 break;
-            case R.id.ciw_public_client://公共客户
+            case R.id.ciw_public_client://综合查询
                 intent = new Intent(this, WebViewActivity.class);
                 intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_COMMON);
                 break;
@@ -174,10 +211,14 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
                 intent = new Intent(this, WebViewActivity.class);
                 intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_FOLLOW);
                 break;
-            case R.id.ciw_customer_follow_up://客户跟进
+            case R.id.ciw_customer_follow_up://数据概览
+                intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CALL_FOLLOW);
                 break;
-            case R.id.ciw_outbound_statistics://外呼统计
-                break;
+//            case R.id.ciw_outbound_statistics://外呼统计
+//                intent = new Intent(this, WebViewActivity.class);
+//                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_CALL_COM);
+//                break;
             case R.id.tv_list:  //榜单详情页
             case R.id.image_right_side:
                 intent = new Intent(this, WebViewActivity.class);
@@ -233,5 +274,22 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
                 tvList.setText("新增榜");
                 break;
         }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            new AlertDialog.Builder(this)
+                    .setMessage("确定要退出吗？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AppManager.getInstances().AppExit(ClientActivity.this);
+                        }
+                    })
+                    .setNegativeButton("再看看", null).show();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

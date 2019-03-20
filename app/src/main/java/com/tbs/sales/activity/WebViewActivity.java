@@ -56,11 +56,6 @@ public class WebViewActivity extends BaseActivity {
         mIntent = getIntent();
         newWebviewBannerRl.setBackgroundColor(Color.parseColor("#ffffff"));
         mLoadingUrl = mIntent.getStringExtra("mLoadingUrl");
-        if (mLoadingUrl.contains("?")) {
-            mLoadingUrl = mLoadingUrl + "&token=" + AppInfoUtils.getToekn(this);
-        } else {
-            mLoadingUrl = mLoadingUrl + "?token=" + AppInfoUtils.getToekn(this);
-        }
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
@@ -71,6 +66,11 @@ public class WebViewActivity extends BaseActivity {
         webView.getSettings().setGeolocationEnabled(true);
         webView.getSettings().setGeolocationEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAppCacheMaxSize(1024 * 1024 * 8);
+        String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
+        webView.getSettings().setAppCachePath(appCachePath);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
 
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
@@ -83,7 +83,29 @@ public class WebViewActivity extends BaseActivity {
             view.loadUrl(url);
             return true;
         }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            writeData();
+        }
     };
+
+
+    private void writeData() {
+        String key = "token";
+        String val = AppInfoUtils.getToekn(this);
+        String key2 = "user_id";
+        String val2 = AppInfoUtils.getId(this);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("window.localStorage.setItem('" + key + "','" + val + "');", null);
+            webView.evaluateJavascript("window.localStorage.setItem('" + key2 + "','" + val2 + "');", null);
+        } else {
+            webView.loadUrl("javascript:localStorage.setItem('" + key + "','" + val + "');");
+            webView.loadUrl("javascript:localStorage.setItem('" + key2 + "','" + val2 + "');");
+        }
+    }
+
     private WebChromeClient webChromeClient = new WebChromeClient() {
         @Override
         public void onReceivedTitle(WebView view, String title) {
@@ -123,4 +145,5 @@ public class WebViewActivity extends BaseActivity {
                 break;
         }
     }
+
 }

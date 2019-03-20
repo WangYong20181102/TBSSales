@@ -57,6 +57,12 @@ public class EditPhoneActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        String phone = AppInfoUtils.getCellPhone(this);
+        etPhoneNumber.setText(phone);
+        etPhoneNumber.setSelection(phone.length());
+        if (!TextUtils.isEmpty(phone)) {
+            imageUsernameDel.setVisibility(View.VISIBLE);
+        }
         etPhoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -89,8 +95,7 @@ public class EditPhoneActivity extends BaseActivity {
                 if (TextUtils.isEmpty(etPhoneNumber.getText().toString().trim())) {
                     Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
                 } else {
-//                    initHttpRequest();
-                    EventBusUtil.sendEvent(new Event(EC.EventCode.CHANGE_PHONE,etPhoneNumber.getText().toString().trim()));
+                    EventBusUtil.sendEvent(new Event(EC.EventCode.CHANGE_PHONE, etPhoneNumber.getText().toString().trim()));
                     finish();
                 }
                 break;
@@ -98,50 +103,5 @@ public class EditPhoneActivity extends BaseActivity {
                 etPhoneNumber.setText("");
                 break;
         }
-    }
-
-    /**
-     * 更改用户手机号
-     */
-    private void initHttpRequest() {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("token", AppInfoUtils.getToekn(this));
-        params.put("field", "phone");
-        params.put("value", etPhoneNumber.getText().toString().trim());
-        OkHttpUtils.post(Constant.USER_EDITACCOUNTALONE, params, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
-                try {
-                    final JSONObject jsonObject = new JSONObject(json);
-                    String code = jsonObject.optString("code");
-                    if (code.equals("0")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_USERINFO));
-                                Toast.makeText(EditPhoneActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        });
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(EditPhoneActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
     }
 }

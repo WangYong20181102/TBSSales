@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
-import com.tbs.sales.bean.CityListBean;
+import com.tbs.sales.bean.CityBean;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ import java.util.List;
  */
 public class FilterCityAdapter extends BaseAdapter {
     private Context context;
-    private List<CityListBean> listCity;
+    private List<CityBean> listCity;
     private int selectPosition;
 
-    public FilterCityAdapter(Context context, List<CityListBean> listCity, int selectPosition) {
+    public FilterCityAdapter(Context context, List<CityBean> listCity, int selectPosition) {
         this.context = context;
         this.listCity = listCity;
         this.selectPosition = selectPosition;
@@ -62,10 +62,10 @@ public class FilterCityAdapter extends BaseAdapter {
             if (position == 5) {
                 holder.BtntextView.setText("更多");
             } else {
-                holder.BtntextView.setText(listCity.get(position).getNm());
+                holder.BtntextView.setText(listCity.get(position).getName());
             }
         } else {
-            holder.BtntextView.setText(listCity.get(position).getNm());
+            holder.BtntextView.setText(listCity.get(position).getName());
         }
         if (position == selectPosition) {
             holder.BtntextView.setTextColor(Color.parseColor("#ffffff"));
@@ -88,7 +88,7 @@ public class FilterCityAdapter extends BaseAdapter {
      * 登录成功更改
      * @param changeCityData
      */
-    public void setChangeCityData(List<CityListBean> changeCityData) {
+    public void setChangeCityData(List<CityBean> changeCityData) {
         listCity = changeCityData;
     }
 
@@ -107,7 +107,7 @@ public class FilterCityAdapter extends BaseAdapter {
     /**
      * 改变集合数据位置
      */
-    public void changeCityMessage(List<CityListBean> listCity, int position){
+    public void changeCityMessage(List<CityBean> listCity, int position){
         this.listCity = listCity;
         selectPosition = position;
     }

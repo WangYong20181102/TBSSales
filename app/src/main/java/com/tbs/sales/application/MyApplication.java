@@ -2,6 +2,8 @@ package com.tbs.sales.application;
 
 import android.app.Application;
 
+import com.tbs.sales.utils.AppInfoUtils;
+
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -14,5 +16,7 @@ public class MyApplication extends Application {
         //极光推送
         JPushInterface.init(this);
         JPushInterface.setDebugMode(true);
+        //将推送的唯一标识存入本地
+        AppInfoUtils.setPushRegisterId(this, JPushInterface.getRegistrationID(getApplicationContext()));
     }
 }

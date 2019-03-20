@@ -1,5 +1,6 @@
 package com.tbs.sales.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.tbs.sales.R;
+import com.tbs.sales.activity.LoginActivity;
 import com.tbs.sales.adapter.HomeMineFragmentAdapter;
 import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.HomeDataBean;
@@ -71,7 +73,6 @@ public class HomeMyFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         gson = new Gson();
         initView();
-        initData();
         initHttpRequest();
         return view;
     }
@@ -120,14 +121,13 @@ public class HomeMyFragment extends BaseFragment {
      */
     private void initHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
+        params.put("plat", "android");
+        params.put("time_range", timeRange.trim());
         params.put("page", mPage);
-        params.put("plat", "mm");
         params.put("page_size", pageSize);
-        params.put("list_type", "all");
+        params.put("list_type", "my");
         params.put("city", city);
-        params.put("time_range", timeRange);
         params.put("co_type", coType);
-        params.put("device", "h5");
         params.put("token", AppInfoUtils.getToekn(getActivity()));
         OkHttpUtils.get(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
@@ -184,8 +184,12 @@ public class HomeMyFragment extends BaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                getActivity().getSharedPreferences("userInfo", 0).edit().clear().commit();
-                                ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
+                                if (jsonObject.optString("message").contains("没有登录")) {
+                                    getActivity().getSharedPreferences("userInfo", 0).edit().clear().commit();
+                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                                } else {
+                                    ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
+                                }
                                 swipeRefreshLayout.setRefreshing(false);
                                 //主要用于显示搜索框
                                 if (adapter == null) {
@@ -198,8 +202,12 @@ public class HomeMyFragment extends BaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                getActivity().getSharedPreferences("userInfo", 0).edit().clear().commit();
-                                ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
+                                if (jsonObject.optString("message").contains("没有登录")) {
+                                    getActivity().getSharedPreferences("userInfo", 0).edit().clear().commit();
+                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                                } else {
+                                    ToastUtils.toastShort(getActivity(), jsonObject.optString("message"));
+                                }
                                 swipeRefreshLayout.setRefreshing(false);
                             }
                         });
@@ -268,6 +276,11 @@ public class HomeMyFragment extends BaseFragment {
                     LoadMore();
                 }
             }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
             RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();//获取LayoutManager
             //找到即将移出屏幕Item的position,position是移出屏幕item的数量
             int firstPosition = ((LinearLayoutManager) manager).findFirstVisibleItemPosition();
@@ -283,18 +296,16 @@ public class HomeMyFragment extends BaseFragment {
             int iResult = iposition - itemTop;
             if (adapter != null) {
                 int tittleHeight = adapter.getTittleHeight();
-                if (iResult > tittleHeight + 50) {
+                if (iResult > tittleHeight + 42) {
                     if (onLineShowHint != null) {
                         onLineShowHint.onLineShowHint(true);
                     }
-                } else if (iResult < tittleHeight + 50) {
+                } else if (iResult < tittleHeight + 42) {
                     if (onLineShowHint != null) {
                         onLineShowHint.onLineShowHint(false);
                     }
                 }
             }
-
-
         }
     };
 

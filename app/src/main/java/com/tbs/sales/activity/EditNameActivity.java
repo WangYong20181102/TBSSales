@@ -58,6 +58,12 @@ public class EditNameActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        String name = AppInfoUtils.getUserNickname(this);
+        etNickname.setText(name);
+        etNickname.setSelection(name.length());
+        if (!TextUtils.isEmpty(name)){
+            imageUsernameDel.setVisibility(View.VISIBLE);
+        }
         etNickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -90,7 +96,6 @@ public class EditNameActivity extends BaseActivity {
                 if (TextUtils.isEmpty(etNickname.getText().toString().trim())) {
                     Toast.makeText(this, "请输入昵称", Toast.LENGTH_SHORT).show();
                 } else {
-//                    initHttpRequest();
                     EventBusUtil.sendEvent(new Event(EC.EventCode.CHANGE_USERNAME, etNickname.getText().toString().trim()));
                     finish();
                 }
@@ -99,50 +104,5 @@ public class EditNameActivity extends BaseActivity {
                 etNickname.setText("");
                 break;
         }
-    }
-
-    /**
-     * 更改姓名
-     */
-    private void initHttpRequest() {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("token", AppInfoUtils.getToekn(this));
-        params.put("field", "real_name");
-        params.put("value", etNickname.getText().toString().trim());
-        OkHttpUtils.post(Constant.USER_EDITACCOUNTALONE, params, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
-                try {
-                    final JSONObject jsonObject = new JSONObject(json);
-                    String code = jsonObject.optString("code");
-                    if (code.equals("0")) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_USERINFO));
-                                ToastUtils.toastShort(EditNameActivity.this, jsonObject.optString("message"));
-                                finish();
-                            }
-                        });
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ToastUtils.toastShort(EditNameActivity.this, jsonObject.optString("message"));
-                            }
-                        });
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
     }
 }

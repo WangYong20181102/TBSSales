@@ -5,9 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+
+import com.tbs.sales.activity.LoginActivity;
+import com.tbs.sales.activity.MyMessageActivity;
+import com.tbs.sales.utils.AppInfoUtils;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -18,6 +23,7 @@ public class MyJpushReceiver extends BroadcastReceiver {
     private static final String TAG = "TalkReceiver";
 
     private NotificationManager nm;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (null == nm) {
@@ -29,6 +35,8 @@ public class MyJpushReceiver extends BroadcastReceiver {
 
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             Log.d(TAG, "JPush 用户注册成功");
+            String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
+            AppInfoUtils.setPushRegisterId(context, regId);
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "接受到推送下来的自定义消息");
@@ -44,7 +52,7 @@ public class MyJpushReceiver extends BroadcastReceiver {
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "用户点击打开了通知");
 
-            openNotification(context,bundle);
+            openNotification(context, bundle);
 
         } else {
             Log.d(TAG, "Unhandled intent - " + intent.getAction());
@@ -55,7 +63,16 @@ public class MyJpushReceiver extends BroadcastReceiver {
         String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
         String content = bundle.getString(JPushInterface.EXTRA_ALERT);
         String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-        Toast.makeText(context,content,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context,content,Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(AppInfoUtils.getId(context))) {
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } else {
+            Intent intent = new Intent(context, MyMessageActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
     }
 
 }

@@ -8,19 +8,17 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.tbs.sales.R;
-import com.tbs.sales.adapter.HomeEarlyWarningFragmentAdapter;
-import com.tbs.sales.adapter.HomeTodayFragmentAdapter;
 import com.tbs.sales.adapter.SearchResultAdapter;
 import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
@@ -46,7 +44,7 @@ import okhttp3.Response;
 /**
  * Created by Mr.Wang on 2019/2/27 15:55.
  */
-public class HomeSearchActivity extends BaseActivity implements TextWatcher {
+public class HomeSearchActivity extends BaseActivity implements TextWatcher, TextView.OnEditorActionListener {
 
     @BindView(R.id.image_search)
     ImageView imageSearch;
@@ -91,7 +89,8 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
         if (!beanList.isEmpty()) {
             beanList.clear();
         }
-        serachHttpRequest();
+        //搜索结果请求
+        searchHttpRequest();
 
     }
 
@@ -99,7 +98,8 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
      * 初始化视图
      */
     private void initView() {
-        editSearch.addTextChangedListener(this);
+        editSearch.addTextChangedListener(this);//内容改变监听
+        editSearch.setOnEditorActionListener(this);//系统软键盘搜索功能
         beanList = new ArrayList<>();
         //recycleView
         layoutManager = new LinearLayoutManager(this);
@@ -124,7 +124,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
     //加载更多数据
     private void LoadMore() {
         mPage++;
-        serachHttpRequest();
+        searchHttpRequest();
     }
 
     @OnClick({R.id.image_search, R.id.image_clear, R.id.text_cancel})
@@ -145,27 +145,23 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
                 if (textCancel.getText().toString().trim().equals("取消")) {
                     finish();
                     hideSystemKeyBroad();
-                } else {
-
                 }
                 break;
         }
     }
 
     /**
-     * 搜索网络请求
+     * 搜索请求
      */
-    private void serachHttpRequest() {
+    private void searchHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("plat", "mm");
+        params.put("plat", "android");
         params.put("list_type", "all");
         params.put("page_size", pageSize);
         params.put("co_type", "-1");
         params.put("page", mPage);
-        params.put("keywords_type", "1");
         params.put("keywords", editSearch.getText().toString().trim());
         params.put("token", AppInfoUtils.getToekn(this));
-        params.put("device", "h5");
         OkHttpUtils.get(Constant.SALE_GETCOMLIST, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -189,7 +185,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
                             @Override
                             public void run() {
                                 recyclerView.setVisibility(View.VISIBLE);
-                                linearCanSearch.setVisibility(View.GONE);
+                                linearCanSearch.setVisibility(View.GONE);   //隐藏可以搜索提示
                                 if (dataBean.getList().size() != 0) {
                                     if (adapter == null) {
                                         adapter = new SearchResultAdapter(HomeSearchActivity.this, beanList);
@@ -197,7 +193,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
                                     } else {
                                         adapter.notifyItemInserted(beanList.size() - pageSize);
                                     }
-                                } else {
+                                } else {//上拉加载无更多信息
                                     if (mPage != 1) {
                                         ToastUtils.toastShort(HomeSearchActivity.this, "暂无更多数据");
                                     }
@@ -235,6 +231,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
             imageClear.setVisibility(View.VISIBLE);
         } else {
             imageClear.setVisibility(View.GONE);
+            linearCanSearch.setVisibility(View.VISIBLE);
         }
     }
 
@@ -248,5 +245,21 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher {
      */
     private void hideSystemKeyBroad() {
         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    //系统软键盘搜索功能
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {  //搜索
+            if (TextUtils.isEmpty(editSearch.getText().toString().trim())) {
+                ToastUtils.toastShort(this, "请输入搜索内容");
+                return true;
+            } else {
+                initData();
+                hideSystemKeyBroad();
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -138,7 +138,7 @@
             android:id="@+id/ciw_public_client"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:left_show_text="公共客户" />
+            app:left_show_text="综合查询" />
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/d1"
@@ -192,17 +192,17 @@
             android:id="@+id/ciw_customer_follow_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:left_show_text="客户跟进" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/d1"
-            android:background="@color/FC_E8E9EB"
-            android:layout_marginLeft="@dimen/d24"/>
-        <com.tbs.sales.widget.ClientItemWidget
-            android:id="@+id/ciw_outbound_statistics"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:left_show_text="外呼统计" />
+            app:left_show_text="数据概览" />
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/d1"-->
+            <!--android:background="@color/FC_E8E9EB"-->
+            <!--android:layout_marginLeft="@dimen/d24"/>-->
+        <!--<com.tbs.sales.widget.ClientItemWidget-->
+            <!--android:id="@+id/ciw_outbound_statistics"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:left_show_text="外呼统计" />-->
 
     </LinearLayout>
 </ScrollView>

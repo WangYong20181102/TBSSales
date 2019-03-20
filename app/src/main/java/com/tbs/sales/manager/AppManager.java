@@ -1,8 +1,12 @@
 package com.tbs.sales.manager;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Build;
+
+import com.tbs.sales.MainActivity;
 
 import java.util.Stack;
 
@@ -29,6 +33,7 @@ public class AppManager {
         }
         activityStack.add(activity);
     }
+
     /**
      * 结束所有Activity
      */
@@ -48,14 +53,67 @@ public class AppManager {
     public void AppExit(Context context) {
         try {
             finishAllActivity();
-            ActivityManager activityMgr = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            activityMgr.restartPackage(context.getPackageName());
-            //友盟统计---->如果开发者调用Process.kill或者System.exit之类的方法杀死进程，
-            //请务必在此之前调用MobclickAgent.onKillProcess(Context context)方法，用来保存统计数据。
-//            MobclickAgent.onKillProcess(context);
-
             System.exit(0);
         } catch (Exception e) {
+        }
+    }
+
+    /**
+     * 判断一个Activity 是否存在
+     *
+     * @param clz
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public boolean isActivityExist(Class<MainActivity> clz) {
+        boolean res;
+        Activity activity = null;
+        for (int i = 0; i < activityStack.size(); i++) {
+            if (clz.equals(activityStack.get(i).getClass())) {
+                activity = activityStack.get(i);
+                break;
+            } else {
+                activity = null;
+            }
+        }
+        if (activity == null) {
+            res = false;
+        } else {
+            if (activity.isFinishing() || activity.isDestroyed()) {
+                res = false;
+            } else {
+                res = true;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 判断一个Activity 是否存在
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public Activity judgeActivityExist(Class<MainActivity> clz) {
+        Activity activity = null;
+        for (int i = 0; i < activityStack.size(); i++) {
+            if (clz.equals(activityStack.get(i).getClass())) {
+                activity = activityStack.get(i);
+                break;
+            } else {
+                activity = null;
+            }
+        }
+        return activity;
+    }
+
+    /**
+     * 结束当前activity
+     *
+     * @param clz
+     */
+    public void finishCurrentActivity(Class<MainActivity> clz) {
+        if (isActivityExist(clz)) {
+            Activity activity = judgeActivityExist(clz);
+            activity.finish();
         }
     }
 }

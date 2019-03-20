@@ -190,6 +190,9 @@ public class ImageUploadUtils {
         // outputX outputY 是裁剪图片宽高
         intent.putExtra("outputX", 720);
         intent.putExtra("outputY", 720);
+        //拉伸图片，否则图片像素低裁剪之后容易出现黑边
+        intent.putExtra("scale",true);
+        intent.putExtra("scaleUpIfNeeded", true);
 //        intent.putExtra("return-data", true);
         uritempFile = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/" + DateTimeUtils.getNowTime() + "small.jpg");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);

@@ -1,5 +1,6 @@
 package com.tbs.sales.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,8 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,33 +22,44 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.tbs.sales.MainActivity;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.FilterCityAdapter;
 import com.tbs.sales.adapter.FilterClientTypeAdapter;
 import com.tbs.sales.adapter.FilterNextVisitAdapter;
 import com.tbs.sales.adapter.HomeMineFragmentAdapter;
 import com.tbs.sales.adapter.HomeViewPagerAdapter;
-import com.tbs.sales.bean.CityListBean;
+import com.tbs.sales.bean.CityBean;
 import com.tbs.sales.bean.Event;
+import com.tbs.sales.constant.Constant;
 import com.tbs.sales.fragment.HomeBriefingFragment;
 import com.tbs.sales.fragment.HomeEarlyWarningFragment;
 import com.tbs.sales.fragment.HomeMyFragment;
 import com.tbs.sales.fragment.HomeTodayFragment;
+import com.tbs.sales.manager.AppManager;
 import com.tbs.sales.utils.AppInfoUtils;
-import com.tbs.sales.utils.CityUtils;
 import com.tbs.sales.utils.DialogUtils;
 import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.TabLayoutUtils;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/2/20 14:11.
@@ -78,7 +91,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     //城市
     private GridView gridViewCity;
     private FilterCityAdapter adapterCity;
-    private List<CityListBean> beanList;
+    private List<CityBean> beanList;
     //下次拜访
     private GridView gridViewNextVisit;
     private FilterNextVisitAdapter adapterNextVisit;
@@ -90,74 +103,126 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     private TextView textSure;
     private boolean bLine = false;//用于控制标题栏下划线
     private HomeMyFragment myFragment;
-    private String clientType = "";//客户类型
+    private String clientType = "-1";//客户类型
     private String city = "";//城市
     private String timeRange = "";//下次拜访
+    private HomeBriefingFragment briefingFragment;
+    private Gson gson;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepager);
         ButterKnife.bind(this);
+        gson = new Gson();
         initView();
         initTab();
-        initCity();
+        initCity(AppInfoUtils.getUserCity(this));
         initPopupWindow();
     }
 
     /**
      * 初始化城市信息
      */
-    private void initCity() {
+    private void initCity(final String data) {
         beanList = new ArrayList<>();
         //获取登录成功保存到本地的城市id
-        String strCity = AppInfoUtils.getUserCity(this);
-        if (!TextUtils.isEmpty(strCity)) {
+        if (!TextUtils.isEmpty(data)) {
             //默认第一个为 全部 按钮
-            beanList.add(new CityListBean("01", "全部", "", "", ""));
-            //字符串转化为集合
-            String regex = "^,*|,*$";
-            String string = strCity.replace("|", ",");
-            String str1 = string.replaceAll(regex, "");
-            final List<String> list = Arrays.asList(str1.split(","));
-            //本地assets城市列表
-            final List<CityListBean> cityListBeans = CityUtils.getAllCity(HomePagerActivity.this);
+            beanList.add(new CityBean("01", "全部"));
+//            //字符串转化为集合
+//            String regex = "^,*|,*$";
+//            String string = data.replace("|", ",");
+//            String str1 = string.replaceAll(regex, "");
+//            final List<String> list = Arrays.asList(str1.split(","));
+//            //本地assets城市列表
+//            final List<CityListBean> cityListBeans = CityUtils.getAllCity(HomePagerActivity.this);
+//            for (int i = 0; i < list.size(); i++) {
+//                for (int j = 0; j < cityListBeans.size(); j++) {
+//                    if (list.get(i).equals(cityListBeans.get(j).getId())) {
+//                        beanList.add(cityListBeans.get(j));
+//                    }
+//                }
+//            }
             //跟本地保存城市信息对比，得到对应城市名称放入集合中
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    for (int i = 0; i < list.size(); i++) {
-                        for (int j = 0; j < cityListBeans.size(); j++) {
-                            if (list.get(i).equals(cityListBeans.get(j).getId())) {
-                                beanList.add(cityListBeans.get(j));
-                            }
+                    try {
+                        JSONArray jsonArray = new JSONArray(data);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            beanList.add(gson.fromJson(jsonArray.get(i).toString(), CityBean.class));
                         }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
             });
+        } else {
+            requestCityMessage();
         }
     }
+
     @Subscribe
     @Override
     public boolean isRegisterEventBus() {
         return true;
     }
+
     @Subscribe
     @Override
     public void receiveEvent(Event event) {
         super.receiveEvent(event);
         switch (event.getCode()) {
             case EC.EventCode.UPDATE_HOME_DATA: //登录成功更新城市信息
-                if (beanList != null) {
-                    beanList = null;
-                    initCity();
-                }
-                if (adapterCity != null){
-                    adapterCity.setChangeCityData(beanList);
-                    adapterCity.notifyDataSetChanged();
-                }
+                requestCityMessage();
+                break;
+            case EC.EventCode.MAIN_SELECT:
+                viewPagerHome.setCurrentItem(0);
                 break;
         }
+    }
+
+    /**
+     * 请求城市信息
+     */
+    public void requestCityMessage() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(this));
+        OkHttpUtils.get(Constant.USER_GETUSERCITYLIST, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    final JSONObject jsonObject = new JSONObject(json);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                AppInfoUtils.setUserCity(HomePagerActivity.this, jsonObject.optString("data"));
+                                if (beanList != null) {
+                                    beanList = null;
+                                    initCity(jsonObject.optString("data"));
+                                }
+                                if (adapterCity != null) {
+                                    adapterCity.setChangeCityData(beanList);
+                                    adapterCity.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -246,7 +311,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
                 if (position == 0) {
                     city = "";
                 } else {
-                    city = ((CityListBean) adapterCity.getItem(position)).getId();
+                    city = ((CityBean) adapterCity.getItem(position)).getId();
                 }
                 //大于6显示更多按钮
                 if (beanList.size() > 6) {
@@ -269,7 +334,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     //城市   更多点击回调更改listview数据结构
     DialogUtils.OnCityResultListener onCityResultListener = new DialogUtils.OnCityResultListener() {
         @Override
-        public void onCityResult(CityListBean cityData) {
+        public void onCityResult(CityBean cityData) {
             city = cityData.getId();
             for (int i = 0; i < beanList.size(); i++) {
                 if (cityData.equals(beanList.get(i))) {
@@ -292,11 +357,12 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
      */
     private void initView() {
         myFragment = new HomeMyFragment();
+        briefingFragment = new HomeBriefingFragment();
         fragmentList = new ArrayList<>();
         fragmentList.add(myFragment);
         fragmentList.add(new HomeTodayFragment());
         fragmentList.add(new HomeEarlyWarningFragment());
-        fragmentList.add(new HomeBriefingFragment());
+        fragmentList.add(briefingFragment);
         viewPagerHome.setOffscreenPageLimit(fragmentList.size());
         adapter = new HomeViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
         viewPagerHome.setAdapter(adapter);
@@ -457,12 +523,30 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.image_right_message:  //消息通知
-                if (TextUtils.isEmpty(AppInfoUtils.getId(this))){
-                    startActivity(new Intent(HomePagerActivity.this,LoginActivity.class));
-                }else {
+                if (TextUtils.isEmpty(AppInfoUtils.getId(this))) {
+                    startActivity(new Intent(HomePagerActivity.this, LoginActivity.class));
+                } else {
                     startActivity(new Intent(HomePagerActivity.this, MyMessageActivity.class));
                 }
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            new AlertDialog.Builder(this)
+                    .setMessage("确定要退出吗？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AppManager.getInstances().AppExit(HomePagerActivity.this);
+                        }
+                    })
+                    .setNegativeButton("再看看", null).show();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

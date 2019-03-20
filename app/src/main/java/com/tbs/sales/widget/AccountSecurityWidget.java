@@ -38,19 +38,20 @@ public class AccountSecurityWidget extends LinearLayout implements View.OnClickL
     public AccountSecurityWidget(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView(context);
-        initData(context,attrs);
+        initData(context, attrs);
     }
 
     /**
      * 初始化数据
+     *
      * @param context
      * @param attrs
      */
     private void initData(Context context, AttributeSet attrs) {
-        if (isInEditMode()){
+        if (isInEditMode()) {
             return;
         }
-        TypedArray array = context.obtainStyledAttributes(attrs,R.styleable.AccountSecurityWidget);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.AccountSecurityWidget);
         //左边提示文案
         CharSequence leftText = array.getText(R.styleable.AccountSecurityWidget_left_text);
         tvPassword.setText(leftText);
@@ -82,9 +83,9 @@ public class AccountSecurityWidget extends LinearLayout implements View.OnClickL
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s.toString().trim())){
+                if (!TextUtils.isEmpty(s.toString().trim())) {
                     imagePasswordDel.setVisibility(VISIBLE);
-                }else {
+                } else {
                     imagePasswordDel.setVisibility(GONE);
                 }
             }
@@ -94,19 +95,18 @@ public class AccountSecurityWidget extends LinearLayout implements View.OnClickL
 
             }
         });
-
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.image_password_del:
                 etPassword.setText("");
                 break;
         }
     }
 
-    public String getText(){
+    public String getText() {
         return etPassword.getText().toString().trim();
     }
 }

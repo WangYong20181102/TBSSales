@@ -11,7 +11,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
-import com.tbs.sales.bean.CityListBean;
+import com.tbs.sales.bean.CityBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class CityMessageAdapter extends BaseAdapter implements Filterable {
     private Context context;
-    private List<CityListBean> listCity;
+    private List<CityBean> listCity;
     private MyFilter filter = null;
     private FilterListener listener = null;
 
-    public CityMessageAdapter(Context context, List<CityListBean> listCity) {
+    public CityMessageAdapter(Context context, List<CityBean> listCity) {
         this.context = context;
         this.listCity = listCity;
     }
@@ -56,7 +56,7 @@ public class CityMessageAdapter extends BaseAdapter implements Filterable {
         } else {
             holder = (MyViewHolder) convertView.getTag();
         }
-        holder.textCity.setText(listCity.get(position).getNm());
+        holder.textCity.setText(listCity.get(position).getName());
         return convertView;
     }
 
@@ -78,9 +78,9 @@ public class CityMessageAdapter extends BaseAdapter implements Filterable {
      */
     class MyFilter extends Filter {
         //创建集合保存原始数据
-        private List<CityListBean> original;
+        private List<CityBean> original;
 
-        public MyFilter(List<CityListBean> oruginal) {
+        public MyFilter(List<CityBean> oruginal) {
             this.original = oruginal;
         }
 
@@ -100,11 +100,11 @@ public class CityMessageAdapter extends BaseAdapter implements Filterable {
                 results.count = original.size();
             } else {
                 // 创建集合保存过滤后的数据
-                List<CityListBean> mList = new ArrayList<CityListBean>();
+                List<CityBean> mList = new ArrayList<CityBean>();
                 // 遍历原始数据集合，根据搜索的规则过滤数据
-                for (CityListBean s : original) {
+                for (CityBean s : original) {
                     // 这里就是过滤规则的具体实现【规则有很多，大家可以自己决定怎么实现】
-                    if (s.getNm().trim().toLowerCase().contains(constraint.toString().trim().toLowerCase())) {
+                    if (s.getName().trim().toLowerCase().contains(constraint.toString().trim().toLowerCase())) {
                         // 规则匹配的话就往集合中添加该数据
                         mList.add(s);
                     }
@@ -123,7 +123,7 @@ public class CityMessageAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // 获取过滤后的数据
-            listCity = (List<CityListBean>) results.values;
+            listCity = (List<CityBean>) results.values;
             // 如果接口对象不为空，那么调用接口中的方法获取过滤后的数据，具体的实现在new这个接口的时候重写的方法里执行
             if(listener != null){
                 listener.getFilterData(listCity);
@@ -139,6 +139,6 @@ public class CityMessageAdapter extends BaseAdapter implements Filterable {
     }
 
     public interface FilterListener {
-        void getFilterData(List<CityListBean> list);// 获取过滤后的数据
+        void getFilterData(List<CityBean> list);// 获取过滤后的数据
     }
 }

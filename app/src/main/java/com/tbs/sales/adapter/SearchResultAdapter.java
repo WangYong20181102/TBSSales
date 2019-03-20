@@ -1,17 +1,25 @@
 package com.tbs.sales.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.bean.HomeDataBean;
+import com.tbs.sales.constant.Constant;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Mr.Wang on 2019/2/27 14:55.
@@ -28,11 +36,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == 0){
+        if (viewType == 0) {
             View view = LayoutInflater.from(context).inflate(R.layout.today_top_bg, parent, false);
             MyViewHolder holder = new MyViewHolder(view);
             return holder;
-        }else {
+        } else {
             View view = LayoutInflater.from(context).inflate(R.layout.today_layout, parent, false);
             MyViewHolder2 holder2 = new MyViewHolder2(view);
             return holder2;
@@ -41,8 +49,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof SearchResultAdapter.MyViewHolder2){
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof MyViewHolder2) {
             //公司名称
             ((MyViewHolder2) holder).textCompanyName.setText(beanList.get(position - 1).getCo_name());
             //右侧信息
@@ -53,6 +61,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName());
             //地址
             ((MyViewHolder2) holder).textAddress.setText(beanList.get(position - 1).getAddress());
+            ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    String mLoadingUrl = Constant.CUSTOMER_MY_DETAIL + "?co_id=" + beanList.get(position - 1).getCo_id() + "&co_type=" + beanList.get(position - 1).getCo_type() + "&warn_state=" + beanList.get(position - 1).getWarn_state() + "&delay=" + beanList.get(position - 1).getDelay_state() + "&menu=my";
+                    intent.putExtra("mLoadingUrl", mLoadingUrl);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -63,9 +80,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0){
+        if (position == 0) {
             return 0;
-        }else {
+        } else {
             return 1;
         }
     }
@@ -76,20 +93,24 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
         }
     }
-    private class MyViewHolder2 extends RecyclerView.ViewHolder {
-        private TextView textCompanyName;   //公司名称
-        private TextView textRemarks;//标注
-        private TextView textId;//id
-        private TextView textUserName;//姓名
-        private TextView textAddress;//地址
+
+    public class MyViewHolder2 extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_company_name)
+        TextView textCompanyName;
+        @BindView(R.id.text_remarks)
+        TextView textRemarks;
+        @BindView(R.id.text_id)
+        TextView textId;
+        @BindView(R.id.text_user_name)
+        TextView textUserName;
+        @BindView(R.id.text_address)
+        TextView textAddress;
+        @BindView(R.id.linear_click)
+        LinearLayout linearClick;
 
         public MyViewHolder2(View itemView) {
             super(itemView);
-            textAddress = itemView.findViewById(R.id.text_address);
-            textCompanyName = itemView.findViewById(R.id.text_company_name);
-            textRemarks = itemView.findViewById(R.id.text_remarks);
-            textId = itemView.findViewById(R.id.text_id);
-            textUserName = itemView.findViewById(R.id.text_user_name);
+            ButterKnife.bind(this, itemView);
         }
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class AccountSecurityActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
+
     @OnClick({R.id.relative_back, R.id.tv_sure})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -94,8 +96,8 @@ public class AccountSecurityActivity extends BaseActivity {
                             public void run() {
                                 Toast.makeText(AccountSecurityActivity.this, "密码修改成功", Toast.LENGTH_SHORT).show();
                                 getSharedPreferences("userInfo", 0).edit().clear().commit();
-                                finish();
                                 startActivity(new Intent(AccountSecurityActivity.this, LoginActivity.class));
+                                finish();
                             }
                         });
                     } else {

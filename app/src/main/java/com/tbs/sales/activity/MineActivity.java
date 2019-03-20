@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,9 +15,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tbs.sales.MainActivity;
 import com.tbs.sales.R;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.constant.Constant;
+import com.tbs.sales.manager.AppManager;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.GlideUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.StringUtils;
@@ -81,7 +87,7 @@ public class MineActivity extends BaseActivity {
         if (TextUtils.isEmpty(userIcon)) {
             imageHead.setImageResource(R.mipmap.img_moren);
         } else {
-            GlideUtils.glideLoader(this, userIcon, imageHead);
+            GlideUtils.glideLoader(this, userIcon, 0, 0, imageHead, 0);
         }
 
     }
@@ -115,7 +121,8 @@ public class MineActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 exitHttpRequest();
                             }
-                        }).show();
+                        })
+                        .setNegativeButton("取消", null).show();
                 break;
         }
     }
@@ -144,7 +151,8 @@ public class MineActivity extends BaseActivity {
                         public void run() {
                             ToastUtils.toastShort(MineActivity.this, jsonObject.optString("message"));
                             getSharedPreferences("userInfo", 0).edit().clear().commit();
-                            onResume();
+                            Intent intent = new Intent(MineActivity.this, LoginActivity.class);
+                            startActivity(intent);
                         }
                     });
                 } catch (JSONException e) {
@@ -153,5 +161,23 @@ public class MineActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            new AlertDialog.Builder(this)
+                    .setMessage("确定要退出吗？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AppManager.getInstances().AppExit(MineActivity.this);
+                        }
+                    })
+                    .setNegativeButton("再看看", null).show();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

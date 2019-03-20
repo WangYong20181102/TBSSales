@@ -2,6 +2,7 @@ package com.tbs.sales;
 
 import android.Manifest;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.tbs.sales.application.MyApplication;
 import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.LoginSuccessBean;
 import com.tbs.sales.constant.Constant;
+import com.tbs.sales.manager.AppManager;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.EventBusUtil;
@@ -86,6 +89,7 @@ public class MainActivity extends TabActivity {
         setContentView(R.layout.activity_main);
         EventBusUtil.register(this);
         ButterKnife.bind(this);
+        AppManager.getInstances().addActivity(this);
         gson = new Gson();
         initView();
         initData();
@@ -140,7 +144,6 @@ public class MainActivity extends TabActivity {
     private void saveUserInfo(LoginSuccessBean.UserinfoBean successBean) {
         AppInfoUtils.setId(this, successBean.getId());
         AppInfoUtils.setUserMd5PassWord(this, successBean.getPassword());
-        AppInfoUtils.setUserCity(this, successBean.getCity_id_list());
         AppInfoUtils.setCellPhone(this, successBean.getPhone());
         AppInfoUtils.setUserNickname(this, successBean.getReal_name());
         AppInfoUtils.setUserSex(this, successBean.getSex());
@@ -152,8 +155,6 @@ public class MainActivity extends TabActivity {
      * 初始化数据
      */
     private void initData() {
-        //将推送的唯一标识存入本地
-        AppInfoUtils.setPushRegisterId(this, JPushInterface.getRegistrationID(getApplicationContext()));
         if (!AppInfoUtils.getFirstLaunch(this)) {
             AppInfoUtils.setFirstLaunch(this, true);
             //获取存储权限
@@ -193,6 +194,10 @@ public class MainActivity extends TabActivity {
         switch (event.getCode()) {
             case EC.EventCode.UPDATE_USERINFO://更新用户信息
                 initGetUserInfo();
+                break;
+            case EC.EventCode.MAIN_SELECT:
+                tabHost.setCurrentTabByTag("ONE");
+                setActivityPosition(0);
                 break;
         }
     }
@@ -283,49 +288,6 @@ public class MainActivity extends TabActivity {
 
                 break;
         }
-    }
-
-    //    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//            /**
-//             * 退出应用
-//             */
-//            AppManager.getInstances().AppExit(MainActivity.this);
-//        }
-//        return false;
-//    }
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-
-//            CustomDialog.Builder builder = new CustomDialog.Builder(this);
-//            builder.setMessage("你确定退出吗？")
-//                    .setPositiveButton("确定",
-//                            new DialogInterface.OnClickListener() {
-//
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int id) {
-//                                    dialog.cancel();
-//                                    //关闭时上传数据
-//                                    Util.HttpPostUserUseInfo();
-//                                    finish();
-//                                    System.exit(0);//                                }
-//                            })
-//                    .setNegativeButton("再看看",
-//                            new DialogInterface.OnClickListener() {
-//
-//                                @Override
-//                                public void onClick(DialogInterface dialog,
-//                                                    int id) {
-//                                    dialog.cancel();
-//                                }
-//                            });
-//            builder.create().show();
-
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
     }
 
     /**

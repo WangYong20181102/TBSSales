@@ -17,7 +17,8 @@
             android:id="@+id/image_city"
             android:layout_width="@dimen/d21"
             android:layout_height="@dimen/d21"
-            android:src="@mipmap/company" />
+            android:src="@mipmap/company"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/text_company_name"
@@ -26,6 +27,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/d7"
             android:layout_toRightOf="@+id/image_city"
+            android:layout_toLeftOf="@+id/text_remarks"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="土拨鼠网络科技" />
 
         <TextView
@@ -35,6 +39,7 @@
             android:layout_alignParentRight="true"
             android:text="意向客户"
             android:textColor="@color/FC_FF8400"
+            android:layout_centerVertical="true"
             android:textSize="@dimen/s12" />
     </RelativeLayout>
 
@@ -122,5 +127,5 @@
         android:layout_marginLeft="@dimen/d4"
         android:layout_marginRight="@dimen/d1"
         android:layout_marginTop="@dimen/d19"
-        android:background="@color/FC_D8D8D8" />
+        android:background="@color/FC_EEEEEE" />
 </LinearLayout>

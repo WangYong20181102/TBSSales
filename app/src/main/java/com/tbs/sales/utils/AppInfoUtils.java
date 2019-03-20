@@ -44,8 +44,7 @@ public class AppInfoUtils {
         // 获取mac地址：
         String macAddress = "000000000000";
         try {
-            WifiManager wifiMgr = (WifiManager) context
-                    .getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiMgr = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = (null == wifiMgr ? null : wifiMgr.getConnectionInfo());
             if (null != info) {
                 if (!TextUtils.isEmpty(info.getMacAddress()))
@@ -215,7 +214,7 @@ public class AppInfoUtils {
         }
         return mChannType;
     }
-    // TODO: 2018/1/10  用户的基本信息↓↓↓↓
+
     //token
     public static String getToekn(Context context) {
         return context.getSharedPreferences("userInfo", 0).getString("token", "");
@@ -242,6 +241,7 @@ public class AppInfoUtils {
     public static void setUserIcon(Context context, String icon) {
         context.getSharedPreferences("userInfo", 0).edit().putString("icon", icon).apply();
     }
+
     //用户的性别
     public static int getUserSex(Context context) {
         return context.getSharedPreferences("userInfo", 0).getInt("sex", 0);
@@ -250,6 +250,7 @@ public class AppInfoUtils {
     public static void setUserSex(Context context, int icon) {
         context.getSharedPreferences("userInfo", 0).edit().putInt("sex", icon).apply();
     }
+
     //用户的职位
     public static String getUserRoleDesc(Context context) {
         return context.getSharedPreferences("userInfo", 0).getString("roledesc", "");
@@ -267,6 +268,7 @@ public class AppInfoUtils {
     public static void setUserCity(Context context, String cityname) {
         context.getSharedPreferences("userInfo", 0).edit().putString("cityname", cityname).apply();
     }
+
     //用户所在的省份
     public static String getUserProvince(Context context) {
         return context.getSharedPreferences("userInfo", 0).getString("province", "");
@@ -274,15 +276,6 @@ public class AppInfoUtils {
 
     public static void setUserProvince(Context context, String province) {
         context.getSharedPreferences("userInfo", 0).edit().putString("province", province).apply();
-    }
-
-    //用户的Uuid
-    public static String getUuid(Context context) {
-        return context.getSharedPreferences("userInfo", 0).getString("id", "");
-    }
-
-    public static void setUuid(Context context, String id) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("id", id).apply();
     }
 
     //用户的id
@@ -293,6 +286,7 @@ public class AppInfoUtils {
     public static void setId(Context context, String id) {
         context.getSharedPreferences("userInfo", 0).edit().putString("id", id).apply();
     }
+
     //用户绑定的手机号码
     public static String getCellPhone(Context context) {
         return context.getSharedPreferences("userInfo", 0).getString("cellphone", "");
@@ -300,15 +294,6 @@ public class AppInfoUtils {
 
     public static void setCellPhone(Context context, String cellphone) {
         context.getSharedPreferences("userInfo", 0).edit().putString("cellphone", cellphone).apply();
-    }
-
-    //用户身份的标识  其效果和type id 一致
-    public static String getMark(Context context) {
-        return context.getSharedPreferences("userInfo", 0).getString("mark", "0");
-    }
-
-    public static void setMark(Context context, String mark) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("mark", mark).apply();
     }
 
     //用户的Userid
@@ -320,23 +305,6 @@ public class AppInfoUtils {
         context.getSharedPreferences("userInfo", 0).edit().putString("userid", userid).commit();
     }
 
-    //用户的会员等级
-    public static String getUserGrade(Context context) {
-        return context.getSharedPreferences("userInfo", 0).getString("grade", "0");
-    }
-
-    public static void setUserGrade(Context context, String grade) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("grade", grade).commit();
-    }
-
-    //用户的是否绑定了手机号码
-    public static String getUserCellphone_check(Context context) {
-        return context.getSharedPreferences("userInfo", 0).getString("cellphone_check", "0");
-    }
-
-    public static void setUserCellphone_check(Context context, String cellphone_check) {
-        context.getSharedPreferences("userInfo", 0).edit().putString("cellphone_check", cellphone_check).commit();
-    }
     //用户的md5密码
     public static String getUserMd5PassWord(Context context) {
         return context.getSharedPreferences("userInfo", 0).getString("user_md5_password", "");
@@ -349,13 +317,25 @@ public class AppInfoUtils {
     /**
      * 判断用户是否是第一次启动app
      */
-    public static boolean getFirstLaunch(Context context){
-        return context.getSharedPreferences("firstLaunch",0).getBoolean("storage",false);
+    public static boolean getFirstLaunch(Context context) {
+        return context.getSharedPreferences("firstLaunch", 0).getBoolean("storage", false);
     }
-    public static void setFirstLaunch(Context context,boolean b){
-        context.getSharedPreferences("firstLaunch",0).edit().putBoolean("storage",b).commit();
+
+    public static void setFirstLaunch(Context context, boolean b) {
+        context.getSharedPreferences("firstLaunch", 0).edit().putBoolean("storage", b).commit();
     }
-    // TODO: 2018/3/1  统计相关的数据**********************************************************************************************************↑
+
+    /**
+     * 启动页
+     */
+    public static boolean getFirstLaunchGlidePage(Context context) {
+        return context.getSharedPreferences("glidePage", 0).getBoolean("bGlidePage", false);
+    }
+
+    public static void setFirstLaunchGlidePage(Context context, boolean b) {
+        context.getSharedPreferences("glidePage", 0).edit().putBoolean("bGlidePage", b).commit();
+    }
+
     //存储推送的唯一标识
     public static String getPushRegisterId(Context context) {
         return context.getSharedPreferences("PushRegisterId", 0).getString("mPushRegisterId", "");
@@ -366,4 +346,14 @@ public class AppInfoUtils {
         context.getSharedPreferences("PushRegisterId", 0).edit().putString("mPushRegisterId", mPushRegisterId).commit();
     }
 
+    /**
+     * 保存账号到本地
+     */
+    public static String getLoginAccound(Context context) {
+        return context.getSharedPreferences("loginState", 0).getString("loginAccound", "");
+    }
+
+    public static void setLoginAccount(Context context, String account) {
+        context.getSharedPreferences("loginState", 0).edit().putString("loginAccound", account).apply();
+    }
 }

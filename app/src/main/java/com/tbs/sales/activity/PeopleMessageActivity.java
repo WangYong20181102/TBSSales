@@ -1,20 +1,14 @@
 package com.tbs.sales.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
@@ -58,11 +52,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -123,6 +112,11 @@ public class PeopleMessageActivity extends BaseActivity {
         phone = AppInfoUtils.getCellPhone(this);
         tvUsername.setText(name);
         tvPhoneNumber.setText(phone);
+        if (AppInfoUtils.getUserSex(this) == 1) {
+            tvGender.setText("男");
+        } else {
+            tvGender.setText("女");
+        }
     }
 
     @OnClick({R.id.relative_back, R.id.image_head, R.id.relative_change_head, R.id.relative_username, R.id.relative_gender, R.id.relative_phone})
@@ -179,11 +173,6 @@ public class PeopleMessageActivity extends BaseActivity {
         } else {
             GlideUtils.glideLoader(this, userIcon, imageHead);
         }
-        if (AppInfoUtils.getUserSex(this) == 1) {
-            tvGender.setText("男");
-        } else {
-            tvGender.setText("女");
-        }
 
     }
 
@@ -225,11 +214,9 @@ public class PeopleMessageActivity extends BaseActivity {
     }
 
     /**
-     * 性别网络请求
-     *
      * @param value
      */
-    private void initHttpRequest(final String value, String field) {
+    private void initHttpRequest(final String value, final String field) {
         HashMap<String, Object> params = new HashMap<>();
         params.put("token", AppInfoUtils.getToekn(this));
         params.put("field", field);
@@ -253,10 +240,15 @@ public class PeopleMessageActivity extends BaseActivity {
                                 EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_USERINFO));
                                 tvUsername.setText(name);   //更改用户姓名
                                 tvPhoneNumber.setText(phone);//更改手机号
-                                if(value.equals("1")){
-                                    tvGender.setText("男");
-                                }else {
-                                    tvGender.setText("女");
+                                if (field.equals("sex")){   //性别
+                                    if (value.equals("1")) {
+                                        tvGender.setText("男");
+                                    } else {
+                                        tvGender.setText("女");
+                                    }
+                                }
+                                if (field.equals("icon") || field.equals("real_name")) {    //更换头像、姓名通知客户界面更新数据
+                                    EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_CLIENT_DATA));
                                 }
                                 ToastUtils.toastShort(PeopleMessageActivity.this, jsonObject.optString("message"));
                             }

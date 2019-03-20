@@ -76,7 +76,7 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 ((MyViewHolder) holder).linearAction.setVisibility(View.VISIBLE);
                 ((MyViewHolder) holder).textAction.setVisibility(View.GONE);
-                ((MyViewHolder) holder).textContent.setText(beanList.get(position).getTitle());
+                ((MyViewHolder) holder).textContent.setText(beanList.get(position).getContent());
             }
             //时间
             ((MyViewHolder) holder).textData.setText(beanList.get(position).getCreate_time());

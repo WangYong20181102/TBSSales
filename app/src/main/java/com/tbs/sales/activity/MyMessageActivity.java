@@ -117,8 +117,8 @@ public class MyMessageActivity extends BaseActivity {
         HashMap<String, Object> params = new HashMap<>();
         params.put("token", AppInfoUtils.getToekn(this));
         params.put("plat", "android");
-//        params.put("device_id", AppInfoUtils.getPushRegisterId(this));
         params.put("page", mPage);
+        params.put("device_id", AppInfoUtils.getPushRegisterId(this));
         params.put("page_size", pageSize);
         OkHttpUtils.get(Constant.PUSH_RECORD, params, new Callback() {
             @Override

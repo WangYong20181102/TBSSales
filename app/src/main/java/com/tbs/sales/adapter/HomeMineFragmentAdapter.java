@@ -2,17 +2,13 @@ package com.tbs.sales.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +22,7 @@ import com.tbs.sales.utils.AppInfoUtils;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -98,11 +95,19 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
             //公司名称
             ((MyViewHolder2) holder).textCompanyName.setText(beanList.get(position - 1).getCo_name());
             //右侧信息
-            ((MyViewHolder2) holder).textRemarks.setText(beanList.get(position - 1).getCo_type_name());
+            if (beanList.get(position - 1).getWarn_state() == 0){
+                ((MyViewHolder2) holder).textRemarks.setText(beanList.get(position - 1).getCo_type_name());
+            }else {
+                ((MyViewHolder2) holder).textRemarks.setText(beanList.get(position - 1).getWarn_state_desc());
+            }
             //id
             ((MyViewHolder2) holder).textId.setText(beanList.get(position - 1).getCo_id() + "");
             //姓名
-            ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName());
+            if (beanList.get(position - 1).getSex() == 2) {//女
+                ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName() + "(女)");
+            } else {
+                ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName() + "(男)");
+            }
             //地址
             ((MyViewHolder2) holder).textAddress.setText(beanList.get(position - 1).getAddress());
             ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
@@ -132,37 +137,38 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    private class MyViewHolder1 extends RecyclerView.ViewHolder {
+    public class MyViewHolder1 extends RecyclerView.ViewHolder {
 
-        private RelativeLayout relativeClick;
-        private LinearLayout imageFilter;//筛选
-        private View viewBg;
+        @BindView(R.id.image_filter)
+        LinearLayout imageFilter;
+        @BindView(R.id.relative_click)
+        RelativeLayout relativeClick;
+        @BindView(R.id.view_bg)
+        View viewBg;
 
         public MyViewHolder1(View itemView) {
             super(itemView);
-            relativeClick = itemView.findViewById(R.id.relative_click);
-            imageFilter = itemView.findViewById(R.id.image_filter);
-            viewBg = itemView.findViewById(R.id.view_bg);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    private class MyViewHolder2 extends RecyclerView.ViewHolder {
-
-        private TextView textCompanyName;   //公司名称
-        private TextView textRemarks;//标注
-        private TextView textId;//id
-        private TextView textUserName;//姓名
-        private TextView textAddress;//地址
-        private LinearLayout linearClick;   //背景
+    public class MyViewHolder2 extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_company_name)
+        TextView textCompanyName;
+        @BindView(R.id.text_remarks)
+        TextView textRemarks;
+        @BindView(R.id.text_id)
+        TextView textId;
+        @BindView(R.id.text_user_name)
+        TextView textUserName;
+        @BindView(R.id.text_address)
+        TextView textAddress;
+        @BindView(R.id.linear_click)
+        LinearLayout linearClick;
 
         public MyViewHolder2(View itemView) {
             super(itemView);
-            textAddress = itemView.findViewById(R.id.text_address);
-            textCompanyName = itemView.findViewById(R.id.text_company_name);
-            textRemarks = itemView.findViewById(R.id.text_remarks);
-            textId = itemView.findViewById(R.id.text_id);
-            textUserName = itemView.findViewById(R.id.text_user_name);
-            linearClick = itemView.findViewById(R.id.linear_click);
+            ButterKnife.bind(this, itemView);
         }
     }
 
