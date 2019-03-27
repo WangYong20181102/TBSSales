@@ -22,6 +22,7 @@ import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.MoveDistanceUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.ToastUtils;
 
@@ -59,6 +60,7 @@ public class HomeTodayFragment extends BaseFragment {
     private int pageSize = 20;
     private boolean isDownRefresh = false;//是否是下拉刷新
     private List<HomeDataBean.ListBean> beanList;
+    private boolean iMove;//屏幕滑动距离
 
     @Nullable
     @Override
@@ -67,7 +69,6 @@ public class HomeTodayFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         gson = new Gson();
         initView();
-        initData();
         initHttpRequest();
         return view;
     }
@@ -138,12 +139,13 @@ public class HomeTodayFragment extends BaseFragment {
                                 } else {
                                     if (mPage != 1) {
                                         Toast.makeText(getActivity(), "暂无更多数据", Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        if (beanList.size() == 0) {
+                                            linearNoData.setVisibility(View.VISIBLE);
+                                        } else {
+                                            linearNoData.setVisibility(View.GONE);
+                                        }
                                     }
-                                }
-                                if (beanList.size() == 0) {
-                                    linearNoData.setVisibility(View.VISIBLE);
-                                } else {
-                                    linearNoData.setVisibility(View.GONE);
                                 }
                                 swipeRefreshLayout.setRefreshing(false);
                             }
@@ -192,6 +194,12 @@ public class HomeTodayFragment extends BaseFragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setOnTouchListener(onTouchListener);
         recyclerView.setOnScrollListener(onScrollListener);
+        new MoveDistanceUtils().setOnMoveDistanceListener(recyclerView, new MoveDistanceUtils.OnMoveDistanceListener() {
+            @Override
+            public void onMoveDistance(boolean b) {
+                iMove = b;
+            }
+        });
 
 
         //初始化下拉刷新视图
@@ -216,7 +224,9 @@ public class HomeTodayFragment extends BaseFragment {
             super.onScrollStateChanged(recyclerView, newState);
             if (adapter != null) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && layoutManager.findLastVisibleItemPosition() + 1 == adapter.getItemCount()) {
-                    LoadMore();
+                    if (iMove){
+                        LoadMore();
+                    }
                 }
             }
         }

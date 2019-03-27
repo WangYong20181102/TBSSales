@@ -4,12 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -19,6 +23,7 @@ import com.tbs.sales.bean.Event;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -34,7 +39,7 @@ public class HomeBriefingFragment extends BaseFragment implements View.OnTouchLi
     @BindView(R.id.web_view)
     WebView webView;
     Unbinder unbinder;
-    private boolean b = true;
+//    private boolean b = true;
     private DisplayMetrics dm;
     private WindowManager manager;
 
@@ -58,7 +63,7 @@ public class HomeBriefingFragment extends BaseFragment implements View.OnTouchLi
         super.receiveEvent(event);
         switch (event.getCode()) {
             case EC.EventCode.UPDATE_HOME_DATA:
-                b = true;
+//                b = true;
                 webView.loadUrl(Constant.WXDISTRIBUTE_CUSTOMER_COUNT);
                 break;
         }
@@ -121,16 +126,26 @@ public class HomeBriefingFragment extends BaseFragment implements View.OnTouchLi
             webView.loadUrl("javascript:localStorage.setItem('" + key + "','" + val + "');");
             webView.loadUrl("javascript:localStorage.setItem('" + key2 + "','" + val2 + "');");
         }
-        if (b) {
-            webView.reload();
-            b = false;
-        }
+//        if (b) {
+//            webView.reload();
+//            b = false;
+//        }
     }
 //    private WebChromeClient webChromeClient = new WebChromeClient() {
 //        @Override
-//        public void onReceivedTitle(WebView view, String title) {
-//            tittle = title;
-//            newWebviewTitle.setText(title);
+//        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+//            if (!TextUtils.isEmpty(AppInfoUtils.getId(getActivity()))){
+//                ToastUtils.toastShort(getActivity(),message);
+//            }
+//            return super.onJsAlert(view, url, message, result);
+//        }
+//
+//        @Override
+//        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+//            if (!TextUtils.isEmpty(AppInfoUtils.getId(getActivity()))){
+//                ToastUtils.toastShort(getActivity(),message);
+//            }
+//            return super.onJsPrompt(view, url, message, defaultValue, result);
 //        }
 //    };
 

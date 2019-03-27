@@ -17,6 +17,7 @@ import com.tbs.sales.adapter.MyMessageAdapter;
 import com.tbs.sales.bean.MyMessageBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.MoveDistanceUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 
 import org.json.JSONArray;
@@ -53,6 +54,7 @@ public class MyMessageActivity extends BaseActivity {
     private int pageSize = 20;
     private Gson gson;
     private boolean isDownRefresh = false;//是否是下拉刷新
+    private boolean iMove;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +76,12 @@ public class MyMessageActivity extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setOnTouchListener(onTouchListener);
         recyclerView.setOnScrollListener(onScrollListener);
+        new MoveDistanceUtils().setOnMoveDistanceListener(recyclerView, new MoveDistanceUtils.OnMoveDistanceListener() {
+            @Override
+            public void onMoveDistance(boolean b) {
+                iMove = b;
+            }
+        });
 
         //初始化下拉刷新视图
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.WHITE);
@@ -98,7 +106,9 @@ public class MyMessageActivity extends BaseActivity {
             super.onScrollStateChanged(recyclerView, newState);
             if (adapter != null) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && layoutManager.findLastVisibleItemPosition() + 1 == adapter.getItemCount()) {
-                    LoadMore();
+                    if (iMove){
+                        LoadMore();
+                    }
                 }
             }
         }

@@ -9,21 +9,21 @@ public class Constant {
     /**
      * 正式环境
      */
-//    public static final String HTTP_URL = "http://bip.tobosu.cn";
-//    public static final String HTTP_URL_H5 = "http://m.tobosu.com";
+//    private static final String HTTP_URL = "http://bip.tobosu.cn";
+//    private static final String HTTP_URL_H5 = "http://m.tobosu.com";
 
 
     /**
      * 测试环境
      */
-    public static final String HTTP_URL = "http://bip.test.tobosu.cn";
-    public static final String HTTP_URL_H5 = "http://m.test.tobosu.com";
+    private static final String HTTP_URL = "http://bip.test.tobosu.cn";
+    private static final String HTTP_URL_H5 = "http://m.test.tobosu.com";
 
 
     /**
      * 图片上传地址
      */
-    public static final String IMAGE_LOAD_URL = "https://www.tobosu.com";
+    private static final String IMAGE_LOAD_URL = "https://www.tobosu.com";
 
 
     //首页信息
