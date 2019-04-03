@@ -33,6 +33,7 @@ import com.tbs.sales.adapter.HomeMineFragmentAdapter;
 import com.tbs.sales.adapter.HomeViewPagerAdapter;
 import com.tbs.sales.bean.CityBean;
 import com.tbs.sales.bean.Event;
+import com.tbs.sales.bean.KeyValueDataBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.fragment.HomeBriefingFragment;
 import com.tbs.sales.fragment.HomeEarlyWarningFragment;
@@ -42,6 +43,7 @@ import com.tbs.sales.manager.AppManager;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.DialogUtils;
 import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.KeyValueUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.TabLayoutUtils;
 
@@ -77,7 +79,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     View viewTop;   //主要用于popupwindow位置显示
     @BindView(R.id.view_line)
     View viewLine;  //首页导航栏下划线
-    private String[] titles = new String[]{"我的", "今日", "预警", "简报"};
+    private String[] titles = new String[]{"跟进", "今日", "预警", "简报"};
     private List<Fragment> fragmentList;
     private HomeViewPagerAdapter adapter;
 
@@ -87,8 +89,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     //客户类型
     private GridView gridViewClientType;
     private FilterClientTypeAdapter adapterClientType;
-    private List<String> listClientType;
-    private String[] strClientType = {"全部", "新客户", "潜在客户", "意向客户", "待签约"};
+    private List<KeyValueDataBean> listClientType;
     //城市
     private GridView gridViewCity;
     private FilterCityAdapter adapterCity;
@@ -104,7 +105,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     private TextView textSure;
     private boolean bLine = false;//用于控制标题栏下划线
     private HomeMyFragment myFragment;
-    private String clientType = "-1";//客户类型
+    private int clientType = -1;//客户类型
     private String city = "";//城市
     private String timeRange = "";//下次拜访
     private HomeBriefingFragment briefingFragment;
@@ -257,10 +258,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
      */
     private void initPopupData() {
         //客户类型数据集
-        listClientType = new ArrayList<>();
-        for (int i = 0; i < strClientType.length; i++) {
-            listClientType.add(strClientType[i]);
-        }
+        listClientType = KeyValueUtils.getHomeClientType();
         //下次拜访数据集
         listNextVisit = new ArrayList<>();
         for (int i = 0; i < strNextVisit.length; i++) {
@@ -291,17 +289,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapterClientType.setSelectPosition(position);
                 adapterClientType.notifyDataSetChanged();
-                if (position == 0) { //全部
-                    clientType = "-1";
-                } else if (position == 1) {  //新客户
-                    clientType = "0";
-                } else if (position == 2) {//潜在客户
-                    clientType = "1";
-                } else if (position == 3) {//意向客户
-                    clientType = "3";
-                } else if (position == 4) {//待签约
-                    clientType = "8";
-                }
+                clientType = listClientType.get(position).getId();
             }
         });
         //城市点击事件
@@ -317,8 +305,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
                 //大于6显示更多按钮
                 if (beanList.size() > 6) {
                     if (position == 5) {    //更多按钮点击弹出城市列表对话框
-                        DialogUtils.getInstances().showCityMessage(HomePagerActivity.this, beanList);
-                        DialogUtils.getInstances().setOnCityResultListener(onCityResultListener);
+                        DialogUtils.getInstances().showCityMessage(HomePagerActivity.this, beanList,onCityResultListener);
                     } else {
                         adapterCity.setSelectPosition(position);
                         adapterCity.notifyDataSetChanged();
@@ -492,7 +479,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
                 if (adapterClientType != null) {
                     adapterClientType.setSelectPosition(0);
                     adapterClientType.notifyDataSetChanged();
-                    clientType = "-1";
+                    clientType = -1;
                 }
                 if (adapterCity != null) {
                     adapterCity.setSelectPosition(0);
@@ -504,11 +491,6 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
                     adapterNextVisit.notifyDataSetChanged();
                     timeRange = "";
                 }
-//                if (popupWindow.isShowing()) {
-//                    popupWindow.dismiss();
-//                }
-//                myFragment.filterHttpRequest("-1", "", "");
-
 
                 break;
             case R.id.text_sure:    //确定

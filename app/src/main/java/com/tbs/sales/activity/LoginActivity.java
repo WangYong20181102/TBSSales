@@ -187,7 +187,6 @@ public class LoginActivity extends BaseActivity {
         HashMap<String, Object> params = new HashMap<>();
         params.put("username", editUsername.getText().toString().trim());
         params.put("password", editPassword.getText().toString().trim());
-        params.put("plat", "android");
         params.put("device_id", AppInfoUtils.getPushRegisterId(this));
         LogUtils.logE(AppInfoUtils.getPushRegisterId(this));
         OkHttpUtils.post(Constant.LOGIN_DOLOGIN, params, new Callback() {
@@ -244,6 +243,7 @@ public class LoginActivity extends BaseActivity {
         AppInfoUtils.setUserIcon(this, successBean.getUserinfo().getIcon());
         AppInfoUtils.setUserRoleDesc(this, successBean.getUserinfo().getRole_desc());
         AppInfoUtils.setLoginAccount(this, editUsername.getText().toString().trim());
+        AppInfoUtils.setOrganAreaIds(this, successBean.getUserinfo().getOrgan_area_ids());
         if (AppManager.getInstances().isActivityExist(MainActivity.class)) {    //如果MainActivity，登录成功发送广播通知跟新数据
             EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_HOME_DATA));   //更新首页数据
             EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_CLIENT_DATA));//更新 客户 数据

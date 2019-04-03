@@ -17,9 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/d45"
             android:layout_marginLeft="@dimen/d24"
+            android:gravity="center"
             android:text="客户"
             android:textColor="@color/black"
-            android:gravity="center"
             android:textSize="@dimen/s17"
             android:textStyle="bold" />
 
@@ -83,15 +83,15 @@
                 android:layout_height="wrap_content">
 
             </android.support.v4.view.ViewPager>
+
             <LinearLayout
                 android:id="@+id/linear_point"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/d17"
-                android:orientation="horizontal"
-                android:gravity="center">
-            </LinearLayout>
+                android:gravity="center"
+                android:orientation="horizontal"></LinearLayout>
         </RelativeLayout>
 
         <View
@@ -102,8 +102,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/d11"
             android:layout_marginTop="@dimen/d16"
+            android:layout_marginBottom="@dimen/d11"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -129,45 +129,53 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:left_show_text="我的客户" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/d1"
-            android:background="@color/FC_E8E9EB"
-            android:layout_marginLeft="@dimen/d24"/>
+            android:layout_marginLeft="@dimen/d24"
+            android:background="@color/FC_E8E9EB" />
+
+        <com.tbs.sales.widget.ClientItemWidget
+            android:id="@+id/ciw_invalid_customer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_show_text="成交客户" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:layout_marginLeft="@dimen/d24"
+            android:background="@color/FC_E8E9EB" />
+
         <com.tbs.sales.widget.ClientItemWidget
             android:id="@+id/ciw_public_client"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:left_show_text="综合查询" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/d1"
-            android:background="@color/FC_E8E9EB"
-            android:layout_marginLeft="@dimen/d24"/>
-        <com.tbs.sales.widget.ClientItemWidget
-            android:id="@+id/ciw_invalid_customer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:left_show_text="无效客户" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/d1"
-            android:background="@color/FC_E8E9EB"
-            android:layout_marginLeft="@dimen/d24"/>
+            android:layout_marginLeft="@dimen/d24"
+            android:background="@color/FC_E8E9EB" />
+
         <com.tbs.sales.widget.ClientItemWidget
             android:id="@+id/ciw_follow_up_record"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:left_show_text="跟进记录" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/d9"
             android:background="@color/FC_F8F8F8" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/d11"
             android:layout_marginTop="@dimen/d16"
+            android:layout_marginBottom="@dimen/d11"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -194,15 +202,15 @@
             android:layout_height="wrap_content"
             app:left_show_text="数据概览" />
         <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/d1"-->
-            <!--android:background="@color/FC_E8E9EB"-->
-            <!--android:layout_marginLeft="@dimen/d24"/>-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/d1"-->
+        <!--android:background="@color/FC_E8E9EB"-->
+        <!--android:layout_marginLeft="@dimen/d24"/>-->
         <!--<com.tbs.sales.widget.ClientItemWidget-->
-            <!--android:id="@+id/ciw_outbound_statistics"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:left_show_text="外呼统计" />-->
+        <!--android:id="@+id/ciw_outbound_statistics"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:left_show_text="外呼统计" />-->
 
     </LinearLayout>
 </ScrollView>

@@ -126,7 +126,6 @@ public class MyMessageActivity extends BaseActivity {
     private void initHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("token", AppInfoUtils.getToekn(this));
-        params.put("plat", "android");
         params.put("page", mPage);
         params.put("device_id", AppInfoUtils.getPushRegisterId(this));
         params.put("page_size", pageSize);

@@ -19,6 +19,7 @@ import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.ToastUtils;
+import com.tbs.sales.widget.ClearEditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,9 +43,7 @@ public class EditNameActivity extends BaseActivity {
     @BindView(R.id.tv_sure)
     TextView tvSure;
     @BindView(R.id.et_nickname)
-    EditText etNickname;
-    @BindView(R.id.image_username_del)
-    ImageView imageUsernameDel;
+    ClearEditText etNickname;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,32 +60,9 @@ public class EditNameActivity extends BaseActivity {
         String name = AppInfoUtils.getUserNickname(this);
         etNickname.setText(name);
         etNickname.setSelection(name.length());
-        if (!TextUtils.isEmpty(name)){
-            imageUsernameDel.setVisibility(View.VISIBLE);
-        }
-        etNickname.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s.toString().trim())) {
-                    imageUsernameDel.setVisibility(View.VISIBLE);
-                } else {
-                    imageUsernameDel.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
-    @OnClick({R.id.tv_cancle, R.id.tv_sure, R.id.image_username_del})
+    @OnClick({R.id.tv_cancle, R.id.tv_sure})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_cancle:    //取消
@@ -99,9 +75,6 @@ public class EditNameActivity extends BaseActivity {
                     EventBusUtil.sendEvent(new Event(EC.EventCode.CHANGE_USERNAME, etNickname.getText().toString().trim()));
                     finish();
                 }
-                break;
-            case R.id.image_username_del:   //清除
-                etNickname.setText("");
                 break;
         }
     }

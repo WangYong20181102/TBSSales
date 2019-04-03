@@ -64,10 +64,28 @@ public class Constant {
     public static final String WXDISTRIBUTE_CUSTOMER_CALL_COM = HTTP_URL_H5 + "/wxdistribute#/customer/count/call?type=call_com";
     //排行榜
     public static final String STATS_GETSTATSINDEX = HTTP_URL + "/api/stats/getStatsIndex";
+    //跟进记录
+    public static final String SALE_GETCOMFOLLOW = HTTP_URL + "/api/sale/getcomfollow";
+    //流转记录
+    public static final String SALE_GETCOMOPERATELIST = HTTP_URL + "/api/sale/getComOperateList";
+    //新增客户
+    public static final String SALE_ADDCOM = HTTP_URL + "/api/sale/addCom";
+    //综合查询
+    public static final String SALE_GETCOMPOSITELIST = HTTP_URL + "/api/sale/getCompositeList";
+    //获取领取人列表
+    public static final String ORGAN_GETALLSTAFF = HTTP_URL + "/api/organ/getAllStaff";
+    //跟进记录
+    public static final String SALE_GETOWNERFOLLOWLIST = HTTP_URL + "/api/sale/getownerfollowlist";
+    //客户数据
+    public static final String SALE_GETCOMINFO = HTTP_URL + "/api/sale/getcominfo";
+    //获取转移客户负责人
+    public static final String ORGAN_GETTRANSUSER = HTTP_URL + "/api/organ/getTransUser";
 
 
     //详情页
     public static final String CUSTOMER_MY_DETAIL = HTTP_URL_H5 + "/wxdistribute#/customer/my/detail";
+    //成交续费
+    public static final String BUSINESS_CONTRACT = HTTP_URL_H5 + "/wxdistribute#/business/contract";
 
 
     /********************************************************           榜单         ****************************************************************/

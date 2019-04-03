@@ -23,8 +23,10 @@ import com.tbs.sales.adapter.SearchResultAdapter;
 import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.MoveDistanceUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.ToastUtils;
+import com.tbs.sales.widget.ClearEditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +46,7 @@ import okhttp3.Response;
 /**
  * Created by Mr.Wang on 2019/2/27 15:55.
  */
-public class HomeSearchActivity extends BaseActivity implements TextWatcher, TextView.OnEditorActionListener {
+public class HomeSearchActivity extends BaseActivity implements TextView.OnEditorActionListener, TextWatcher {
 
     @BindView(R.id.image_search)
     ImageView imageSearch;
@@ -68,6 +70,8 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
     private int mPage = 0;
     private int pageSize = 20;
     private List<HomeDataBean.ListBean> beanList;
+    private boolean iMove;//屏幕滑动距离
+    private String list_type = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +79,13 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
         setContentView(R.layout.activity_home_search);
         ButterKnife.bind(this);
         gson = new Gson();
+        initIntent();
         initView();
+
+    }
+
+    private void initIntent() {
+        list_type = getIntent().getStringExtra("list_type");
     }
 
     /**
@@ -106,6 +116,12 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setOnScrollListener(onScrollListener);
+        new MoveDistanceUtils().setOnMoveDistanceListener(recyclerView, new MoveDistanceUtils.OnMoveDistanceListener() {
+            @Override
+            public void onMoveDistance(boolean b) {
+                iMove = b;
+            }
+        });
     }
 
     //上拉加载更多
@@ -115,7 +131,9 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
             super.onScrollStateChanged(recyclerView, newState);
             if (adapter != null) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && layoutManager.findLastVisibleItemPosition() + 1 == adapter.getItemCount()) {
-                    LoadMore();
+                    if (iMove) {
+                        LoadMore();
+                    }
                 }
             }
         }
@@ -127,7 +145,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
         searchHttpRequest();
     }
 
-    @OnClick({R.id.image_search, R.id.image_clear, R.id.text_cancel})
+    @OnClick({R.id.image_search, R.id.text_cancel, R.id.image_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.image_search: //搜索
@@ -138,14 +156,14 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
                     hideSystemKeyBroad();
                 }
                 break;
-            case R.id.image_clear:  //清理输入框
-                editSearch.setText("");
-                break;
             case R.id.text_cancel:  //取消
                 if (textCancel.getText().toString().trim().equals("取消")) {
                     finish();
                     hideSystemKeyBroad();
                 }
+                break;
+            case R.id.image_clear:  //清理输入框
+                editSearch.setText("");
                 break;
         }
     }
@@ -155,8 +173,7 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
      */
     private void searchHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("plat", "android");
-        params.put("list_type", "all");
+        params.put("list_type", list_type);
         params.put("page_size", pageSize);
         params.put("co_type", "-1");
         params.put("page", mPage);
@@ -220,26 +237,6 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
         });
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!TextUtils.isEmpty(s.toString().trim())) {
-            imageClear.setVisibility(View.VISIBLE);
-        } else {
-            imageClear.setVisibility(View.GONE);
-            linearCanSearch.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
     /**
      * 隐藏系统键盘
      */
@@ -261,5 +258,25 @@ public class HomeSearchActivity extends BaseActivity implements TextWatcher, Tex
             }
         }
         return false;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (!TextUtils.isEmpty(s.toString().trim())) {
+            imageClear.setVisibility(View.VISIBLE);
+        } else {
+            imageClear.setVisibility(View.GONE);
+            linearCanSearch.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

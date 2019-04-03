@@ -9,8 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/d5"
-        android:layout_marginTop="@dimen/d24">
+        android:layout_marginTop="@dimen/d24"
+        android:layout_marginBottom="@dimen/d5">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,10 +35,10 @@
                 android:layout_toRightOf="@+id/image_search"
                 android:background="@null"
                 android:hint="搜索"
-                android:textColor="@color/FC_666666"
-                android:singleLine="true"
-                android:maxLines="1"
                 android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/FC_666666"
                 android:textSize="@dimen/s12" />
 
             <ImageView
@@ -73,26 +73,30 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/linear_no_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:visibility="gone">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/no_message"/>
+                android:src="@mipmap/no_message" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="暂无数据"
-                android:textSize="@dimen/s13"
-                android:textColor="@color/FC_AAAAAA"/>
+                android:textColor="@color/FC_AAAAAA"
+                android:textSize="@dimen/s13" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/linear_can_search"
             android:layout_width="match_parent"

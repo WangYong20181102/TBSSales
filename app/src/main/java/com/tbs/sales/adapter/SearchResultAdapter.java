@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.activity.ClientDetailsActivity;
 import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
@@ -41,7 +42,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MyViewHolder holder = new MyViewHolder(view);
             return holder;
         } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.today_layout, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.my_content, parent, false);
             MyViewHolder2 holder2 = new MyViewHolder2(view);
             return holder2;
         }
@@ -59,15 +60,24 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((MyViewHolder2) holder).textId.setText(beanList.get(position - 1).getCo_id() + "");
             //姓名
             ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName());
+            //性别(1男2nv)
+            switch (beanList.get(position - 1).getSex()) {
+                case 1:
+                    ((MyViewHolder2) holder).imageSex.setImageResource(R.mipmap.boy);
+                    break;
+                case 2:
+                    ((MyViewHolder2) holder).imageSex.setImageResource(R.mipmap.girl);
+                    break;
+            }
             //地址
             ((MyViewHolder2) holder).textAddress.setText(beanList.get(position - 1).getAddress());
             ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, WebViewActivity.class);
-                    String mLoadingUrl = Constant.CUSTOMER_MY_DETAIL + "?co_id=" + beanList.get(position - 1).getCo_id() + "&co_type=" + beanList.get(position - 1).getCo_type() + "&warn_state=" + beanList.get(position - 1).getWarn_state() + "&delay=" + beanList.get(position - 1).getDelay_state() + "&menu=my";
-                    intent.putExtra("mLoadingUrl", mLoadingUrl);
+                    Intent intent = new Intent(context, ClientDetailsActivity.class);
+                    intent.putExtra("co_id", beanList.get(position - 1).getCo_id());
                     context.startActivity(intent);
+
                 }
             });
         }
@@ -107,6 +117,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView textAddress;
         @BindView(R.id.linear_click)
         LinearLayout linearClick;
+        @BindView(R.id.image_sex)
+        ImageView imageSex;
 
         public MyViewHolder2(View itemView) {
             super(itemView);

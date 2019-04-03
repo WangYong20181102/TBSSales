@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d9"
+        android:background="@color/FC_F8F8F8" />
+
+    <RelativeLayout
+        android:id="@+id/relative_click"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d33"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginTop="@dimen/d14"
+        android:layout_marginRight="@dimen/d24"
+        android:layout_marginBottom="@dimen/d14"
+        android:background="@drawable/home_mine_search_bg">
+
+        <ImageView
+            android:id="@+id/image_search"
+            android:layout_width="@dimen/d14"
+            android:layout_height="@dimen/d14"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d9"
+            android:src="@mipmap/search" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d10"
+            android:layout_toRightOf="@+id/image_search"
+            android:text="客户ID/姓名/公司名称"
+            android:textColor="@color/FC_666666"
+            android:textSize="@dimen/s12" />
+
+        <LinearLayout
+            android:id="@+id/image_filter"
+            android:layout_width="@dimen/d38"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/d14"
+                android:layout_height="@dimen/d14"
+                android:src="@mipmap/filter" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d1"
+        android:background="@color/FC_EEEEEE"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginRight="@dimen/d24"/>
+
+</LinearLayout>

@@ -64,6 +64,7 @@ public class OkHttpUtils {
      * @param callback
      */
     public static void get(String url, HashMap<String, Object> paramsMap, Callback callback) {
+        paramsMap.put("plat","android");
         StringBuilder tempParams = new StringBuilder();
         try {
             //处理参数
@@ -105,6 +106,7 @@ public class OkHttpUtils {
      */
     public static void post(String url, HashMap<String, Object> params, Callback callback) {
         FormBody.Builder builder = new FormBody.Builder();
+        builder.add("plat","android");
         for (String key : params.keySet()) {
             builder.add(key, String.valueOf(params.get(key)));
         }

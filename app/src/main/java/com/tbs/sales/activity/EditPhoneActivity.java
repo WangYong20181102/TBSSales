@@ -18,6 +18,7 @@ import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.widget.ClearEditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,9 +42,7 @@ public class EditPhoneActivity extends BaseActivity {
     @BindView(R.id.tv_sure)
     TextView tvSure;
     @BindView(R.id.et_phone_number)
-    EditText etPhoneNumber;
-    @BindView(R.id.image_username_del)
-    ImageView imageUsernameDel;
+    ClearEditText etPhoneNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,32 +59,9 @@ public class EditPhoneActivity extends BaseActivity {
         String phone = AppInfoUtils.getCellPhone(this);
         etPhoneNumber.setText(phone);
         etPhoneNumber.setSelection(phone.length());
-        if (!TextUtils.isEmpty(phone)) {
-            imageUsernameDel.setVisibility(View.VISIBLE);
-        }
-        etPhoneNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s.toString().trim())) {
-                    imageUsernameDel.setVisibility(View.VISIBLE);
-                } else {
-                    imageUsernameDel.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
-    @OnClick({R.id.tv_cancle, R.id.tv_sure, R.id.image_username_del})
+    @OnClick({R.id.tv_cancle, R.id.tv_sure})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_cancle:    //取消
@@ -98,9 +74,6 @@ public class EditPhoneActivity extends BaseActivity {
                     EventBusUtil.sendEvent(new Event(EC.EventCode.CHANGE_PHONE, etPhoneNumber.getText().toString().trim()));
                     finish();
                 }
-                break;
-            case R.id.image_username_del:   //清除
-                etPhoneNumber.setText("");
                 break;
         }
     }

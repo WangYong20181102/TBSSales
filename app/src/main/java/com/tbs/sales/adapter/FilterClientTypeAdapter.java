@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.bean.KeyValueDataBean;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
  */
 public class FilterClientTypeAdapter extends BaseAdapter {
     private Context context;
-    private List<String> listClientType;
+    private List<KeyValueDataBean> listClientType;
     private int selectPosition;
 
-    public FilterClientTypeAdapter(Context context, List<String> listClientType, int selectPosition) {
+    public FilterClientTypeAdapter(Context context, List<KeyValueDataBean> listClientType, int selectPosition) {
 
         this.context = context;
         this.listClientType = listClientType;
@@ -54,7 +55,7 @@ public class FilterClientTypeAdapter extends BaseAdapter {
         }else {
             holder = (MyViewHolder) convertView.getTag();
         }
-        holder.BtntextView.setText(listClientType.get(position));
+        holder.BtntextView.setText(listClientType.get(position).getName());
         if (position == selectPosition) {
             holder.BtntextView.setTextColor(Color.parseColor("#ffffff"));
             GradientDrawable gradientDrawable = new GradientDrawable();

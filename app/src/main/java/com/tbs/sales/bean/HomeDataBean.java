@@ -1,7 +1,6 @@
 package com.tbs.sales.bean;
 
-import com.google.gson.annotations.SerializedName;
-
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -262,7 +261,7 @@ public class HomeDataBean {
         }
     }
 
-    public static class ListBean {
+    public static class ListBean implements Serializable {
 
         private int co_id;
         private int com_id;
@@ -286,7 +285,7 @@ public class HomeDataBean {
         private int add_uid;
         private String pre_time;
         private String follow_time;
-        private Object finish_time;
+        private String finish_time;
         private Object create_time;
         private String update_time;
         private int respond_uid;
@@ -317,6 +316,43 @@ public class HomeDataBean {
         private String callphone;
         private String sphone;
         private List<?> respond_list;
+        /**
+         * update_time : null
+         * invalid_reason : 0
+         * is_grab : 0
+         * add_time : 2019-04-01 09:52:15
+         * grab_time :
+         * invite_time :
+         * give_uid : 0
+         * give_name :
+         * grab_uid : 0
+         * grab_name :
+         * grab_state : 0
+         * grab_type : 0
+         * invalid_reason_name :
+         * real_phone : 18200000000
+         * is_grab_desc : 公共客户
+         * invite_uid : 0
+         * invite_name :
+         */
+
+        private int invalid_reason;
+        private int is_grab;
+        private String add_time;
+        private String grab_time;
+        private String invite_time;
+        private int give_uid;
+        private String give_name;
+        private int grab_uid;
+        private String grab_name;
+        private int grab_state;
+        private int grab_type;
+        private String invalid_reason_name;
+        private String real_phone;
+        private String is_grab_desc;
+        private String invite_uid;
+        private String invite_name;
+
 
         public int getCo_id() {
             return co_id;
@@ -494,11 +530,11 @@ public class HomeDataBean {
             this.follow_time = follow_time;
         }
 
-        public Object getFinish_time() {
+        public String getFinish_time() {
             return finish_time;
         }
 
-        public void setFinish_time(Object finish_time) {
+        public void setFinish_time(String finish_time) {
             this.finish_time = finish_time;
         }
 
@@ -740,6 +776,134 @@ public class HomeDataBean {
 
         public void setRespond_list(List<?> respond_list) {
             this.respond_list = respond_list;
+        }
+
+        public int getInvalid_reason() {
+            return invalid_reason;
+        }
+
+        public void setInvalid_reason(int invalid_reason) {
+            this.invalid_reason = invalid_reason;
+        }
+
+        public int getIs_grab() {
+            return is_grab;
+        }
+
+        public void setIs_grab(int is_grab) {
+            this.is_grab = is_grab;
+        }
+
+        public String getAdd_time() {
+            return add_time;
+        }
+
+        public void setAdd_time(String add_time) {
+            this.add_time = add_time;
+        }
+
+        public String getGrab_time() {
+            return grab_time;
+        }
+
+        public void setGrab_time(String grab_time) {
+            this.grab_time = grab_time;
+        }
+
+        public String getInvite_time() {
+            return invite_time;
+        }
+
+        public void setInvite_time(String invite_time) {
+            this.invite_time = invite_time;
+        }
+
+        public int getGive_uid() {
+            return give_uid;
+        }
+
+        public void setGive_uid(int give_uid) {
+            this.give_uid = give_uid;
+        }
+
+        public String getGive_name() {
+            return give_name;
+        }
+
+        public void setGive_name(String give_name) {
+            this.give_name = give_name;
+        }
+
+        public int getGrab_uid() {
+            return grab_uid;
+        }
+
+        public void setGrab_uid(int grab_uid) {
+            this.grab_uid = grab_uid;
+        }
+
+        public String getGrab_name() {
+            return grab_name;
+        }
+
+        public void setGrab_name(String grab_name) {
+            this.grab_name = grab_name;
+        }
+
+        public int getGrab_state() {
+            return grab_state;
+        }
+
+        public void setGrab_state(int grab_state) {
+            this.grab_state = grab_state;
+        }
+
+        public int getGrab_type() {
+            return grab_type;
+        }
+
+        public void setGrab_type(int grab_type) {
+            this.grab_type = grab_type;
+        }
+
+        public String getInvalid_reason_name() {
+            return invalid_reason_name;
+        }
+
+        public void setInvalid_reason_name(String invalid_reason_name) {
+            this.invalid_reason_name = invalid_reason_name;
+        }
+
+        public String getReal_phone() {
+            return real_phone;
+        }
+
+        public void setReal_phone(String real_phone) {
+            this.real_phone = real_phone;
+        }
+
+        public String getIs_grab_desc() {
+            return is_grab_desc;
+        }
+
+        public void setIs_grab_desc(String is_grab_desc) {
+            this.is_grab_desc = is_grab_desc;
+        }
+
+        public String getInvite_uid() {
+            return invite_uid;
+        }
+
+        public void setInvite_uid(String invite_uid) {
+            this.invite_uid = invite_uid;
+        }
+
+        public String getInvite_name() {
+            return invite_name;
+        }
+
+        public void setInvite_name(String invite_name) {
+            this.invite_name = invite_name;
         }
     }
 }

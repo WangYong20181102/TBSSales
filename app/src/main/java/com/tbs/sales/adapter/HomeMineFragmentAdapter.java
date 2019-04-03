@@ -8,11 +8,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.activity.ClientDetailsActivity;
 import com.tbs.sales.activity.HomeSearchActivity;
 import com.tbs.sales.activity.LoginActivity;
 import com.tbs.sales.activity.WebViewActivity;
@@ -20,6 +22,7 @@ import com.tbs.sales.bean.HomeDataBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 
+import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
@@ -87,7 +90,9 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if (TextUtils.isEmpty(AppInfoUtils.getId(context))) {
                         context.startActivity(new Intent(context, LoginActivity.class));
                     } else {
-                        context.startActivity(new Intent(context, HomeSearchActivity.class));
+                        Intent intent = new Intent(context,HomeSearchActivity.class);
+                        intent.putExtra("list_type","my");
+                        context.startActivity(intent);
                     }
                 }
             });
@@ -95,27 +100,31 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
             //公司名称
             ((MyViewHolder2) holder).textCompanyName.setText(beanList.get(position - 1).getCo_name());
             //右侧信息
-            if (beanList.get(position - 1).getWarn_state() == 0){
+            if (beanList.get(position - 1).getWarn_state() == 0) {
                 ((MyViewHolder2) holder).textRemarks.setText(beanList.get(position - 1).getCo_type_name());
-            }else {
+            } else {
                 ((MyViewHolder2) holder).textRemarks.setText(beanList.get(position - 1).getWarn_state_desc());
             }
             //id
             ((MyViewHolder2) holder).textId.setText(beanList.get(position - 1).getCo_id() + "");
             //姓名
-            if (beanList.get(position - 1).getSex() == 2) {//女
-                ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName() + "(女)");
-            } else {
-                ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName() + "(男)");
+            ((MyViewHolder2) holder).textUserName.setText(beanList.get(position - 1).getName());
+            //性别(1男2女)
+            switch (beanList.get(position - 1).getSex()) {
+                case 1:
+                    ((MyViewHolder2) holder).imageSex.setImageResource(R.mipmap.boy);
+                    break;
+                case 2:
+                    ((MyViewHolder2) holder).imageSex.setImageResource(R.mipmap.girl);
+                    break;
             }
             //地址
             ((MyViewHolder2) holder).textAddress.setText(beanList.get(position - 1).getAddress());
             ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, WebViewActivity.class);
-                    String mLoadingUrl = Constant.CUSTOMER_MY_DETAIL + "?co_id=" + beanList.get(position - 1).getCo_id() + "&co_type=" + beanList.get(position - 1).getCo_type() + "&warn_state=" + beanList.get(position - 1).getWarn_state() + "&delay=" + beanList.get(position - 1).getDelay_state() + "&menu=my";
-                    intent.putExtra("mLoadingUrl", mLoadingUrl);
+                    Intent intent = new Intent(context, ClientDetailsActivity.class);
+                    intent.putExtra("co_id", beanList.get(position - 1).getCo_id());
                     context.startActivity(intent);
                 }
             });
@@ -165,6 +174,8 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
         TextView textAddress;
         @BindView(R.id.linear_click)
         LinearLayout linearClick;
+        @BindView(R.id.image_sex)
+        ImageView imageSex;
 
         public MyViewHolder2(View itemView) {
             super(itemView);

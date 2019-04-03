@@ -269,6 +269,15 @@ public class AppInfoUtils {
         context.getSharedPreferences("userInfo", 0).edit().putString("cityname", cityname).apply();
     }
 
+    //负责区域
+    public static String getOrganAreaIds(Context context) {
+        return context.getSharedPreferences("userInfo", 0).getString("organ_area_ids", "");
+    }
+
+    public static void setOrganAreaIds(Context context, String province) {
+        context.getSharedPreferences("userInfo", 0).edit().putString("organ_area_ids", province).apply();
+    }
+
     //用户所在的省份
     public static String getUserProvince(Context context) {
         return context.getSharedPreferences("userInfo", 0).getString("province", "");
@@ -303,6 +312,15 @@ public class AppInfoUtils {
 
     public static void setUserid(Context context, String userid) {
         context.getSharedPreferences("userInfo", 0).edit().putString("userid", userid).commit();
+    }
+
+    //领取人
+    public static String getPeople(Context context) {
+        return context.getSharedPreferences("userInfo", 0).getString("people", "");
+    }
+
+    public static void setPeople(Context context, String people) {
+        context.getSharedPreferences("userInfo", 0).edit().putString("people", people).commit();
     }
 
     //用户的md5密码

@@ -117,7 +117,6 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
         params.put("area_id", "-1");
         params.put("time", time);
         params.put("token", AppInfoUtils.getToekn(this));
-        params.put("plat", "android");
         OkHttpUtils.post(Constant.STATS_GETSTATSINDEX, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -196,20 +195,16 @@ public class ClientActivity extends BaseActivity implements ViewPager.OnPageChan
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ciw_my_client:    //我的客户
-                intent = new Intent(this, WebViewActivity.class);
-                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_MY);
+                intent = new Intent(this, MineClientActivity.class);
                 break;
             case R.id.ciw_public_client://综合查询
-                intent = new Intent(this, WebViewActivity.class);
-                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_COMMON);
+                intent = new Intent(this, IntegratedQueryActivity.class);
                 break;
-            case R.id.ciw_invalid_customer://无效客户
-                intent = new Intent(this, WebViewActivity.class);
-                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_INVALID);
+            case R.id.ciw_invalid_customer://成交客户
+                intent = new Intent(this, TransactionClientActivity.class);
                 break;
             case R.id.ciw_follow_up_record://跟进记录
-                intent = new Intent(this, WebViewActivity.class);
-                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_FOLLOW);
+                intent = new Intent(this, FollowRecordingActivity.class);
                 break;
             case R.id.ciw_customer_follow_up://数据概览
                 intent = new Intent(this, WebViewActivity.class);

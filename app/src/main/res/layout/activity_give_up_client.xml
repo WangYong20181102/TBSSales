@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d45"
+        android:background="@color/white">
+        <!--返回按钮，增大点击区域-->
+        <RelativeLayout
+            android:id="@+id/relative_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/d24">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/back" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="放弃客户"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s17"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d9"
+        android:background="@color/FC_F8F8F8" />
+
+    <RelativeLayout
+        android:id="@+id/rl_give_up_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/d18">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d13"
+            android:text="*"
+            android:textColor="@color/FC_EF133A"
+            android:textSize="@dimen/s13" />
+
+        <TextView
+            android:id="@+id/tv_give_up_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d24"
+            android:text="放弃类型"
+            android:textColor="@color/FC_333333"
+            android:textSize="@dimen/s14" />
+
+        <TextView
+            android:id="@+id/tv_right_give_up_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/d9"
+            android:layout_toLeftOf="@+id/image_give_up_type"
+            android:text="请选择"
+            android:textColor="@color/FC_999999"
+            android:textSize="@dimen/s12" />
+
+        <ImageView
+            android:id="@+id/image_give_up_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d24"
+            android:src="@mipmap/side" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d1"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginTop="@dimen/d17"
+        android:background="@color/FC_E8E9EB" />
+
+    <RelativeLayout
+        android:id="@+id/rl_client_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/d18">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d13"
+            android:text="*"
+            android:textColor="@color/FC_EF133A"
+            android:textSize="@dimen/s13" />
+
+        <TextView
+            android:id="@+id/tv_client_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/d24"
+            android:text="客户类型"
+            android:textColor="@color/FC_333333"
+            android:textSize="@dimen/s14" />
+
+        <TextView
+            android:id="@+id/tv_right_client_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/d9"
+            android:layout_toLeftOf="@+id/image_right_side"
+            android:text="请选择"
+            android:textColor="@color/FC_999999"
+            android:textSize="@dimen/s12" />
+
+        <ImageView
+            android:id="@+id/image_right_side"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/d24"
+            android:src="@mipmap/side" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d1"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginTop="@dimen/d17"
+        android:background="@color/FC_E8E9EB" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d126"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginTop="@dimen/d19"
+        android:layout_marginRight="@dimen/d24">
+
+        <EditText
+            android:id="@+id/et_give_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请输入放弃说明"
+            android:maxEms="20"
+            android:maxLength="20"
+            android:textColor="@color/FC_999999"
+            android:textSize="@dimen/s13" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:layout_alignParentBottom="true"
+            android:background="@color/FC_E8E9EB" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/d14"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/FC_333333"
+                android:textSize="@dimen/s13" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/20"
+                android:textColor="@color/FC_999999"
+                android:textSize="@dimen/s13" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_sure"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d40"
+        android:layout_marginLeft="@dimen/d24"
+        android:layout_marginTop="@dimen/d29"
+        android:layout_marginRight="@dimen/d24"
+        android:background="@drawable/give_up_client_btn_bg"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确认放弃"
+            android:textColor="@color/white"
+            android:textSize="@dimen/s14" />
+    </LinearLayout>
+
+
+</LinearLayout>

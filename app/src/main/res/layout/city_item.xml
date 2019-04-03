@@ -3,21 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/text_city"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="北京市"
-        android:textSize="@dimen/s15"
-        android:textColor="@color/black"
         android:layout_marginLeft="@dimen/d61"
-        android:layout_marginTop="@dimen/d15"/>
+        android:layout_marginTop="@dimen/d15"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="北京市"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s15" />
+
+        <TextView
+            android:id="@+id/tv_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d10"
+            android:text="剩余"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s15" />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/d1"
-        android:background="@color/FC_E5E5E5"
         android:layout_marginLeft="@dimen/d29"
+        android:layout_marginTop="@dimen/d15"
         android:layout_marginRight="@dimen/d24"
-        android:layout_marginTop="@dimen/d15"/>
+        android:background="@color/FC_E5E5E5" />
 
 </LinearLayout>

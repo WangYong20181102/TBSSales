@@ -139,6 +139,11 @@ public class WebViewActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.new_webview_back: //返回
+                if (webView != null) {
+                    ((ViewGroup) webView.getParent()).removeView(webView);
+                    webView.destroy();
+                    webView = null;
+                }
                 finish();
                 break;
             case R.id.ll_share:

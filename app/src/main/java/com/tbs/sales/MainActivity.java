@@ -20,6 +20,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.tbs.sales.activity.AddClientActivity;
 import com.tbs.sales.activity.ApplicationActivity;
 import com.tbs.sales.activity.ClientActivity;
 import com.tbs.sales.activity.HomePagerActivity;
@@ -149,6 +150,7 @@ public class MainActivity extends TabActivity {
         AppInfoUtils.setUserSex(this, successBean.getSex());
         AppInfoUtils.setUserIcon(this, successBean.getIcon());
         AppInfoUtils.setUserRoleDesc(this, successBean.getRole_desc());
+        AppInfoUtils.setOrganAreaIds(this, successBean.getOrgan_area_ids());
     }
 
     /**
@@ -222,9 +224,10 @@ public class MainActivity extends TabActivity {
                 setActivityPosition(4);
                 break;
             case R.id.relative_add: //添加
-                Intent intent = new Intent(this, WebViewActivity.class);
-                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_ADD);
-                startActivity(intent);
+//                Intent intent = new Intent(this, WebViewActivity.class);
+//                intent.putExtra("mLoadingUrl", Constant.WXDISTRIBUTE_CUSTOMER_ADD);
+//                startActivity(intent);
+                startActivity(new Intent(this, AddClientActivity.class));
                 break;
         }
     }

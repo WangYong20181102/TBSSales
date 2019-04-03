@@ -6,8 +6,8 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:paddingLeft="@dimen/d22"
-    android:paddingRight="@dimen/d25"
-    android:paddingTop="@dimen/d19">
+    android:paddingTop="@dimen/d19"
+    android:paddingRight="@dimen/d25">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,8 +17,8 @@
             android:id="@+id/image_city"
             android:layout_width="@dimen/d21"
             android:layout_height="@dimen/d21"
-            android:src="@mipmap/company"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@mipmap/company" />
 
         <TextView
             android:id="@+id/text_company_name"
@@ -26,10 +26,10 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/d7"
-            android:layout_toRightOf="@+id/image_city"
             android:layout_toLeftOf="@+id/text_remarks"
-            android:singleLine="true"
+            android:layout_toRightOf="@+id/image_city"
             android:ellipsize="end"
+            android:singleLine="true"
             android:text="土拨鼠网络科技" />
 
         <TextView
@@ -37,10 +37,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:text="意向客户"
             android:textColor="@color/FC_FF8400"
-            android:textSize="@dimen/s12"
-            android:layout_centerVertical="true"/>
+            android:textSize="@dimen/s12" />
     </RelativeLayout>
 
     <LinearLayout
@@ -77,12 +77,10 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="姓名:"
-            android:textColor="@color/FC_666666"
-            android:textSize="@dimen/s13" />
+        <ImageView
+            android:layout_width="@dimen/d15"
+            android:layout_height="@dimen/d15"
+            android:src="@mipmap/client" />
 
         <TextView
             android:id="@+id/text_user_name"
@@ -92,6 +90,13 @@
             android:text="土拨鼠"
             android:textColor="@color/FC_666666"
             android:textSize="@dimen/s13" />
+
+        <ImageView
+            android:id="@+id/image_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/d4"
+            android:src="@mipmap/boy" />
 
     </LinearLayout>
 
@@ -103,12 +108,10 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="预警:"
-            android:textColor="@color/FC_666666"
-            android:textSize="@dimen/s13" />
+            android:src="@mipmap/early_warn" />
 
         <TextView
             android:id="@+id/text_early_warning"
@@ -125,7 +128,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/d1"
         android:layout_marginLeft="@dimen/d4"
-        android:layout_marginRight="@dimen/d1"
         android:layout_marginTop="@dimen/d19"
+        android:layout_marginRight="@dimen/d1"
         android:background="@color/FC_EEEEEE" />
 </LinearLayout>

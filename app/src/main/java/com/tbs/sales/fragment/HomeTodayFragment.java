@@ -95,7 +95,6 @@ public class HomeTodayFragment extends BaseFragment {
     private void initHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", mPage);
-        params.put("plat", "android");
         params.put("page_size", pageSize);
         params.put("list_type", "today");
         params.put("co_type", "-1");

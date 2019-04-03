@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!--相机权限-->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- SD卡读取权限，用户写入离线定位数据 -->
@@ -99,6 +100,20 @@
         <activity android:name=".activity.NoticeActivity" />
         <activity android:name=".activity.HelpCenterActivity" />
         <activity android:name=".activity.GuidePageActivity" />
+        <activity android:name=".activity.ClientDetailsActivity" />
+        <activity android:name=".activity.MineClientActivity" />
+        <activity android:name=".activity.AddClientActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".activity.ClientMessageActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".activity.ClientEditActivity" />
+        <activity android:name=".activity.GiveUpClientActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".activity.TransactionClientActivity" />
+        <activity android:name=".activity.IntegratedQueryActivity" />
+        <activity android:name=".activity.InteratedQuerySearchActivity" />
+        <activity android:name=".activity.FollowRecordingActivity" />
+        <activity android:name=".activity.TransferActivity" />
     </application>
 
 </manifest>

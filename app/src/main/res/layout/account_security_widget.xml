@@ -19,7 +19,7 @@
             android:textColor="@color/FC_333333"
             android:text="新密码:" />
 
-        <EditText
+        <com.tbs.sales.widget.ClearEditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,14 +33,6 @@
             android:layout_marginLeft="@dimen/d8"
             android:textSize="@dimen/s14" />
 
-        <ImageView
-            android:id="@+id/image_password_del"
-            android:layout_width="@dimen/d15"
-            android:layout_height="@dimen/d15"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/personal_delate"
-            android:visibility="gone" />
     </RelativeLayout>
 
     <View

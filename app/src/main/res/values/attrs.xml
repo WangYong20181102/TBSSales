@@ -4,6 +4,20 @@
         <attr name="left_text" format="string"/>
         <attr name="input_hint_text" format="string"/>
     </declare-styleable>
+    <declare-styleable name="AddClientItem">
+        <attr name="must_input_icon" format="boolean"/>
+        <!--左侧文字-->
+        <attr name="add_left_text" format="string"/>
+        <!--右侧文字-->
+        <attr name="right_text" format="string"/>
+        <!--最多字符-->
+        <attr name="max_ems" format="integer"/>
+        <!--输入类型-->
+        <attr name="input_type" format="boolean"/>
+        <!--hint-->
+        <attr name="input_hint" format="string"/>
+
+    </declare-styleable>
     <declare-styleable name="ClientItemWidget">
         <!--左侧显示文案-->
         <attr name="left_show_text" format="string"/>

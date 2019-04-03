@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linear_city"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d45">
+
+            <LinearLayout
+                android:id="@+id/linear_back"
+                android:layout_width="@dimen/d36"
+                android:layout_height="@dimen/d36"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/d17"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/d18"
+                    android:layout_height="@dimen/d18"
+                    android:src="@mipmap/back" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="选择城市"
+                android:textColor="@color/black"
+                android:textSize="@dimen/s17"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d1"
+            android:layout_marginTop="@dimen/d7"
+            android:background="@color/FC_F8F8F8" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d9"
+            android:background="@color/FC_F8F8F8" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/d33"
+            android:layout_marginLeft="@dimen/d29"
+            android:layout_marginTop="@dimen/d12"
+            android:layout_marginRight="@dimen/d24"
+            android:layout_marginBottom="@dimen/d10"
+            android:background="@drawable/home_mine_search_bg">
+
+            <ImageView
+                android:id="@+id/image_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/d14"
+                android:src="@mipmap/search" />
+
+            <EditText
+                android:id="@+id/edit_city_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/d6"
+                android:layout_toRightOf="@+id/image_search"
+                android:background="@null"
+                android:hint="城市名称搜索"
+                android:textColor="@color/FC_666666"
+                android:textSize="@dimen/s12" />
+
+            <ImageView
+                android:id="@+id/image_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/d10"
+                android:src="@mipmap/personal_delate"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <ListView
+                android:id="@+id/list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

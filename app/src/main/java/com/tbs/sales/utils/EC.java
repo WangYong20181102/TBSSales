@@ -13,5 +13,6 @@ public class EC {
         public static final int CHANGE_PHONE = 0x000005;    //更换手机号
         public static final int MAIN_SELECT = 0x000007;    //首页
         public static final int CHANGE_CITY_MESSAGE = 0x000008;    //获取城市信息
+        public static final int UPDATE_MINE_CLIENT = 0x000009;    //我的客户
     }
 }

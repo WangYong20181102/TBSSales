@@ -63,7 +63,7 @@ public class HomeMyFragment extends BaseFragment {
     private int pageSize = 20;
     private boolean isDownRefresh = false;//是否是下拉刷新
     private List<HomeDataBean.ListBean> beanList;
-    private String coType = "-1"; //客户类型
+    private int coType = -1; //客户类型
     private String city = "";//城市
     private String timeRange = "";//下次拜访
     private boolean iMove;//屏幕滑动距离
@@ -102,7 +102,7 @@ public class HomeMyFragment extends BaseFragment {
      * @param city
      * @param timeRange
      */
-    public void filterHttpRequest(String coType, String city, String timeRange) {
+    public void filterHttpRequest(int coType, String city, String timeRange) {
         this.coType = coType;
         this.city = city;
         this.timeRange = timeRange;
@@ -123,7 +123,6 @@ public class HomeMyFragment extends BaseFragment {
      */
     private void initHttpRequest() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("plat", "android");
         params.put("time_range", timeRange.trim());
         params.put("page", mPage);
         params.put("page_size", pageSize);

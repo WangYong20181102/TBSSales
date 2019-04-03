@@ -20,7 +20,7 @@ import com.tbs.sales.R;
 /**
  * Created by Mr.Wang on 2019/2/21 15:38.
  */
-public class AccountSecurityWidget extends LinearLayout implements View.OnClickListener {
+public class AccountSecurityWidget extends LinearLayout{
 
     /**
      * 左侧显示文案
@@ -29,11 +29,7 @@ public class AccountSecurityWidget extends LinearLayout implements View.OnClickL
     /**
      * 输入框
      */
-    private EditText etPassword;
-    /**
-     * 删除按钮
-     */
-    private ImageView imagePasswordDel;
+    private ClearEditText etPassword;
 
     public AccountSecurityWidget(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -73,37 +69,6 @@ public class AccountSecurityWidget extends LinearLayout implements View.OnClickL
         View view = LayoutInflater.from(context).inflate(R.layout.account_security_widget, this, true);
         tvPassword = view.findViewById(R.id.tv_password);
         etPassword = view.findViewById(R.id.et_password);
-        imagePasswordDel = view.findViewById(R.id.image_password_del);
-        imagePasswordDel.setOnClickListener(this);
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(s.toString().trim())) {
-                    imagePasswordDel.setVisibility(VISIBLE);
-                } else {
-                    imagePasswordDel.setVisibility(GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.image_password_del:
-                etPassword.setText("");
-                break;
-        }
     }
 
     public String getText() {

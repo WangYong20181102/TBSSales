@@ -134,7 +134,6 @@ public class MineActivity extends BaseActivity {
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("token", AppInfoUtils.getToekn(this));
-        params.put("plat", "android");
         OkHttpUtils.post(Constant.LOGIN_DOLOGOUT, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
