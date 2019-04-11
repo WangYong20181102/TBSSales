@@ -20,6 +20,10 @@ public class Constant {
     private static final String HTTP_URL_H5 = "http://m.test.tobosu.com";
 
 
+    //检查当前App是否需要更新
+    public static final String CHECK_APP_IS_UPDATA = HTTP_URL + "/api/public/isUpdateApp";
+
+
     /**
      * 图片上传地址
      */
@@ -80,6 +84,16 @@ public class Constant {
     public static final String SALE_GETCOMINFO = HTTP_URL + "/api/sale/getcominfo";
     //获取转移客户负责人
     public static final String ORGAN_GETTRANSUSER = HTTP_URL + "/api/organ/getTransUser";
+    //转移客户
+    public static final String GRAB_TRANSORDER = HTTP_URL + "/api/grab/transOrder";
+    //跟进记录
+    public static final String SALE_ADDFOLLOW = HTTP_URL + "/api/sale/addfollow";
+    //客户信息
+    public static final String SALE_EDITCOM = HTTP_URL + "/api/sale/editCom";
+    //放弃客户
+    public static final String GRAB_CANCELORDER = HTTP_URL + "/api/grab/cancelOrder";
+    //申请延期
+    public static final String GRAB_DELAYORDER = HTTP_URL + "/api/grab/delayOrder";
 
 
     //详情页

@@ -7,14 +7,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tbs.sales.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,8 +30,10 @@ import butterknife.ButterKnife;
 public class GuidePageActivity extends BaseActivity {
     @BindView(R.id.view_pager)
     ViewPager viewPager;
-    @BindView(R.id.btn_glide)
-    Button btnGlide;
+    @BindView(R.id.tv_btn)
+    TextView btnGlide;
+    @BindView(R.id.linear_dots)
+    LinearLayout linearDots;
     private MyPagerAdapter adapter;
     private List<Integer> integerList;
 
@@ -40,6 +45,42 @@ public class GuidePageActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
         initData();
+        initDots();
+
+    }
+
+    /**
+     * 初始化dot
+     */
+    private void initDots() {
+        linearDots.removeAllViews();
+        for (int i = 0; i < integerList.size(); i++) {
+            ImageView imageView = new ImageView(this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.rightMargin = 9;
+            layoutParams.leftMargin = 9;
+            imageView.setLayoutParams(layoutParams);
+            imageView.setBackgroundResource(R.drawable.guide_dot_bg);
+            linearDots.addView(imageView);
+        }
+        updateDots();
+    }
+
+    /**
+     * 更新点
+     */
+    private void updateDots() {
+        if (integerList.size() == 0) {
+            return;
+        }
+        int currentPage = viewPager.getCurrentItem() % integerList.size();
+        for (int i = 0; i < linearDots.getChildCount(); i++) {
+            linearDots.getChildAt(i).setEnabled(i == currentPage);// 设置setEnabled为true的话
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.rightMargin = 9;
+            layoutParams.leftMargin = 9;
+            linearDots.getChildAt(i).setLayoutParams(layoutParams);
+        }
     }
 
     /**
@@ -66,6 +107,7 @@ public class GuidePageActivity extends BaseActivity {
                 } else {
                     btnGlide.setVisibility(View.GONE);
                 }
+                updateDots();
             }
 
             @Override
@@ -76,11 +118,7 @@ public class GuidePageActivity extends BaseActivity {
     }
 
     private void initData() {
-        integerList = new ArrayList<>();
-        integerList.add(R.mipmap.kehuguanli);
-        integerList.add(R.mipmap.add);
-        integerList.add(R.mipmap.already_divided);
-        integerList.add(R.mipmap.benyuepaihang);
+        integerList = new ArrayList<>(Arrays.asList(R.mipmap.guide1,R.mipmap.guide2,R.mipmap.guide3,R.mipmap.guide4));
         adapter = new MyPagerAdapter(this);
         viewPager.setAdapter(adapter);
     }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -100,25 +101,44 @@ public class FollowRecordingActivity extends BaseActivity {
                     String code = jsonObject.optString("code");
                     LogUtils.logE("==========>>请求成功" + jsonObject.toString());
                     if (code.equals("0")) {
-                        final FollowRecordingBean dataBean = gson.fromJson(jsonObject.optString("data"), FollowRecordingBean.class);
-                        beanList.addAll(dataBean.getList());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (adapter == null) {
-                                    adapter = new FollowRecordingAdapter(FollowRecordingActivity.this, beanList);
-                                    recyclerView.setAdapter(adapter);
-                                }
-                                if (dataBean.getList().size() != 0) {
-                                    linearNoData.setVisibility(View.GONE);
-                                    if (isDownRefresh) {
-                                        isDownRefresh = false;
-                                        recyclerView.scrollToPosition(0);
-                                        adapter.notifyDataSetChanged();
-                                    } else {
-                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                        if (!TextUtils.isEmpty(jsonObject.optString("data").replace("[]", "").trim())) {//判断是否为空
+                            final FollowRecordingBean dataBean = gson.fromJson(jsonObject.optString("data"), FollowRecordingBean.class);
+                            beanList.addAll(dataBean.getList());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (adapter == null) {
+                                        adapter = new FollowRecordingAdapter(FollowRecordingActivity.this, beanList);
+                                        recyclerView.setAdapter(adapter);
                                     }
-                                } else {
+                                    if (dataBean.getList().size() != 0) {
+                                        linearNoData.setVisibility(View.GONE);
+                                        if (isDownRefresh) {
+                                            isDownRefresh = false;
+                                            recyclerView.scrollToPosition(0);
+                                            adapter.notifyDataSetChanged();
+                                        } else {
+                                            adapter.notifyItemInserted(beanList.size() - pageSize + 1);
+                                        }
+                                    } else {
+                                        if (mPage != 1) {
+                                            ToastUtils.toastShort(FollowRecordingActivity.this, "暂无更多数据");
+                                        } else {
+                                            if (beanList.isEmpty()) {
+                                                linearNoData.setVisibility(View.VISIBLE);
+                                            } else {
+                                                linearNoData.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    }
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
+
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
                                     if (mPage != 1) {
                                         ToastUtils.toastShort(FollowRecordingActivity.this, "暂无更多数据");
                                     } else {
@@ -128,10 +148,11 @@ public class FollowRecordingActivity extends BaseActivity {
                                             linearNoData.setVisibility(View.GONE);
                                         }
                                     }
+                                    swipeRefreshLayout.setRefreshing(false);
                                 }
-                                swipeRefreshLayout.setRefreshing(false);
-                            }
-                        });
+                            });
+                        }
+
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override

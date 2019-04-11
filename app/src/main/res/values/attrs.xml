@@ -18,6 +18,12 @@
         <attr name="input_hint" format="string"/>
 
     </declare-styleable>
+    <declare-styleable name="AddClientItem1">
+        <attr name="must_input" format="boolean"/>
+        <!--左侧文字-->
+        <attr name="left_show_content" format="string"/>
+
+    </declare-styleable>
     <declare-styleable name="ClientItemWidget">
         <!--左侧显示文案-->
         <attr name="left_show_text" format="string"/>

@@ -208,7 +208,7 @@ public class HomeSearchActivity extends BaseActivity implements TextView.OnEdito
                                         adapter = new SearchResultAdapter(HomeSearchActivity.this, beanList);
                                         recyclerView.setAdapter(adapter);
                                     } else {
-                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                                        adapter.notifyItemInserted(beanList.size() - pageSize + 1);
                                     }
                                 } else {//上拉加载无更多信息
                                     if (mPage != 1) {

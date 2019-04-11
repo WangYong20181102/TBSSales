@@ -49,7 +49,7 @@ public class PeopleChoseAdapter extends BaseAdapter implements Filterable {
     public View getView(int position, View convertView, ViewGroup parent) {
         MyViewHolder holder = null;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.city_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.people_item, parent, false);
             holder = new MyViewHolder();
             holder.textCity = convertView.findViewById(R.id.text_city);
             holder.tvRemaning = convertView.findViewById(R.id.tv_remaining);

@@ -9,11 +9,16 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.tbs.sales.R;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.PeopleBean;
+import com.tbs.sales.bean.UserInfoDataBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.DialogUtils;
+import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,8 +55,9 @@ public class TransferActivity extends BaseActivity {
     LinearLayout btnSure;
     private List<PeopleBean> peopleBeanList;
     private Gson gson;
-    private String co_name;
-    private String grab_desc;
+    private UserInfoDataBean dataBean;
+    private PeopleBean peopleBean;
+    private int uid = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,13 +74,15 @@ public class TransferActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        tvRightGiveUpType.setText(co_name);
-        tvOldName.setText(grab_desc);
+        tvRightGiveUpType.setText(dataBean.getCo_name());
+        tvOldName.setText(dataBean.getGrab_desc());
+        tvChose.setText(peopleBean.getName());
+        uid = peopleBean.getId();
     }
 
     private void initIntent() {
-        co_name = getIntent().getStringExtra("co_name");
-        grab_desc = getIntent().getStringExtra("grab_desc");
+        dataBean = (UserInfoDataBean) getIntent().getSerializableExtra(UserInfoDataBean.class.getName());
+        peopleBean = (PeopleBean) getIntent().getSerializableExtra(PeopleBean.class.getName());
     }
 
     /**
@@ -130,12 +138,62 @@ public class TransferActivity extends BaseActivity {
                 DialogUtils.getInstances().showPeopleList(this, peopleBeanList, new DialogUtils.OnPeopleResultListener() {
                     @Override
                     public void onPeopleResult(PeopleBean city) {
+                        uid = city.getId();
                         tvChose.setText(city.getName());
                     }
                 });
                 break;
             case R.id.btn_sure:
+                if (uid == -1) {//等于-1表示没选择客户负责人
+                    ToastUtils.toastShort(this, "请选择新的客户负责人");
+                    return;
+                }
+                httpRequest();
                 break;
         }
+    }
+
+    private void httpRequest() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(this));
+        params.put("ids", dataBean.getCo_id());
+        params.put("uid", uid);
+        OkHttpUtils.post(Constant.GRAB_TRANSORDER, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    final JSONObject jsonObject = new JSONObject(json);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {//转移成功
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(TransferActivity.this, jsonObject.optString("message"));
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.CLOSE_DETAIL));
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_HOME_DATA));   //更新首页数据
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_MINE_CLIENT));   //我的客户
+                                finish();
+                            }
+                        });
+
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(TransferActivity.this, jsonObject.optString("message"));
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

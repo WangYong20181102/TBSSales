@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.ClientDetailsPagerAdapter;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.KeyValueDataBean;
 import com.tbs.sales.bean.UserInfoDataBean;
 import com.tbs.sales.constant.Constant;
@@ -32,9 +33,11 @@ import com.tbs.sales.fragment.CirculationRecordFragment;
 import com.tbs.sales.fragment.FollowUpRecordFragment;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.DialogUtils;
+import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.KeyValueUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +57,7 @@ import static com.tbs.sales.utils.TabLayoutUtils.setIndicator;
 
 /**
  * Created by Mr.Wang on 2019/3/28 17:00.
+ * 客户详情
  */
 public class ClientDetailsActivity extends BaseActivity {
     @BindView(R.id.relative_back)
@@ -91,6 +95,9 @@ public class ClientDetailsActivity extends BaseActivity {
     @BindView(R.id.view_line)
     View viewLine;
     private String[] titles = new String[]{"跟进记录", "流转记录"};
+    /**
+     * 电话集合
+     */
     private List<String> phoneList;
     private List<KeyValueDataBean> dataBeanList;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
@@ -156,6 +163,25 @@ public class ClientDetailsActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Subscribe
+    @Override
+    public void receiveEvent(Event event) {
+        super.receiveEvent(event);
+        switch (event.getCode()) {
+            case EC.EventCode.CLOSE_DETAIL:
+                finish();
+                break;
+            case EC.EventCode.UPDATE_CLIENT_DETAIL://更新详情页数据
+                initHttpRequest();
+                break;
+        }
+    }
+
     /**
      * 展示用户数据
      *
@@ -187,7 +213,7 @@ public class ClientDetailsActivity extends BaseActivity {
                 imageSex.setImageResource(R.mipmap.girl);
                 break;
         }
-        if (type == 1) {
+        if (type == 1) {//默认
             linearMenu.setVisibility(View.VISIBLE);
             imageFollow.setVisibility(View.VISIBLE);
             imagePhone.setVisibility(View.VISIBLE);
@@ -272,8 +298,22 @@ public class ClientDetailsActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.relative_client_message://客户信息
-                Intent intent1 = new Intent(this, ClientMessageActivity.class);
-                intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
+                Intent intent1;
+                if (type == 2) {//综合查询跳转
+                    intent1 = new Intent(this, ClientMessageQueryActivity.class);//不可编辑
+                    intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
+                } else if (type == 3) {//跟进记录界面跳转
+                    if (dataBean.getRespond_uid() != Integer.parseInt(AppInfoUtils.getId(this))) {//是我的客户
+                        intent1 = new Intent(this, ClientMessageActivity.class);
+                        intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
+                    } else {
+                        intent1 = new Intent(this, ClientMessageQueryActivity.class);//不可编辑
+                        intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
+                    }
+                } else {
+                    intent1 = new Intent(this, ClientMessageActivity.class);
+                    intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
+                }
                 startActivity(intent1);
                 break;
         }

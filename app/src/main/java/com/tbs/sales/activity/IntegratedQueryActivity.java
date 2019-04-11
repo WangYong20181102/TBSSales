@@ -59,7 +59,7 @@ import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/4/2 12:10.
- * 综合查寻
+ * 综合查询
  */
 public class IntegratedQueryActivity extends BaseActivity implements IntegratedQueryAdapter.OnFilterClickListener, View.OnClickListener {
     @BindView(R.id.relative_back)
@@ -462,7 +462,7 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
                                         recyclerView.scrollToPosition(0);
                                         adapter.notifyDataSetChanged();
                                     } else {
-                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                                        adapter.notifyItemInserted(beanList.size() - pageSize + 1);
                                     }
                                 } else {
                                     if (mPage != 1) {

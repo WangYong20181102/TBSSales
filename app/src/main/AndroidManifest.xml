@@ -106,7 +106,8 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".activity.ClientMessageActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity android:name=".activity.ClientEditActivity" />
+        <activity android:name=".activity.ClientEditActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".activity.GiveUpClientActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".activity.TransactionClientActivity" />
@@ -114,6 +115,10 @@
         <activity android:name=".activity.InteratedQuerySearchActivity" />
         <activity android:name=".activity.FollowRecordingActivity" />
         <activity android:name=".activity.TransferActivity" />
+        <activity android:name=".activity.ClientMessageQueryActivity" />
+        <activity android:name=".activity.SelectReceivePeopleActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:configChanges="orientation|keyboardHidden"/>
     </application>
 
 </manifest>

@@ -22,12 +22,12 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (!AppInfoUtils.getFirstLaunchGlidePage(this)) {//第一次启动
-//            AppInfoUtils.setFirstLaunchGlidePage(this, true);
-//            startActivity(new Intent(WelcomeActivity.this, GuidePageActivity.class));
-//            finish();
-//            return;
-//        }
+        if (!AppInfoUtils.getFirstLaunchGlidePage(this)) {//第一次启动
+            AppInfoUtils.setFirstLaunchGlidePage(this, true);
+            startActivity(new Intent(WelcomeActivity.this, GuidePageActivity.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_welcome);
         initData();
     }

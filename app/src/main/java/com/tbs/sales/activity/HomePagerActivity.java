@@ -177,7 +177,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     public void receiveEvent(Event event) {
         super.receiveEvent(event);
         switch (event.getCode()) {
-            case EC.EventCode.UPDATE_HOME_DATA: //登录成功更新城市信息
+            case EC.EventCode.UPDATE_CITY_MESSAGE: //登录成功更新城市信息
                 requestCityMessage();
                 break;
             case EC.EventCode.MAIN_SELECT:

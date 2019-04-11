@@ -119,7 +119,7 @@ public class HomeEarlyWarningFragment extends BaseFragment {
                                         recyclerView.scrollToPosition(0);
                                         adapter.notifyDataSetChanged();
                                     } else {
-                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+                                        adapter.notifyItemInserted(beanList.size() - pageSize + 1);
                                     }
                                 } else {
                                     if (mPage != 1) {

@@ -246,6 +246,7 @@ public class LoginActivity extends BaseActivity {
         AppInfoUtils.setOrganAreaIds(this, successBean.getUserinfo().getOrgan_area_ids());
         if (AppManager.getInstances().isActivityExist(MainActivity.class)) {    //如果MainActivity，登录成功发送广播通知跟新数据
             EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_HOME_DATA));   //更新首页数据
+            EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_CITY_MESSAGE));   //更新城市信息
             EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_CLIENT_DATA));//更新 客户 数据
             EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_USERINFO));//更新用户数据
             EventBusUtil.sendEvent(new Event(EC.EventCode.MAIN_SELECT));//选择首页

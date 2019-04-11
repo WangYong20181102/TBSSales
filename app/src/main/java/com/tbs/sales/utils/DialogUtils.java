@@ -24,7 +24,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.activity.ClientMessageActivity;
 import com.tbs.sales.activity.GiveUpClientActivity;
+import com.tbs.sales.activity.SelectReceivePeopleActivity;
 import com.tbs.sales.activity.TransferActivity;
 import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.adapter.BottomSelectItemAdapter;
@@ -32,14 +34,23 @@ import com.tbs.sales.adapter.CityMessageAdapter;
 import com.tbs.sales.adapter.PeopleChoseAdapter;
 import com.tbs.sales.adapter.PeopleMessageAdapter;
 import com.tbs.sales.bean.CityBean;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.KeyValueDataBean;
 import com.tbs.sales.bean.PeopleBean;
 import com.tbs.sales.bean.UserInfoDataBean;
 import com.tbs.sales.constant.Constant;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/2/28 13:34.
@@ -495,7 +506,9 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-                context.startActivity(new Intent(context, GiveUpClientActivity.class));
+                Intent intent = new Intent(context, GiveUpClientActivity.class);
+                intent.putExtra(UserInfoDataBean.class.getName(), dataBean);
+                context.startActivity(intent);
             }
         });
         //申请延期
@@ -518,7 +531,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
                     compatDialog(context, "确定", "取消", "确定提交延期申请？", "（当前剩余" + dataBean.getCan_delay_num() + "个延期名额）", new onSureListener() {
                         @Override
                         public void onSure() {
-
+                            httpRequestDelayorder(context, dataBean.getCo_id());
                         }
                     }, new onCancleListener() {
                         @Override
@@ -539,9 +552,8 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-                Intent intent = new Intent(context, TransferActivity.class);
-                intent.putExtra("co_name", dataBean.getCo_name());
-                intent.putExtra("grab_desc", dataBean.getGrab_desc());
+                Intent intent = new Intent(context, SelectReceivePeopleActivity.class);
+                intent.putExtra(UserInfoDataBean.class.getName(), dataBean);
                 context.startActivity(intent);
             }
         });
@@ -590,7 +602,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
                     dialog.dismiss();
                 }
                 Intent intent = new Intent(context, WebViewActivity.class);
-                intent.putExtra("mLoadingUrl", Constant.BUSINESS_CONTRACT + "?co_id=" + dataBean.getCo_id() + "&co_name" + dataBean.getCo_name());
+                intent.putExtra("mLoadingUrl", Constant.BUSINESS_CONTRACT + "?co_id=" + dataBean.getCo_id() + "&co_name=" + dataBean.getCo_name());
                 context.startActivity(intent);
             }
         });
@@ -609,6 +621,52 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
             dialog.show();
         }
         return dialog;
+    }
+
+    /**
+     * 延期申请
+     *
+     * @param context
+     * @param co_id
+     */
+    private void httpRequestDelayorder(final Context context, int co_id) {
+        final Activity activity = (Activity) context;
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(context));
+        params.put("co_id", co_id);
+        OkHttpUtils.post(Constant.GRAB_DELAYORDER, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    final JSONObject jsonObject = new JSONObject(json);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(context, jsonObject.optString("message"));
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_CLIENT_DETAIL));//更新客户详情
+                            }
+                        });
+                    } else {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(context, jsonObject.optString("message"));
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**

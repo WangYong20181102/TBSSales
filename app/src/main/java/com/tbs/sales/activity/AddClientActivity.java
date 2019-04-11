@@ -44,7 +44,7 @@ import okhttp3.Response;
  * Created by Mr.Wang on 2019/3/30 16:24.
  * 添加客户
  */
-public class AddClientActivity extends BaseActivity{
+public class AddClientActivity extends BaseActivity {
     @BindView(R.id.tv_cancle)
     TextView tvCancle;
     @BindView(R.id.tv_sure)
@@ -82,6 +82,7 @@ public class AddClientActivity extends BaseActivity{
     private List<CityBean> beanList;
     private Gson gson;
     private String city_id;
+    private int province_id;
     private int sex;
     private List<KeyValueDataBean> dataBeanList;
 
@@ -229,6 +230,8 @@ public class AddClientActivity extends BaseActivity{
         params.put("name", aciCoName.getText());
         params.put("sex", sex);
         params.put("city", city_id);
+        params.put("province", province_id);
+        params.put("county", "");
         params.put("address", aciAddress.getText());
         params.put("weixin", aciWechatNum.getText());
         params.put("email", aciEmailAddress.getText());
@@ -274,6 +277,7 @@ public class AddClientActivity extends BaseActivity{
     DialogUtils.OnCityResultListener onCityResultListener = new DialogUtils.OnCityResultListener() {
         @Override
         public void onCityResult(CityBean cityData) {
+            province_id = cityData.getProvince_id();
             city_id = cityData.getId();
             tvRightCity.setText(cityData.getName());
         }

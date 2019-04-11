@@ -1,7 +1,9 @@
 package com.tbs.sales;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,7 +13,10 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
+import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
+import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
 import com.google.gson.Gson;
 import com.tbs.sales.activity.AddClientActivity;
 import com.tbs.sales.activity.ApplicationActivity;
@@ -26,14 +37,18 @@ import com.tbs.sales.activity.ClientActivity;
 import com.tbs.sales.activity.HomePagerActivity;
 import com.tbs.sales.activity.MineActivity;
 import com.tbs.sales.activity.WebViewActivity;
+import com.tbs.sales.adapter.UpdateDialogAdapter;
 import com.tbs.sales.application.MyApplication;
 import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.LoginSuccessBean;
+import com.tbs.sales.bean._UpdateInfo;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.manager.AppManager;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.BaseDialog;
 import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.EventBusUtil;
+import com.tbs.sales.utils.LogUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -83,6 +98,8 @@ public class MainActivity extends TabActivity {
     private static TabHost tabHost;
     private LoginSuccessBean.UserinfoBean successBean;
     private Gson gson;
+    private _UpdateInfo mUpdateInfo;
+    private DownloadBuilder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +112,112 @@ public class MainActivity extends TabActivity {
         initView();
         initData();
         initGetUserInfo();
+        checkAppUpdate();
+    }
+
+    /**
+     * 检测更新App操作
+     */
+    private void checkAppUpdate() {
+//        if (TextUtils.isEmpty(AppInfoUtils.getIsShowUpdataDialog(this))) {
+//            //没有开启过更新提示
+        HttpCheckAppUpdata();//检测更新与否  在检测完成之后设置更新弹窗的flag（有强制更新的时候不设置flag） 如果没有更新提示 走 getHuoDongPicture()方法
+//        }
+    }
+
+    //检测是否需要更新
+    private void HttpCheckAppUpdata() {
+//        AppInfoUtils.setIsShowUpdataDialog(this, "showing");
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("chcode", AppInfoUtils.getChannType(this));
+        param.put("version", AppInfoUtils.getAppVersionName(this));
+        OkHttpUtils.post(Constant.CHECK_APP_IS_UPDATA, param, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                LogUtils.logE("数据获取失败===============" + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = new String(response.body().string());
+                LogUtils.logE("检测用户的更新数据==========" + json);
+                try {
+                    JSONObject jsonObject = new JSONObject(json);
+                    String status = jsonObject.optString("status");
+                    if (status.equals("200")) {
+                        //数据获取成功
+                        String data = jsonObject.optString("data");
+                        mUpdateInfo = gson.fromJson(data, _UpdateInfo.class);
+                        if (mUpdateInfo.getIs_update().equals("1")) {
+                            //有更新的情况
+//                            if (mUpdateInfo.getType().equals("2")) {
+//                                //非强制更新的情况下不设置更新的flag
+//                                AppInfoUtils.setIsShowUpdataDialog(MainActivity.this, "showing");
+//                            } else {
+//                                AppInfoUtils.setIsShowUpdataDialog(MainActivity.this, "");
+//                            }
+                            //有更新
+                            if (AppInfoUtils.isWifiConnected(MainActivity.this)) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        showUpdateDialog(mUpdateInfo);
+                                    }
+                                });
+                            }
+                        } else {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    getHuoDongPicture();
+//                                }
+//                            });
+                        }
+                    } else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    //显示更新弹窗
+    private void showUpdateDialog(final _UpdateInfo updateInfo) {
+        builder = AllenVersionChecker.getInstance().downloadOnly(UIData.create()
+                .setDownloadUrl(updateInfo.getApk_url()));
+        builder.setCustomVersionDialogListener(new CustomVersionDialogListener() {
+            @Override
+            public Dialog getCustomVersionDialog(Context context, UIData versionBundle) {
+                BaseDialog baseDialog = new BaseDialog(context, R.style.BaseDialog, R.layout.dialog_updata);
+                RecyclerView update_dialog_msg = baseDialog.findViewById(R.id.update_dialog_msg);
+                TextView versionchecklib_version_dialog_cancel = baseDialog.findViewById(R.id.versionchecklib_version_dialog_cancel);
+                if (updateInfo.getType().equals("1")) {
+                    versionchecklib_version_dialog_cancel.setText("退出");
+                }
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
+                UpdateDialogAdapter updateDialogAdapter = new UpdateDialogAdapter(MainActivity.this, updateInfo.getContent());
+                update_dialog_msg.setLayoutManager(linearLayoutManager);
+                update_dialog_msg.setAdapter(updateDialogAdapter);
+                updateDialogAdapter.notifyDataSetChanged();
+                return baseDialog;
+            }
+        });
+        //设置是否得强制更新
+        if (updateInfo.getType().equals("1")) {
+            builder.setForceUpdateListener(new ForceUpdateListener() {
+                @Override
+                public void onShouldForceUpdate() {
+                    finish();
+                    System.exit(0);
+                }
+            });
+        }
+        builder.setShowDownloadingDialog(false);
+        builder.setNotificationBuilder(NotificationBuilder.create().setRingtone(true)
+                .setIcon(R.mipmap.ic_launcher).setContentTitle("TBS销售系统").setContentText("正在下载最新销售系统安装包..."));
+        builder.excuteMission(this);
     }
 
     /**

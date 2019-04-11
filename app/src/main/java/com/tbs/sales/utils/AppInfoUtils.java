@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
@@ -57,6 +59,23 @@ public class AppInfoUtils {
             return macAddress;
         }
         return macAddress;
+    }
+
+    /**
+     * 判断WIFI网络是否可用
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isWifiConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mWiFiNetworkInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (mWiFiNetworkInfo != null) {
+                return mWiFiNetworkInfo.isAvailable();
+            }
+        }
+        return false;
     }
 
     /**
@@ -373,5 +392,14 @@ public class AppInfoUtils {
 
     public static void setLoginAccount(Context context, String account) {
         context.getSharedPreferences("loginState", 0).edit().putString("loginAccound", account).apply();
+    }
+
+    //是否弹更新弹窗
+    public static String getIsShowUpdataDialog(Context context) {
+        return context.getSharedPreferences("dialogInfo", 0).getString("updataDialog", "");
+    }
+
+    public static void setIsShowUpdataDialog(Context context, String updataDialog) {
+        context.getSharedPreferences("dialogInfo", 0).edit().putString("updataDialog", updataDialog).commit();
     }
 }

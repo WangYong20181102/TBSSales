@@ -3,6 +3,7 @@ package com.tbs.sales.activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +22,35 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.ClientTypeAdapter;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.KeyValueDataBean;
 import com.tbs.sales.bean.UserInfoDataBean;
+import com.tbs.sales.constant.Constant;
+import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.DialogUtils;
+import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.KeyValueUtils;
+import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
+import com.tbs.sales.widget.MyGridView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/4/1 14:51.
@@ -47,7 +64,7 @@ public class ClientEditActivity extends BaseActivity {
     @BindView(R.id.tv_client_type)
     TextView tvClientType;
     @BindView(R.id.grid_view_client_type)
-    GridView gridViewClientType;
+    MyGridView gridViewClientType;
     @BindView(R.id.linear_client_type)
     LinearLayout linearClientType;
     @BindView(R.id.tv_next)
@@ -98,6 +115,8 @@ public class ClientEditActivity extends BaseActivity {
     private UserInfoDataBean listBean;
     private TimePickerView pvTime;
     private SimpleDateFormat dateFormat;
+    private String co_tag;//客户标签
+    private String invalid_reason;//无效原因
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -175,15 +194,19 @@ public class ClientEditActivity extends BaseActivity {
                     case 1:
                     case 2:
                     case 7:
+                        invalid_reason = "";
                         rlGiveUpType.setVisibility(View.VISIBLE);
                         tvGiveUpType.setText("客户标签");
                         break;
                     case 5:
                     case 6:
+                        co_tag = "";
                         rlGiveUpType.setVisibility(View.VISIBLE);
                         tvGiveUpType.setText("无效原因");
                         break;
                     default:
+                        co_tag = "";
+                        invalid_reason = "";
                         rlGiveUpType.setVisibility(View.GONE);
                         break;
                 }
@@ -197,6 +220,7 @@ public class ClientEditActivity extends BaseActivity {
      */
     private void initIntent() {
         listBean = (UserInfoDataBean) getIntent().getSerializableExtra(UserInfoDataBean.class.getName());
+        type = listBean.getCo_type();
         tvDateTime.setText(listBean.getFollow_time());
     }
 
@@ -206,7 +230,31 @@ public class ClientEditActivity extends BaseActivity {
             case R.id.tv_cancle://取消
                 finish();
                 break;
-            case R.id.tv_sure:
+            case R.id.tv_sure://确认
+                switch (type) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 7:
+                        if (TextUtils.isEmpty(co_tag)) {
+                            ToastUtils.toastShort(ClientEditActivity.this, "请选择客户标签");
+                            return;
+                        }
+                        break;
+                    case 5:
+                    case 6://无效
+                        if (TextUtils.isEmpty(invalid_reason)) {
+                            ToastUtils.toastShort(ClientEditActivity.this, "请选择无效原因");
+                            return;
+                        }
+                        break;
+                }
+                if (TextUtils.isEmpty(etFollowMiaoshu.getText().toString().trim())) {
+                    ToastUtils.toastShort(ClientEditActivity.this, "请输入跟进描述");
+                    return;
+                }
+
+                httpRequest();
                 break;
             case R.id.linear_date_time://日期选择
                 pvTime.show();
@@ -220,15 +268,17 @@ public class ClientEditActivity extends BaseActivity {
                         DialogUtils.getInstances().showBottomSelect(this, keyValueDataBeanList1, new DialogUtils.OnBottomItemSelectListener() {
                             @Override
                             public void onItemSelect(int position) {
+                                co_tag = keyValueDataBeanList1.get(position).getId() + "";
                                 tvRightGiveUpType.setText(keyValueDataBeanList1.get(position).getName());
                             }
                         });
                         break;
                     case 5:
-                    case 6:
+                    case 6://无效
                         DialogUtils.getInstances().showBottomSelect(this, keyValueDataBeanList3, new DialogUtils.OnBottomItemSelectListener() {
                             @Override
                             public void onItemSelect(int position) {
+                                invalid_reason = keyValueDataBeanList3.get(position).getId() + "";
                                 tvRightGiveUpType.setText(keyValueDataBeanList3.get(position).getName());
                             }
                         });
@@ -237,6 +287,7 @@ public class ClientEditActivity extends BaseActivity {
                         DialogUtils.getInstances().showBottomSelect(this, keyValueDataBeanList2, new DialogUtils.OnBottomItemSelectListener() {
                             @Override
                             public void onItemSelect(int position) {
+                                co_tag = keyValueDataBeanList2.get(position).getId() + "";
                                 tvRightGiveUpType.setText(keyValueDataBeanList2.get(position).getName());
                             }
                         });
@@ -244,6 +295,57 @@ public class ClientEditActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    /**
+     * 网络请求
+     */
+    private void httpRequest() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(this));
+        params.put("co_id", listBean.getCo_id());
+        params.put("co_type", type);
+        params.put("co_tag", co_tag);
+        params.put("pre_time", tvDateTime.getText().toString());
+        params.put("invalid_reason", invalid_reason);
+        params.put("desc", etFollowMiaoshu.getText().toString().trim());
+        OkHttpUtils.post(Constant.SALE_ADDFOLLOW, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    final JSONObject jsonObject = new JSONObject(json);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(ClientEditActivity.this, jsonObject.optString("message"));
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_CLIENT_DETAIL));//更新客户详情
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_HOME_DATA));   //更新首页数据
+                                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_MINE_CLIENT));   //我的客户
+
+                                finish();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(ClientEditActivity.this, jsonObject.optString("message"));
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void initTimePicker() {

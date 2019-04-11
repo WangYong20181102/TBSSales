@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d45"
+        android:layout_marginRight="@dimen/d24">
+        <!--返回按钮，增大点击区域-->
+        <RelativeLayout
+            android:id="@+id/relative_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/d24">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/back" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="客户信息"
+            android:textColor="@color/black"
+            android:textSize="@dimen/s17"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/d1"
+        android:background="@color/FC_F8F8F8" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/d9"
+                android:background="@color/FC_F8F8F8" />
+
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_co_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="客户ID"/>
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="城市"/>
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_compass_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="公司名称" />
+
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="详细地址"/>
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_yewu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="业务范围"/>
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_pingtai"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="合作平台"/>
+
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_co_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="联系人"
+                app:must_input="true" />
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="性别"
+                app:must_input="true" />
+
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="座机" />
+
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_tel_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="手机" />
+
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_wechat_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="微信" />
+
+            <com.tbs.sales.widget.AddClientItem1
+                android:id="@+id/aci_email_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:left_show_content="邮箱"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

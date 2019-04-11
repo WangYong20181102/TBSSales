@@ -151,7 +151,7 @@ public class CirculationRecordFragment extends BaseFragment {
 //                                    }
 //                                }else {
 //                                    if (mPage != 1) {
-//                                        adapter.notifyItemInserted(beanList.size() - pageSize);
+//                                        adapter.notifyItemInserted(beanList.size() - pageSize + 1);
 //                                    }
 //                                }
 //                                num = beanList.size();

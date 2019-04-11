@@ -7,20 +7,28 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
+
     <LinearLayout
+        android:id="@+id/linear_dots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/d45"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/d150"
-        android:animateLayoutChanges="true">
-        <Button
-            android:id="@+id/btn_glide"
-            android:layout_width="@dimen/d100"
-            android:layout_height="@dimen/d50"
-            android:text="开始"
-            android:visibility="gone"/>
-    </LinearLayout>
+        android:layout_marginBottom="@dimen/d20"
+        android:text="@string/experience"
+        android:textColor="@color/white"
+        android:textSize="@dimen/s12"
+        android:visibility="gone" />
 
 </RelativeLayout>
