@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.tbs.sales.MainActivity;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.FilterCityAdapter;
 import com.tbs.sales.adapter.FilterClientTypeAdapter;
@@ -54,6 +52,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,16 +75,12 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     @BindView(R.id.view_pager_home)
     ViewPager viewPagerHome;
     @BindView(R.id.view_top)
-    View viewTop;   //主要用于popupwindow位置显示
+    View viewTop;   //主要用于popupWindow位置显示
     @BindView(R.id.view_line)
     View viewLine;  //首页导航栏下划线
     private String[] titles = new String[]{"跟进", "今日", "预警", "简报"};
-    private List<Fragment> fragmentList;
-    private HomeViewPagerAdapter adapter;
-
     /*********筛选控件************/
     private PopupWindow popupWindow;
-    private LinearLayout linearPopBg;   //筛选弹框父布局
     //客户类型
     private GridView gridViewClientType;
     private FilterClientTypeAdapter adapterClientType;
@@ -97,18 +92,12 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     //下次拜访
     private GridView gridViewNextVisit;
     private FilterNextVisitAdapter adapterNextVisit;
-    private List<String> listNextVisit;
     private String[] strNextVisit = {"全部", "今天", "7天内", "两周内", "一个月内"};
-    //重置
-    private TextView textReset;
-    //确定
-    private TextView textSure;
     private boolean bLine = false;//用于控制标题栏下划线
     private HomeMyFragment myFragment;
     private int clientType = -1;//客户类型
     private String city = "";//城市
     private String timeRange = "";//下次拜访
-    private HomeBriefingFragment briefingFragment;
     private Gson gson;
 
     @Override
@@ -132,20 +121,6 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
         if (!TextUtils.isEmpty(data)) {
             //默认第一个为 全部 按钮
             beanList.add(new CityBean("01", "全部"));
-//            //字符串转化为集合
-//            String regex = "^,*|,*$";
-//            String string = data.replace("|", ",");
-//            String str1 = string.replaceAll(regex, "");
-//            final List<String> list = Arrays.asList(str1.split(","));
-//            //本地assets城市列表
-//            final List<CityListBean> cityListBeans = CityUtils.getAllCity(HomePagerActivity.this);
-//            for (int i = 0; i < list.size(); i++) {
-//                for (int j = 0; j < cityListBeans.size(); j++) {
-//                    if (list.get(i).equals(cityListBeans.get(j).getId())) {
-//                        beanList.add(cityListBeans.get(j));
-//                    }
-//                }
-//            }
             //跟本地保存城市信息对比，得到对应城市名称放入集合中
             runOnUiThread(new Runnable() {
                 @Override
@@ -235,12 +210,15 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
         HomeMineFragmentAdapter.setOnFilterClickListener(this);
         //筛选弹框布局
         View view = LayoutInflater.from(this).inflate(R.layout.filter_client_layout, null);
-        linearPopBg = view.findViewById(R.id.linear_bg);
+        //筛选弹框父布局
+        LinearLayout linearPopBg = view.findViewById(R.id.linear_bg);
         gridViewClientType = view.findViewById(R.id.grid_view_client_type);
         gridViewCity = view.findViewById(R.id.grid_view_city);
         gridViewNextVisit = view.findViewById(R.id.grid_view_next_visit);
-        textReset = view.findViewById(R.id.text_reset);
-        textSure = view.findViewById(R.id.text_sure);
+        //重置
+        TextView textReset = view.findViewById(R.id.text_reset);
+        //确定
+        TextView textSure = view.findViewById(R.id.text_sure);
         linearPopBg.setOnClickListener(this);
         textReset.setOnClickListener(this);
         textSure.setOnClickListener(this);
@@ -260,10 +238,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
         //客户类型数据集
         listClientType = KeyValueUtils.getHomeClientType();
         //下次拜访数据集
-        listNextVisit = new ArrayList<>();
-        for (int i = 0; i < strNextVisit.length; i++) {
-            listNextVisit.add(strNextVisit[i]);
-        }
+        List<String> listNextVisit = new ArrayList<>(Arrays.asList(strNextVisit));
         adapterClientType = new FilterClientTypeAdapter(this, listClientType, 0);
         adapterCity = new FilterCityAdapter(this, beanList, 0);
         adapterNextVisit = new FilterNextVisitAdapter(this, listNextVisit, 0);
@@ -305,7 +280,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
                 //大于6显示更多按钮
                 if (beanList.size() > 6) {
                     if (position == 5) {    //更多按钮点击弹出城市列表对话框
-                        DialogUtils.getInstances().showCityMessage(HomePagerActivity.this, beanList,onCityResultListener);
+                        DialogUtils.getInstances().showCityList(HomePagerActivity.this, beanList,onCityResultListener,DialogUtils.HAVE_MARGIN);
                     } else {
                         adapterCity.setSelectPosition(position);
                         adapterCity.notifyDataSetChanged();
@@ -319,7 +294,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
 
     }
 
-    //城市   更多点击回调更改listview数据结构
+    //城市   更多点击回调更改listView数据结构
     DialogUtils.OnCityResultListener onCityResultListener = new DialogUtils.OnCityResultListener() {
         @Override
         public void onCityResult(CityBean cityData) {
@@ -345,14 +320,13 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
      */
     private void initView() {
         myFragment = new HomeMyFragment();
-        briefingFragment = new HomeBriefingFragment();
-        fragmentList = new ArrayList<>();
+        List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(myFragment);
         fragmentList.add(new HomeTodayFragment());
         fragmentList.add(new HomeEarlyWarningFragment());
-        fragmentList.add(briefingFragment);
+        fragmentList.add(new HomeBriefingFragment());
         viewPagerHome.setOffscreenPageLimit(fragmentList.size());
-        adapter = new HomeViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
+        HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
         viewPagerHome.setAdapter(adapter);
 
         //viewpager滑动监听

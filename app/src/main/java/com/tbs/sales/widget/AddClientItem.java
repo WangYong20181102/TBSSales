@@ -100,7 +100,7 @@ public class AddClientItem extends LinearLayout {
     /**
      * 设置座机格式
      */
-    public void setPhone() {
+    public void setPhoneType() {
         cetText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

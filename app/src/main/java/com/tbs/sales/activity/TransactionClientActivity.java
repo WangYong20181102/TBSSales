@@ -239,7 +239,7 @@ public class TransactionClientActivity extends BaseActivity implements Transacti
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String json = new String(response.body().string());
+                String json = response.body().string();
                 try {
                     final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");

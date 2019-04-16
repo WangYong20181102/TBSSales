@@ -35,6 +35,9 @@ public class GuidePageActivity extends BaseActivity {
     @BindView(R.id.linear_dots)
     LinearLayout linearDots;
     private MyPagerAdapter adapter;
+    /**
+     * 图片资源
+     */
     private List<Integer> integerList;
 
 
@@ -117,6 +120,9 @@ public class GuidePageActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 初始化数据
+     */
     private void initData() {
         integerList = new ArrayList<>(Arrays.asList(R.mipmap.guide1,R.mipmap.guide2,R.mipmap.guide3,R.mipmap.guide4));
         adapter = new MyPagerAdapter(this);

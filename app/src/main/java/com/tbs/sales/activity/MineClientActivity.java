@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,7 +78,6 @@ public class MineClientActivity extends BaseActivity implements MineClientAdapte
     View viewTop;   //主要用于popupwindow位置显示
     /*********筛选控件************/
     private PopupWindow popupWindow;
-    private LinearLayout linearPopBg;   //筛选弹框父布局
     //客户类型
     private GridView gridViewClientType;
     private FilterClientTypeAdapter adapterClientType;
@@ -89,12 +89,7 @@ public class MineClientActivity extends BaseActivity implements MineClientAdapte
     //下次拜访
     private GridView gridViewNextVisit;
     private FilterNextVisitAdapter adapterNextVisit;
-    private List<String> listNextVisit;
     private String[] strNextVisit = {"全部", "今天", "7天内", "两周内", "一个月内"};
-    //重置
-    private TextView textReset;
-    //确定
-    private TextView textSure;
     private LinearLayoutManager layoutManager;
     private MineClientAdapter adapter;
     private Gson gson;
@@ -214,17 +209,20 @@ public class MineClientActivity extends BaseActivity implements MineClientAdapte
         MineClientAdapter.setOnFilterClickListener(this);
         //筛选弹框布局
         View view = LayoutInflater.from(this).inflate(R.layout.filter_my_client_layout, null);
-        linearPopBg = view.findViewById(R.id.linear_bg);
+        //筛选弹框父布局
+        LinearLayout linearPopBg = view.findViewById(R.id.linear_bg);
         gridViewClientType = view.findViewById(R.id.grid_view_client_type);
         gridViewCity = view.findViewById(R.id.grid_view_city);
         gridViewNextVisit = view.findViewById(R.id.grid_view_next_visit);
-        textReset = view.findViewById(R.id.text_reset);
-        textSure = view.findViewById(R.id.text_sure);
+        //重置
+        TextView textReset = view.findViewById(R.id.text_reset);
+        //确定
+        TextView textSure = view.findViewById(R.id.text_sure);
         linearPopBg.setOnClickListener(this);
         textReset.setOnClickListener(this);
         textSure.setOnClickListener(this);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#80ffffff")));
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#80FFFFFF")));
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
         popupWindow.update();
@@ -239,10 +237,7 @@ public class MineClientActivity extends BaseActivity implements MineClientAdapte
         //客户类型数据集
         listClientType = KeyValueUtils.getIQClientType();
         //下次拜访数据集
-        listNextVisit = new ArrayList<>();
-        for (int i = 0; i < strNextVisit.length; i++) {
-            listNextVisit.add(strNextVisit[i]);
-        }
+        List<String> listNextVisit = new ArrayList<>(Arrays.asList(strNextVisit));
         adapterClientType = new FilterClientTypeAdapter(this, listClientType, 0);
         adapterCity = new FilterCityAdapter(this, cityBeanList, 0);
         adapterNextVisit = new FilterNextVisitAdapter(this, listNextVisit, 0);
@@ -284,7 +279,7 @@ public class MineClientActivity extends BaseActivity implements MineClientAdapte
                 //大于6显示更多按钮
                 if (cityBeanList.size() > 6) {
                     if (position == 5) {    //更多按钮点击弹出城市列表对话框
-                        DialogUtils.getInstances().showCityMessage(MineClientActivity.this, cityBeanList, onCityResultListener);
+                        DialogUtils.getInstances().showCityList(MineClientActivity.this, cityBeanList, onCityResultListener,DialogUtils.HAVE_MARGIN);
                     } else {
                         adapterCity.setSelectPosition(position);
                         adapterCity.notifyDataSetChanged();
@@ -298,7 +293,7 @@ public class MineClientActivity extends BaseActivity implements MineClientAdapte
 
     }
 
-    //城市   更多点击回调更改listview数据结构
+    //城市   更多点击回调更改listView数据结构
     DialogUtils.OnCityResultListener onCityResultListener = new DialogUtils.OnCityResultListener() {
         @Override
         public void onCityResult(CityBean cityData) {

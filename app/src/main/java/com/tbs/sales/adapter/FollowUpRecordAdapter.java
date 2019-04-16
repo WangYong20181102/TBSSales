@@ -30,7 +30,6 @@ public class FollowUpRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context context;
     private List<ComFollowRecordingBean> beanList;
     private OnPlayVideoListener onPlayVideo = null;
-    private MediaPlayer mediaPlayer;
 
     public void setOnPlayVideoListener(OnPlayVideoListener onPlayVideoListener) {
         onPlayVideo = onPlayVideoListener;
@@ -99,15 +98,6 @@ public class FollowUpRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 ((MyViewHolder) holder).tvCommunicDesc.setText(beanList.get(position).getCommunic_desc());
             }
 
-//            if (position == 0) {
-//                beanList.get(position).setVoice_url("http://antiserver.kuwo.cn/anti.s?format=mp3|aac&rid=37107986&type=convert_url&response=res#.mp3");
-//            } else if (position == 2) {
-//                beanList.get(position).setVoice_url("http://sc1.111ttt.cn:8282/2018/1/03m/13/396131213056.m4a?tflag=1546606800&pin=97bb2268ae26c20fe093fd5b0f04be80#.mp3");
-//            } else if (position == 3) {
-//                beanList.get(position).setVoice_url("http://antiserver.kuwo.cn/anti.s?format=mp3|aac&rid=60140414&type=convert_url&response=res#.mp3");
-//            } else if (position == 7) {
-//                beanList.get(position).setVoice_url("http://antiserver.kuwo.cn/anti.s?format=mp3|aac&rid=54893572&type=convert_url&response=res#.mp3");
-//            }
             //语音
             if (TextUtils.isEmpty(beanList.get(position).getVoice_url())) {
                 ((MyViewHolder) holder).rlVideoVoice.setVisibility(View.GONE);
@@ -129,7 +119,7 @@ public class FollowUpRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      */
     private void initMediaPlayer(String voice_url, final MyViewHolder holder, int position) {
         final SimpleDateFormat format = new SimpleDateFormat("mm:ss");
-        mediaPlayer = new MediaPlayer();
+        MediaPlayer mediaPlayer = new MediaPlayer();
         holder.seekBar.setOnSeekBarChangeListener(new MySeekBar(position));
         holder.imagePlay.setTag(R.id.tag_first, mediaPlayer);
         holder.imagePlay.setTag(R.id.tag_second, holder);

@@ -101,9 +101,14 @@ public class ClientDetailsActivity extends BaseActivity {
     private List<String> phoneList;
     private List<KeyValueDataBean> dataBeanList;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
-    private ClientDetailsPagerAdapter adapter;
+    /**
+     * 判断上个activity是哪个界面
+     */
     private int type;
-    private int co_id;//客户id
+    /**
+     * 客户id
+     */
+    private int co_id;
     private UserInfoDataBean dataBean;
     private Gson gson;
     private static final int REQUEST_CALL_PERMISSION = 10111; //拨号请求码
@@ -263,7 +268,7 @@ public class ClientDetailsActivity extends BaseActivity {
 
         fragmentArrayList.add(new FollowUpRecordFragment(co_id));
         fragmentArrayList.add(new CirculationRecordFragment(co_id));
-        adapter = new ClientDetailsPagerAdapter(getSupportFragmentManager(), fragmentArrayList);
+        ClientDetailsPagerAdapter adapter = new ClientDetailsPagerAdapter(getSupportFragmentManager(), fragmentArrayList);
         viewPager.setAdapter(adapter);
         //将tab和Viewpager绑定
         tabLayout.setupWithViewPager(viewPager);
@@ -310,7 +315,7 @@ public class ClientDetailsActivity extends BaseActivity {
                         intent1 = new Intent(this, ClientMessageQueryActivity.class);//不可编辑
                         intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
                     }
-                } else {
+                } else {//默认
                     intent1 = new Intent(this, ClientMessageActivity.class);
                     intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
                 }

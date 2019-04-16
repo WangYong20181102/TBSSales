@@ -74,7 +74,6 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
     View viewTop;   //主要用于popupwindow位置显示
     /*********筛选控件************/
     private PopupWindow popupWindow;
-    private LinearLayout linearPopBg;   //筛选弹框父布局
     //客户类型
     private GridView gridViewClientType;
     private FilterClientTypeAdapter adapterClientType;
@@ -85,12 +84,8 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
     private List<CityBean> cityBeanList;
     //领取人
     private GridView gridViewNextVisit;
-    private PeopleAdapter peopleAdapder;
+    private PeopleAdapter peopleAdapter;
     private List<PeopleBean> peopleBeanList;
-    //重置
-    private TextView textReset;
-    //确定
-    private TextView textSure;
     private LinearLayoutManager layoutManager;
     private IntegratedQueryAdapter adapter;
     private Gson gson;
@@ -131,9 +126,9 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
                     for (int i = 0; i < jsonArray.length(); i++) {
                         peopleBeanList.add(gson.fromJson(jsonArray.get(i).toString(), PeopleBean.class));
                     }
-                    if (peopleAdapder == null) {
-                        peopleAdapder = new PeopleAdapter(IntegratedQueryActivity.this, peopleBeanList, 0);
-                        gridViewNextVisit.setAdapter(peopleAdapder);
+                    if (peopleAdapter == null) {
+                        peopleAdapter = new PeopleAdapter(IntegratedQueryActivity.this, peopleBeanList, 0);
+                        gridViewNextVisit.setAdapter(peopleAdapter);
                     }
 
                 } catch (JSONException e) {
@@ -167,9 +162,9 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
                             @Override
                             public void run() {
                                 initPeople(data.optString("list"));
-                                if (peopleAdapder != null) {
-                                    peopleAdapder.setChangeCityData(peopleBeanList);
-                                    peopleAdapder.notifyDataSetChanged();
+                                if (peopleAdapter != null) {
+                                    peopleAdapter.setChangeCityData(peopleBeanList);
+                                    peopleAdapter.notifyDataSetChanged();
                                 }
                             }
                         });
@@ -276,12 +271,15 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
         IntegratedQueryAdapter.setOnFilterClickListener(this);
         //筛选弹框布局
         View view = LayoutInflater.from(this).inflate(R.layout.integrated_query_layout, null);
-        linearPopBg = view.findViewById(R.id.linear_bg);
+        //筛选弹框父布局
+        LinearLayout linearPopBg = view.findViewById(R.id.linear_bg);
         gridViewClientType = view.findViewById(R.id.grid_view_client_type);
         gridViewCity = view.findViewById(R.id.grid_view_city);
         gridViewNextVisit = view.findViewById(R.id.grid_view_next_visit);
-        textReset = view.findViewById(R.id.text_reset);
-        textSure = view.findViewById(R.id.text_sure);
+        //重置
+        TextView textReset = view.findViewById(R.id.text_reset);
+        //确定
+        TextView textSure = view.findViewById(R.id.text_sure);
         linearPopBg.setOnClickListener(this);
         textReset.setOnClickListener(this);
         textSure.setOnClickListener(this);
@@ -312,19 +310,19 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
                 if (position == 0) {
                     respond = "";
                 } else {
-                    respond = ((PeopleBean) peopleAdapder.getItem(position)).getId() + "";
+                    respond = ((PeopleBean) peopleAdapter.getItem(position)).getId() + "";
                 }
                 //大于6显示更多按钮
                 if (peopleBeanList.size() > 6) {
                     if (position == 5) {
                         DialogUtils.getInstances().showPeopleMessage(IntegratedQueryActivity.this, peopleBeanList, onPeopleResultListener);
                     } else {
-                        peopleAdapder.setSelectPosition(position);
-                        peopleAdapder.notifyDataSetChanged();
+                        peopleAdapter.setSelectPosition(position);
+                        peopleAdapter.notifyDataSetChanged();
                     }
                 } else {
-                    peopleAdapder.setSelectPosition(position);
-                    peopleAdapder.notifyDataSetChanged();
+                    peopleAdapter.setSelectPosition(position);
+                    peopleAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -350,7 +348,7 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
                 //大于6显示更多按钮
                 if (cityBeanList.size() > 6) {
                     if (position == 5) {    //更多按钮点击弹出城市列表对话框
-                        DialogUtils.getInstances().showCityMessage(IntegratedQueryActivity.this, cityBeanList, onCityResultListener);
+                        DialogUtils.getInstances().showCityList(IntegratedQueryActivity.this, cityBeanList, onCityResultListener,DialogUtils.HAVE_MARGIN);
                     } else {
                         adapterCity.setSelectPosition(position);
                         adapterCity.notifyDataSetChanged();
@@ -393,13 +391,13 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
             for (int i = 0; i < peopleBeanList.size(); i++) {
                 if (peopleBean.equals(peopleBeanList.get(i))) {
                     if (i < 5) {
-                        peopleAdapder.changeCityMessage(peopleBeanList, i);
+                        peopleAdapter.changeCityMessage(peopleBeanList, i);
                     } else {    //移除集合中指定位置item，并添加到第一个显示
                         peopleBeanList.remove(i);
                         peopleBeanList.add(1, peopleBean);
-                        peopleAdapder.changeCityMessage(peopleBeanList, 1);
+                        peopleAdapter.changeCityMessage(peopleBeanList, 1);
                     }
-                    peopleAdapder.notifyDataSetChanged();
+                    peopleAdapter.notifyDataSetChanged();
                     break;
                 }
             }
@@ -615,9 +613,9 @@ public class IntegratedQueryActivity extends BaseActivity implements IntegratedQ
                     adapterCity.notifyDataSetChanged();
                     city = "";
                 }
-                if (peopleAdapder != null) {
-                    peopleAdapder.setSelectPosition(0);
-                    peopleAdapder.notifyDataSetChanged();
+                if (peopleAdapter != null) {
+                    peopleAdapter.setSelectPosition(0);
+                    peopleAdapter.notifyDataSetChanged();
                     respond = "";
                 }
 

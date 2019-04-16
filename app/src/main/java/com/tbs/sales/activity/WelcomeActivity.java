@@ -22,7 +22,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!AppInfoUtils.getFirstLaunchGlidePage(this)) {//第一次启动
+        if (!AppInfoUtils.getFirstLaunchGlidePage(this)) {//第一次启动跳转带引导页
             AppInfoUtils.setFirstLaunchGlidePage(this, true);
             startActivity(new Intent(WelcomeActivity.this, GuidePageActivity.class));
             finish();
@@ -36,6 +36,7 @@ public class WelcomeActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        //3秒展示时间
         handler = new MyHandler(this);
         handler.postDelayed(new Runnable() {
             @Override
@@ -57,9 +58,9 @@ public class WelcomeActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                if (!TextUtils.isEmpty(AppInfoUtils.getId(context))) {
+                if (!TextUtils.isEmpty(AppInfoUtils.getId(context))) {//已登录跳转到首页
                     context.startActivity(new Intent(context, MainActivity.class));
-                } else {
+                } else {//未登录跳转登录界面
                     context.startActivity(new Intent(context, LoginActivity.class));
                 }
             }

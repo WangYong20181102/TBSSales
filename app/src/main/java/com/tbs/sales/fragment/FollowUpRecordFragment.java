@@ -41,21 +41,27 @@ import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/3/28 17:49.
+ * 跟进记录
  */
+@SuppressLint("ValidFragment")
 public class FollowUpRecordFragment extends BaseFragment {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     Unbinder unbinder;
-    private LinearLayoutManager layoutManager;
     private FollowUpRecordAdapter adapter;
     private List<ComFollowRecordingBean> beanList;
     private Gson gson;
     private Timer timer;
+    /**
+     * 进度条
+     */
     private boolean isSeekBarChanging;
     private SimpleDateFormat format;
     private int mPosition = 0;
     private HashMap<Integer, MediaPlayer> mediaPlayers;//mediaplayers集合
-
+    /**
+     * 客户id
+     */
     private int co_id;
 
     @SuppressLint("ValidFragment")
@@ -213,7 +219,7 @@ public class FollowUpRecordFragment extends BaseFragment {
         mediaPlayers = new HashMap<>();
         format = new SimpleDateFormat("mm:ss");
         beanList = new ArrayList<>();
-        layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 

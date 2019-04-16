@@ -79,11 +79,26 @@ public class AddClientActivity extends BaseActivity {
     AddClientItem aciWechatNum;
     @BindView(R.id.aci_email_address)
     AddClientItem aciEmailAddress;
+    /**
+     * 城市集
+     */
     private List<CityBean> beanList;
     private Gson gson;
+    /**
+     * 城市id
+     */
     private String city_id;
+    /**
+     * 省份id
+     */
     private int province_id;
+    /**
+     * 性别
+     */
     private int sex;
+    /**
+     * 性别集
+     */
     private List<KeyValueDataBean> dataBeanList;
 
     @Override
@@ -101,7 +116,10 @@ public class AddClientActivity extends BaseActivity {
      */
     private void initData() {
         dataBeanList = KeyValueUtils.getSex();
-        aciPhone.setPhone();
+        /**
+         * 设置座机格式，加横线
+         */
+        aciPhone.setPhoneType();
     }
 
     /**
@@ -110,7 +128,7 @@ public class AddClientActivity extends BaseActivity {
     private void initCity(final String data) {
         beanList = new ArrayList<>();
         //获取登录成功保存到本地的城市id
-        if (!TextUtils.isEmpty(data)) {
+        if (!TextUtils.isEmpty(data)) {//判断是否为null，为空请求城市信息
             //跟本地保存城市信息对比，得到对应城市名称放入集合中
             runOnUiThread(new Runnable() {
                 @Override
@@ -171,10 +189,10 @@ public class AddClientActivity extends BaseActivity {
     @OnClick({R.id.tv_cancle, R.id.tv_sure, R.id.rl_city, R.id.rl_sex})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.tv_cancle:    //取消
+            case R.id.tv_cancle://取消
                 finish();
                 break;
-            case R.id.tv_sure:
+            case R.id.tv_sure://确认按钮
                 if (TextUtils.isEmpty(aciCompassName.getText())) {
                     ToastUtils.toastShort(this, "请完善公司名称");
                     return;
@@ -200,10 +218,11 @@ public class AddClientActivity extends BaseActivity {
                     return;
                 }
 
+                //添加客户请求
                 requestAddClient();
                 break;
-            case R.id.rl_city:
-                DialogUtils.getInstances().showCityList(AddClientActivity.this, beanList, onCityResultListener);
+            case R.id.rl_city://选择城市信息
+                DialogUtils.getInstances().showCityList(AddClientActivity.this, beanList, onCityResultListener,DialogUtils.NO_MARGIN);
                 break;
             case R.id.rl_sex://性别
                 DialogUtils.getInstances().showBottomSelect(this, dataBeanList, new DialogUtils.OnBottomItemSelectListener() {
@@ -231,7 +250,7 @@ public class AddClientActivity extends BaseActivity {
         params.put("sex", sex);
         params.put("city", city_id);
         params.put("province", province_id);
-        params.put("county", "");
+        params.put("county", "");//区县
         params.put("address", aciAddress.getText());
         params.put("weixin", aciWechatNum.getText());
         params.put("email", aciEmailAddress.getText());
@@ -273,7 +292,7 @@ public class AddClientActivity extends BaseActivity {
         });
     }
 
-    //城市
+    //城市选择返回结果
     DialogUtils.OnCityResultListener onCityResultListener = new DialogUtils.OnCityResultListener() {
         @Override
         public void onCityResult(CityBean cityData) {

@@ -296,7 +296,7 @@ public class ClientMessageActivity extends BaseActivity {
                 }
                 break;
             case R.id.rl_city://城市列表
-                DialogUtils.getInstances().showCityList(ClientMessageActivity.this, beanList, onCityResultListener);
+                DialogUtils.getInstances().showCityList(ClientMessageActivity.this, beanList, onCityResultListener,DialogUtils.NO_MARGIN);
                 break;
             case R.id.rl_business_scope://业务范围
                 DialogUtils.getInstances().showBottomSelect(this, strList1, new DialogUtils.OnBottomItemSelectListener() {

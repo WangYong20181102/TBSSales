@@ -24,10 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
-import com.tbs.sales.activity.ClientMessageActivity;
 import com.tbs.sales.activity.GiveUpClientActivity;
 import com.tbs.sales.activity.SelectReceivePeopleActivity;
-import com.tbs.sales.activity.TransferActivity;
 import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.adapter.BottomSelectItemAdapter;
 import com.tbs.sales.adapter.CityMessageAdapter;
@@ -55,21 +53,26 @@ import okhttp3.Response;
 /**
  * Created by Mr.Wang on 2019/2/28 13:34.
  */
-public class DialogUtils implements View.OnClickListener, TextWatcher {
-
-    private LinearLayout linearBack;    //返回按钮父布局
-    private ImageView imageSearch;  //搜索图片
-    private EditText editCityMessage;//城市文本输入框
-    private ImageView imageDelete;  //内容清除按钮
-    private ListView listView;
-    private CityMessageAdapter adapter;
-    private PeopleMessageAdapter peopleAdapter;
+public class DialogUtils {
     private static DialogUtils dialogUtils = null;
     private Dialog dialog;
+    /**
+     * 城市列表
+     */
     private List<CityBean> listResult;
+    /**
+     * 领取人列表
+     */
     private List<PeopleBean> peopleListResult;
     private Activity activity;
-    private LinearLayout linearLayout;
+    /**
+     * 有边距
+     */
+    public static final int HAVE_MARGIN = 1;
+    /**
+     * 无边距
+     */
+    public static final int NO_MARGIN = 2;
 
     /**
      * 单例
@@ -85,33 +88,72 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
 
     /**
      * 显示城市列表
-     * 有左边距
      *
-     * @param context
-     * @param listCity
-     * @return
+     * @param margin 1有左边距 2无左边距
      */
-    public Dialog showCityMessage(Context context, final List<CityBean> listCity, final OnCityResultListener onCityResultListener) {
+    public void showCityList(Context context, final List<CityBean> listCity, final OnCityResultListener onCityResultListener, int margin) {
+        View view;
         activity = (Activity) context;
-        adapter = new CityMessageAdapter(context, listCity);
         listResult = new ArrayList<>();
+        final CityMessageAdapter adapter = new CityMessageAdapter(context, listCity);
         //自定义dialog
         dialog = new Dialog(context, R.style.dialogCityMessage);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_city_message, null);
-        linearBack = view.findViewById(R.id.linear_back);
-        imageSearch = view.findViewById(R.id.image_search);
-        editCityMessage = view.findViewById(R.id.edit_city_message);
-        imageDelete = view.findViewById(R.id.image_delete);
-        listView = view.findViewById(R.id.list_view);
-        linearLayout = view.findViewById(R.id.linear_city);
+        if (margin == HAVE_MARGIN) {//有左边距
+            view = LayoutInflater.from(context).inflate(R.layout.dialog_city_message, null);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.dialog_city_list, null);
+        }
+        //取消
+        LinearLayout linearBack = view.findViewById(R.id.linear_back);
+        //搜索输入框
+        final EditText editCityMessage = view.findViewById(R.id.edit_city_message);
+        //清除文本按钮
+        final ImageView imageDelete = view.findViewById(R.id.image_delete);
+        //列表
+        ListView listView = view.findViewById(R.id.list_view);
         dialog.setContentView(view);
 
         //点击事件监听
-        linearBack.setOnClickListener(this);
-        imageDelete.setOnClickListener(this);
-        imageSearch.setOnClickListener(this);
+        linearBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                KeyBoardUtil.hideKeyBoard(activity);
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        imageDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editCityMessage.setText("");
+            }
+        });
 
-        editCityMessage.addTextChangedListener(this);
+        editCityMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s.toString().trim())) {
+                    imageDelete.setVisibility(View.VISIBLE);
+                } else {
+                    imageDelete.setVisibility(View.GONE);
+                }
+                if (adapter != null) {
+                    adapter.getFilter().filter(s);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        //搜索结果返回集
         adapter.setListener(new CityMessageAdapter.FilterListener() {
             @Override
             public void getFilterData(List<CityBean> list) {
@@ -145,7 +187,10 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
         dialog.show();
-        return dialog;
+    }
+
+    public interface OnCityResultListener {
+        void onCityResult(CityBean city);
     }
 
     /**
@@ -155,16 +200,20 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
      * @param context
      * @return
      */
-    public Dialog showPeopleMessage(Context context, final List<PeopleBean> peopleList, final OnPeopleResultListener onPeopleResultListener) {
+    public void showPeopleMessage(Context context, final List<PeopleBean> peopleList, final OnPeopleResultListener onPeopleResultListener) {
         activity = (Activity) context;
-        peopleAdapter = new PeopleMessageAdapter(context, peopleList);
         peopleListResult = new ArrayList<>();
+        final PeopleMessageAdapter peopleAdapter = new PeopleMessageAdapter(context, peopleList);
         //自定义dialog
         dialog = new Dialog(context, R.style.dialogCityMessage);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_people_message, null);
+        //取消
         LinearLayout linearBack = view.findViewById(R.id.linear_back);
+        //搜索文本输入框
         final EditText editPeopleMessage = view.findViewById(R.id.edit_people_message);
+        //清除文字按钮
         final ImageView imageDelete = view.findViewById(R.id.image_delete);
+        //列表集
         ListView listView = view.findViewById(R.id.list_view);
         dialog.setContentView(view);
 
@@ -185,6 +234,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
             }
         });
 
+        //文本监听
         editPeopleMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -208,6 +258,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
 
             }
         });
+        //搜索结果返回集
         peopleAdapter.setListener(new PeopleMessageAdapter.FilterListener() {
             @Override
             public void getFilterData(List<PeopleBean> list) {
@@ -241,26 +292,29 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
         dialog.show();
-        return dialog;
     }
 
     /**
      * 显示领取人列表
-     * 无左边距
+     * 无左边距(带剩余配额数)
      *
      * @param context
      * @return
      */
-    public Dialog showPeopleList(final Context context, final List<PeopleBean> peopleList, final OnPeopleResultListener onPeopleResultListener) {
+    public void showPeopleList(final Context context, final List<PeopleBean> peopleList, final OnPeopleResultListener onPeopleResultListener) {
         activity = (Activity) context;
-        final PeopleChoseAdapter choseAdapter = new PeopleChoseAdapter(context, peopleList);
         peopleListResult = new ArrayList<>();
+        final PeopleChoseAdapter choseAdapter = new PeopleChoseAdapter(context, peopleList);
         //自定义dialog
         dialog = new Dialog(context, R.style.dialogCityMessage);
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_people_chose_list, null);
+        //取消
         LinearLayout linearBack = view.findViewById(R.id.linear_back);
+        //文本输入框
         final EditText editPeopleMessage = view.findViewById(R.id.edit_people_message);
+        //清除文本按钮
         final ImageView imageDelete = view.findViewById(R.id.image_delete);
+        //列表
         ListView listView = view.findViewById(R.id.list_view);
         dialog.setContentView(view);
 
@@ -274,13 +328,14 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
                 }
             }
         });
+        //清除按钮监听
         imageDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editPeopleMessage.setText("");
             }
         });
-
+        //文本输入框监听
         editPeopleMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -304,6 +359,7 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
 
             }
         });
+        //搜索结果返回集
         choseAdapter.setListener(new PeopleChoseAdapter.FilterListener() {
             @Override
             public void getFilterData(List<PeopleBean> list) {
@@ -351,137 +407,10 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
         dialog.show();
-        return dialog;
-    }
-
-    /**
-     * 显示城市列表
-     * 无左边距
-     *
-     * @param context
-     * @param listCity
-     * @return
-     */
-    public Dialog showCityList(Context context, final List<CityBean> listCity, final OnCityResultListener onCityResultListener) {
-        activity = (Activity) context;
-        adapter = new CityMessageAdapter(context, listCity);
-        listResult = new ArrayList<>();
-        //自定义dialog
-        dialog = new Dialog(context, R.style.dialogCityMessage);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_city_list, null);
-        linearBack = view.findViewById(R.id.linear_back);
-        imageSearch = view.findViewById(R.id.image_search);
-        editCityMessage = view.findViewById(R.id.edit_city_message);
-        imageDelete = view.findViewById(R.id.image_delete);
-        listView = view.findViewById(R.id.list_view);
-        linearLayout = view.findViewById(R.id.linear_city);
-        dialog.setContentView(view);
-
-        //点击事件监听
-        linearBack.setOnClickListener(this);
-        imageDelete.setOnClickListener(this);
-        imageSearch.setOnClickListener(this);
-
-        editCityMessage.addTextChangedListener(this);
-        adapter.setListener(new CityMessageAdapter.FilterListener() {
-            @Override
-            public void getFilterData(List<CityBean> list) {
-                listResult = list;
-            }
-        });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (onCityResultListener != null) {
-                    if (listResult.size() == 0) {
-                        onCityResultListener.onCityResult(listCity.get(position));
-                    } else {
-                        onCityResultListener.onCityResult(listResult.get(position));
-                    }
-                    KeyBoardUtil.hideKeyBoard(activity);
-                }
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        listView.setAdapter(adapter);
-
-        //设置无边距
-        Window dialogWindow = dialog.getWindow();
-        dialogWindow.setGravity(Gravity.BOTTOM);
-        dialogWindow.getDecorView().setPadding(0, 0, 0, 0);
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        lp.width = WindowManager.LayoutParams.FILL_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        dialogWindow.setAttributes(lp);
-        dialog.show();
-        return dialog;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.linear_back:  //返回
-                KeyBoardUtil.hideKeyBoard(activity);
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                break;
-            case R.id.image_search: //搜索
-                break;
-            case R.id.image_delete://清除
-                editCityMessage.setText("");
-                break;
-        }
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!TextUtils.isEmpty(s.toString().trim())) {
-            imageDelete.setVisibility(View.VISIBLE);
-        } else {
-            imageDelete.setVisibility(View.GONE);
-        }
-        if (adapter != null) {
-            adapter.getFilter().filter(s);
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
-
-    public interface OnCityResultListener {
-        void onCityResult(CityBean city);
     }
 
     public interface OnPeopleResultListener {
         void onPeopleResult(PeopleBean city);
-    }
-
-//    /**
-//     * 隐藏系统键盘
-//     */
-//    private void hideSystemKeyBroad() {
-//        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-//    }
-
-    /**
-     * 隐藏系统键盘
-     */
-    private void hideSystemKeyBroad() {
-        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        System.gc();
-
     }
 
     /**
@@ -490,16 +419,26 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
      * @param context
      * @return
      */
-    public Dialog showMenuDialog(final Context context, final UserInfoDataBean dataBean, int type) {
+    public void showMenuDialog(final Context context, final UserInfoDataBean dataBean, int type) {
         final Dialog dialog = new Dialog(context, R.style.dialogMenu);
         View view = LayoutInflater.from(context).inflate(R.layout.client_detail_menu, null);
         RelativeLayout relativeBg = view.findViewById(R.id.relative_bg);
         //成交客户
         LinearLayout linearChengjiao = view.findViewById(R.id.linear_chengjiao);
         final TextView tvClient = view.findViewById(R.id.tv_client);
+        linearChengjiao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                Intent intent = new Intent(context, WebViewActivity.class);
+                intent.putExtra("mLoadingUrl", Constant.BUSINESS_CONTRACT + "?co_id=" + dataBean.getCo_id() + "&co_name=" + dataBean.getCo_name());
+                context.startActivity(intent);
+            }
+        });
         //放弃客户
         LinearLayout linearOut = view.findViewById(R.id.linear_out);
-        TextView tvOut = view.findViewById(R.id.tv_out);
         linearOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -513,7 +452,6 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         });
         //申请延期
         LinearLayout linearYanqi = view.findViewById(R.id.linear_yanqi);
-        TextView tvYanqi = view.findViewById(R.id.tv_yanqi);
         linearYanqi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -544,8 +482,6 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         });
         //转移
         LinearLayout linearZhuanYi = view.findViewById(R.id.linear_zhuanyi);
-        TextView tvZhuanyi = view.findViewById(R.id.tv_zhuanyi);
-
         linearZhuanYi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -584,8 +520,6 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
                 tvClient.setText("续费");
             }
         }
-
-
         relativeBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -595,17 +529,6 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
             }
         });
 
-        linearChengjiao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                Intent intent = new Intent(context, WebViewActivity.class);
-                intent.putExtra("mLoadingUrl", Constant.BUSINESS_CONTRACT + "?co_id=" + dataBean.getCo_id() + "&co_name=" + dataBean.getCo_name());
-                context.startActivity(intent);
-            }
-        });
         dialog.setContentView(view);
         //设置无边距
         Window dialogWindow = dialog.getWindow();
@@ -620,7 +543,6 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         } else {
             dialog.show();
         }
-        return dialog;
     }
 
     /**
@@ -691,6 +613,17 @@ public class DialogUtils implements View.OnClickListener, TextWatcher {
         showBulletBox(context, textSure, textCancle, message, prompt, onSureListener, onCancleListener);
     }
 
+    /**
+     * 弹出对话框（包含一个按钮或者两个按钮）
+     *
+     * @param context
+     * @param textSure         确定按钮
+     * @param textCancle       取消按钮
+     * @param message          内容
+     * @param prompt           提示
+     * @param onSureListener
+     * @param onCancleListener
+     */
     private void showBulletBox(Context context, String textSure, String textCancle, String message, String prompt, final onSureListener onSureListener, final onCancleListener onCancleListener) {
         final Dialog dialog = new Dialog(context, R.style.dialogMenu);
         View view = LayoutInflater.from(context).inflate(R.layout.compat_dialog, null);

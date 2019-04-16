@@ -54,7 +54,7 @@ import okhttp3.Response;
 
 /**
  * Created by Mr.Wang on 2019/4/1 14:51.
- * 客户详情(客户编辑)
+ * 客户详情(客户跟进)
  */
 public class ClientEditActivity extends BaseActivity {
     @BindView(R.id.tv_cancle)
@@ -96,7 +96,6 @@ public class ClientEditActivity extends BaseActivity {
      */
     private List<KeyValueDataBean> listClientType;
     private ClientTypeAdapter adapterClientType;
-    private int selectPosition;
     private int type;
 
     /**
@@ -136,6 +135,7 @@ public class ClientEditActivity extends BaseActivity {
         keyValueDataBeanList2 = KeyValueUtils.getDetailNoYiXiang();
         keyValueDataBeanList3 = KeyValueUtils.getWuXiao();
         //0-新客户、1-潜在（初步接触）、2-持续跟进（归到1）、3-意向（线下跟进）、4-成交、5-无效、6-已签单客户（归到5）、7-暂无意向、8-待签约
+        int selectPosition;
         switch (listBean.getCo_type()) {
             case 0:
             case 1:
