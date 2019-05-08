@@ -156,7 +156,8 @@
         <EditText
             android:id="@+id/et_give_up"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start"
             android:background="@null"
             android:hint="请输入放弃说明"
             android:maxEms="20"

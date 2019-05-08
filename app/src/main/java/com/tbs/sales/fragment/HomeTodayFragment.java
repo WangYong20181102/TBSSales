@@ -128,6 +128,7 @@ public class HomeTodayFragment extends BaseFragment {
                                     recyclerView.setAdapter(adapter);
                                 }
                                 if (dataBean.getList().size() != 0) {
+                                    linearNoData.setVisibility(View.GONE);
                                     if (isDownRefresh) {
                                         isDownRefresh = false;
                                         recyclerView.scrollToPosition(0);

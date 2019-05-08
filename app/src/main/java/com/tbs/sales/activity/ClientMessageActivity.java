@@ -178,6 +178,10 @@ public class ClientMessageActivity extends BaseActivity {
         position3 = listBean.getSex();
         //座机
         aciPhone.setText(listBean.getTel());
+        /**
+         * 设置座机格式，加横线
+         */
+        aciPhone.setPhoneType();
         //手机
         aciTelPhone.setText(listBean.getPhone());
         //微信
@@ -371,7 +375,7 @@ public class ClientMessageActivity extends BaseActivity {
         params.put("has_serv_plat", position2);
         params.put("name", aciCoName.getText());
         params.put("sex", position3);
-        params.put("tel", StringUtils.setPhone(aciPhone.getText()));
+        params.put("tel", aciPhone.getText());
         params.put("phone", aciTelPhone.getText());
         params.put("weixin", aciWechatNum.getText());
         params.put("email", aciEmailAddress.getText());

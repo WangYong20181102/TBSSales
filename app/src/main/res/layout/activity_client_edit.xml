@@ -213,10 +213,11 @@
                 <EditText
                     android:id="@+id/et_follow_miaoshu"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/d100"
                     android:layout_marginLeft="@dimen/d23"
                     android:layout_marginTop="@dimen/d14"
                     android:layout_marginRight="@dimen/d23"
+                    android:gravity="start"
                     android:background="@null"
                     android:hint="添加描述"
                     android:maxEms="50"

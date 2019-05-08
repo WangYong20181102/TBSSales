@@ -16,10 +16,13 @@ import com.google.gson.Gson;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.FollowUpRecordAdapter;
 import com.tbs.sales.bean.ComFollowRecordingBean;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.OkHttpUtils;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +54,6 @@ public class FollowUpRecordFragment extends BaseFragment {
     private FollowUpRecordAdapter adapter;
     private List<ComFollowRecordingBean> beanList;
     private Gson gson;
-    private Timer timer;
     /**
      * 进度条
      */
@@ -59,6 +61,7 @@ public class FollowUpRecordFragment extends BaseFragment {
     private SimpleDateFormat format;
     private int mPosition = 0;
     private HashMap<Integer, MediaPlayer> mediaPlayers;//mediaplayers集合
+    private Timer timer;
     /**
      * 客户id
      */
@@ -78,6 +81,49 @@ public class FollowUpRecordFragment extends BaseFragment {
         initView();
         initRequestFollowRecording();
         return view;
+    }
+
+    @Override
+    public boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Subscribe
+    @Override
+    public void receiveEvent(Event event) {
+        super.receiveEvent(event);
+        switch (event.getCode()) {
+            case EC.EventCode.UPDATE_CLIENT_DETAIL://更新详情页数据
+                initData();
+                break;
+        }
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        isSeekBarChanging = true;
+        if (!mediaPlayers.isEmpty()) {
+            for (Integer mediaPlay : mediaPlayers.keySet()) {
+                if (mediaPlayers.get(mediaPlay) != null) {
+                    mediaPlayers.get(mediaPlay).pause();
+                }
+            }
+        }
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+
+        if (adapter != null) {
+            adapter = null;
+        }
+        if (!beanList.isEmpty()) {
+            beanList.clear();
+        }
+        initRequestFollowRecording();
+
     }
 
     /**
@@ -114,6 +160,7 @@ public class FollowUpRecordFragment extends BaseFragment {
                                     adapter.setOnPlayVideoListener(new FollowUpRecordAdapter.OnPlayVideoListener() {
                                         @Override
                                         public void onResult(final MediaPlayer mediaPlayer, final FollowUpRecordAdapter.MyViewHolder holder, final int position) {
+                                            isSeekBarChanging = false;
                                             if (mediaPlayers.isEmpty()) {
                                                 mediaPlayers.put(position, mediaPlayer);
                                             } else {

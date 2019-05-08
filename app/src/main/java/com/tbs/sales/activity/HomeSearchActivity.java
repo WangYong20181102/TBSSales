@@ -204,6 +204,7 @@ public class HomeSearchActivity extends BaseActivity implements TextView.OnEdito
                                 recyclerView.setVisibility(View.VISIBLE);
                                 linearCanSearch.setVisibility(View.GONE);   //隐藏可以搜索提示
                                 if (dataBean.getList().size() != 0) {
+                                    linearNoData.setVisibility(View.GONE);
                                     if (adapter == null) {
                                         adapter = new SearchResultAdapter(HomeSearchActivity.this, beanList);
                                         recyclerView.setAdapter(adapter);

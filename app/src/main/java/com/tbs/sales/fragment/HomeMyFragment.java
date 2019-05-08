@@ -126,7 +126,7 @@ public class HomeMyFragment extends BaseFragment {
         params.put("time_range", timeRange.trim());
         params.put("page", mPage);
         params.put("page_size", pageSize);
-        params.put("list_type", "my");
+        params.put("list_type", "follow");
         params.put("city", city);
         params.put("co_type", coType);
         params.put("token", AppInfoUtils.getToekn(getActivity()));

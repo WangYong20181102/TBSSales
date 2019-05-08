@@ -7,7 +7,7 @@
     <View
         android:id="@+id/view_top_bg"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/d24" />
+        android:layout_height="@dimen/d25" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,12 +42,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/d10"
+            android:paddingBottom="@dimen/d10"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/d14">
+                android:layout_marginBottom="@dimen/d15">
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -73,7 +74,7 @@
                 android:id="@+id/linear_biaoqian"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/d14"
+                android:layout_marginBottom="@dimen/d15"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -96,7 +97,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/d14"
+                android:layout_marginBottom="@dimen/d15"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -118,9 +119,10 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_change_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/d14"
+                android:layout_marginBottom="@dimen/d15"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -145,7 +147,7 @@
                 android:id="@+id/linear_suggest_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/d14"
+                android:layout_marginBottom="@dimen/d15"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 

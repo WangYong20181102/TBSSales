@@ -1,6 +1,9 @@
 package com.tbs.sales.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -130,7 +133,7 @@ public class ClientDetailsActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        phoneList = new ArrayList<>();
+//        phoneList = new ArrayList<>();
     }
 
     /**
@@ -182,6 +185,9 @@ public class ClientDetailsActivity extends BaseActivity {
                 finish();
                 break;
             case EC.EventCode.UPDATE_CLIENT_DETAIL://更新详情页数据
+//                if (phoneList != null) {//清除电话列表
+//                    phoneList.clear();
+//                }
                 initHttpRequest();
                 break;
         }
@@ -194,11 +200,13 @@ public class ClientDetailsActivity extends BaseActivity {
      */
     private void showUserData(UserInfoDataBean dataBean) {
         if (!TextUtils.isEmpty(dataBean.getCallphone().trim())) {   //优先展示callphone
-            phoneList.add(dataBean.getPhone().trim());
+//            phoneList.add(dataBean.getPhone().trim());
+            phone = dataBean.getPhone().trim();
         } else {
-            phoneList.add(dataBean.getContacts().trim());
+//            phoneList.add(dataBean.getContacts().trim());
+            phone = dataBean.getContacts().trim();
         }
-        dataBeanList = KeyValueUtils.getPhone(phoneList);
+//        dataBeanList = KeyValueUtils.getPhone(phoneList);
         //公司
         tvCompany.setText(dataBean.getCo_name());
         //id
@@ -233,7 +241,7 @@ public class ClientDetailsActivity extends BaseActivity {
                 linearMenu.setVisibility(View.GONE);
             }
         } else if (type == 3) {//跟进记录界面进入
-            if (dataBean.getRespond_uid() != Integer.parseInt(AppInfoUtils.getId(this))) {    //是我的客户
+            if (dataBean.getRespond_uid() == Integer.parseInt(AppInfoUtils.getId(this))) {    //是我的客户
                 linearMenu.setVisibility(View.VISIBLE);
                 imageFollow.setVisibility(View.VISIBLE);
                 imagePhone.setVisibility(View.VISIBLE);
@@ -289,13 +297,24 @@ public class ClientDetailsActivity extends BaseActivity {
                 DialogUtils.getInstances().showMenuDialog(this, dataBean, type);
                 break;
             case R.id.image_phone:  //打电话
-                DialogUtils.getInstances().showBottomSelect(this, dataBeanList, new DialogUtils.OnBottomItemSelectListener() {
+//                DialogUtils.getInstances().showBottomSelect(this, dataBeanList, new DialogUtils.OnBottomItemSelectListener() {
+//                    @Override
+//                    public void onItemSelect(int position) {
+//                        phone = dataBeanList.get(position).getName();
+//                        call(phone);
+//                    }
+//                });
+                new AlertDialog.Builder(this).setMessage(phone).setPositiveButton("拨打", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onItemSelect(int position) {
-                        phone = dataBeanList.get(position).getName();
+                    public void onClick(DialogInterface dialog, int which) {
                         call(phone);
                     }
-                });
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
                 break;
             case R.id.image_follow: //客户跟进
                 Intent intent = new Intent(this, ClientEditActivity.class);
@@ -308,7 +327,7 @@ public class ClientDetailsActivity extends BaseActivity {
                     intent1 = new Intent(this, ClientMessageQueryActivity.class);//不可编辑
                     intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
                 } else if (type == 3) {//跟进记录界面跳转
-                    if (dataBean.getRespond_uid() != Integer.parseInt(AppInfoUtils.getId(this))) {//是我的客户
+                    if (dataBean.getRespond_uid() == Integer.parseInt(AppInfoUtils.getId(this))) {//是我的客户
                         intent1 = new Intent(this, ClientMessageActivity.class);
                         intent1.putExtra(UserInfoDataBean.class.getName(), dataBean);
                     } else {
@@ -351,10 +370,9 @@ public class ClientDetailsActivity extends BaseActivity {
      */
     public void call(String telPhone) {
         if (checkReadPermission(Manifest.permission.CALL_PHONE, REQUEST_CALL_PERMISSION)) {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(telPhone));
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + telPhone));
             startActivity(intent);
         }
-
     }
 
     /**

@@ -4,4 +4,5 @@
     <item name="tag_first" type="id"></item>
     <item name="tag_second" type="id"></item>
     <item name="tag_three" type="id"></item>
+    <string name="filepath">com.xf.uploadh5demo.fileprovider</string>
 </resources>

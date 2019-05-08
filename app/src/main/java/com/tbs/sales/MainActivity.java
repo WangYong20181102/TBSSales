@@ -143,8 +143,8 @@ public class MainActivity extends TabActivity {
                 LogUtils.logE("检测用户的更新数据==========" + json);
                 try {
                     JSONObject jsonObject = new JSONObject(json);
-                    String status = jsonObject.optString("status");
-                    if (status.equals("200")) {
+                    String status = jsonObject.optString("code");
+                    if (status.equals("0")) {
                         //数据获取成功
                         String data = jsonObject.optString("data");
                         mUpdateInfo = gson.fromJson(data, _UpdateInfo.class);

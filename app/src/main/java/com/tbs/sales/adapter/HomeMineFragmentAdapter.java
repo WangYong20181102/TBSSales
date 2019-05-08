@@ -91,7 +91,7 @@ public class HomeMineFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
                         context.startActivity(new Intent(context, LoginActivity.class));
                     } else {
                         Intent intent = new Intent(context,HomeSearchActivity.class);
-                        intent.putExtra("list_type","my");
+                        intent.putExtra("list_type","follow");
                         context.startActivity(intent);
                     }
                 }

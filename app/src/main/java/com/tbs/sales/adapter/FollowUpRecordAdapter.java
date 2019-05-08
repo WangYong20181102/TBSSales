@@ -83,13 +83,18 @@ public class FollowUpRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 ((MyViewHolder) holder).linearBiaoQian.setVisibility(View.VISIBLE);
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < strings.size(); i++) {
-                    builder.append(strings.get(i) + "    ");
+                    builder.append("#" + strings.get(i) + "#    ");
                 }
                 ((MyViewHolder) holder).tvBiaoqian.setText(builder.toString());
             }
             //跟进内容
             ((MyViewHolder) holder).tvDesc.setText(beanList.get(position).getDesc());
-            ((MyViewHolder) holder).tvChangeDesc.setText(beanList.get(position).getChange_desc());
+            if (TextUtils.isEmpty(beanList.get(position).getChange_desc())){
+                ((MyViewHolder) holder).linearChangeDesc.setVisibility(View.GONE);
+            }else {
+                ((MyViewHolder) holder).linearChangeDesc.setVisibility(View.VISIBLE);
+                ((MyViewHolder) holder).tvChangeDesc.setText(beanList.get(position).getChange_desc());
+            }
             //建议沟通方式
             if (TextUtils.isEmpty(beanList.get(position).getCommunic_desc())) {
                 ((MyViewHolder) holder).linearSuggestType.setVisibility(View.GONE);
@@ -98,6 +103,7 @@ public class FollowUpRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 ((MyViewHolder) holder).tvCommunicDesc.setText(beanList.get(position).getCommunic_desc());
             }
 
+//            beanList.get(position).setVoice_url("http://www.ytmp3.cn/down/60892.mp3");
             //语音
             if (TextUtils.isEmpty(beanList.get(position).getVoice_url())) {
                 ((MyViewHolder) holder).rlVideoVoice.setVisibility(View.GONE);
@@ -170,6 +176,8 @@ public class FollowUpRecordAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         TextView tvDesc;
         @BindView(R.id.tv_change_desc)
         TextView tvChangeDesc;
+        @BindView(R.id.linear_change_desc)
+        LinearLayout linearChangeDesc;
         @BindView(R.id.tv_communic_desc)
         TextView tvCommunicDesc;
         @BindView(R.id.image_play)

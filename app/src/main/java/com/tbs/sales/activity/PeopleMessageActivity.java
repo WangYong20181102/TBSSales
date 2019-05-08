@@ -340,7 +340,7 @@ public class PeopleMessageActivity extends BaseActivity {
                 mCameraFile = ImageUploadUtils.getInstances(PeopleMessageActivity.this).takeCamerGetPhoto();
             } else {
                 //获取权限失败
-                Toast.makeText(PeopleMessageActivity.this, "你取消了相机授权~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PeopleMessageActivity.this, "拍照权限被禁用，请在权限管理修改", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == 101) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

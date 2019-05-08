@@ -15,12 +15,15 @@ import com.google.gson.Gson;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.CirculationRecordAdapter;
 import com.tbs.sales.bean.CirculationRecordBean;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.MoveDistanceUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.ToastUtils;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +70,7 @@ public class CirculationRecordFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_circulation_record, null);
         unbinder = ButterKnife.bind(this, view);
         gson = new Gson();
-        initData();
+        initView();
         initRequest();
         return view;
     }
@@ -75,7 +78,7 @@ public class CirculationRecordFragment extends BaseFragment {
     /**
      * 初始化数据
      */
-    private void initData() {
+    private void initView() {
         beanList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -107,6 +110,36 @@ public class CirculationRecordFragment extends BaseFragment {
     //加载更多数据
     private void LoadMore() {
         mPage++;
+        initRequest();
+    }
+
+    @Override
+    public boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Subscribe
+    @Override
+    public void receiveEvent(Event event) {
+        super.receiveEvent(event);
+        switch (event.getCode()) {
+            case EC.EventCode.UPDATE_CLIENT_DETAIL://更新详情页数据
+                initData();
+                break;
+        }
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+
+        if (adapter != null) {
+            adapter = null;
+        }
+        if (!beanList.isEmpty()) {
+            beanList.clear();
+        }
         initRequest();
     }
 

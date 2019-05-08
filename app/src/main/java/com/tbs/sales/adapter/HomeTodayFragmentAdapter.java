@@ -74,7 +74,7 @@ public class HomeTodayFragmentAdapter extends RecyclerView.Adapter<RecyclerView.
                     break;
             }
             //时间
-            ((MyViewHolder2) holder).textTime.setText(beanList.get(position - 1).getGrab_add_time());
+            ((MyViewHolder2) holder).textTime.setText(beanList.get(position - 1).getPre_time());
             ((MyViewHolder2) holder).linearClick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

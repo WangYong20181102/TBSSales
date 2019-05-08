@@ -110,6 +110,10 @@ public class ClientEditActivity extends BaseActivity {
      * 无效(无效原因)
      */
     private List<KeyValueDataBean> keyValueDataBeanList3;
+    /**
+     * 成交(客户标签)
+     */
+    private List<KeyValueDataBean> keyValueDataBeanList4;
 
     private UserInfoDataBean listBean;
     private TimePickerView pvTime;
@@ -134,12 +138,14 @@ public class ClientEditActivity extends BaseActivity {
         keyValueDataBeanList1 = KeyValueUtils.getDetailPageClientType();
         keyValueDataBeanList2 = KeyValueUtils.getDetailNoYiXiang();
         keyValueDataBeanList3 = KeyValueUtils.getWuXiao();
+        keyValueDataBeanList4 = KeyValueUtils.getDetailChengJiao();
         //0-新客户、1-潜在（初步接触）、2-持续跟进（归到1）、3-意向（线下跟进）、4-成交、5-无效、6-已签单客户（归到5）、7-暂无意向、8-待签约
         int selectPosition;
         switch (listBean.getCo_type()) {
             case 0:
             case 1:
             case 2:
+                type = 1;//默认潜在
                 listClientType = KeyValueUtils.getClientType1();
                 selectPosition = 1;
                 rlGiveUpType.setVisibility(View.VISIBLE);
@@ -164,7 +170,8 @@ public class ClientEditActivity extends BaseActivity {
             case 4:
                 listClientType = KeyValueUtils.getClientType3();
                 selectPosition = 0;
-                rlGiveUpType.setVisibility(View.GONE);
+                rlGiveUpType.setVisibility(View.VISIBLE);
+                tvGiveUpType.setText("客户标签");
                 break;
             case 5:
             case 6:
@@ -174,6 +181,7 @@ public class ClientEditActivity extends BaseActivity {
                 tvGiveUpType.setText("无效原因");
                 break;
             default:
+                type = 1;//默认潜在
                 listClientType = KeyValueUtils.getClientType1();
                 selectPosition = 1;
                 rlGiveUpType.setVisibility(View.GONE);
@@ -194,6 +202,7 @@ public class ClientEditActivity extends BaseActivity {
                     case 1:
                     case 2:
                     case 7:
+                    case 4:
                         invalid_reason = "";
                         rlGiveUpType.setVisibility(View.VISIBLE);
                         tvGiveUpType.setText("客户标签");
@@ -221,7 +230,7 @@ public class ClientEditActivity extends BaseActivity {
     private void initIntent() {
         listBean = (UserInfoDataBean) getIntent().getSerializableExtra(UserInfoDataBean.class.getName());
         type = listBean.getCo_type();
-        tvDateTime.setText(listBean.getFollow_time());
+        tvDateTime.setText("");
     }
 
     @OnClick({R.id.tv_cancle, R.id.tv_sure, R.id.linear_date_time, R.id.rl_give_up_type})
@@ -236,6 +245,7 @@ public class ClientEditActivity extends BaseActivity {
                     case 1:
                     case 2:
                     case 7:
+                    case 4:
                         if (TextUtils.isEmpty(co_tag)) {
                             ToastUtils.toastShort(ClientEditActivity.this, "请选择客户标签");
                             return;
@@ -270,6 +280,15 @@ public class ClientEditActivity extends BaseActivity {
                             public void onItemSelect(int position) {
                                 co_tag = keyValueDataBeanList1.get(position).getId() + "";
                                 tvRightGiveUpType.setText(keyValueDataBeanList1.get(position).getName());
+                            }
+                        });
+                        break;
+                    case 4://成交
+                        DialogUtils.getInstances().showBottomSelect(this, keyValueDataBeanList4, new DialogUtils.OnBottomItemSelectListener() {
+                            @Override
+                            public void onItemSelect(int position) {
+                                co_tag = keyValueDataBeanList4.get(position).getId() + "";
+                                tvRightGiveUpType.setText(keyValueDataBeanList4.get(position).getName());
                             }
                         });
                         break;

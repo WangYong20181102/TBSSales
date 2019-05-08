@@ -110,6 +110,19 @@ public class KeyValueUtils {
         dataBeanList.add(new KeyValueDataBean("其他", 99));
         return dataBeanList;
     }
+    /**
+     * 成交(客户标签)
+     */
+    public static List<KeyValueDataBean> getDetailChengJiao() {
+        List<KeyValueDataBean> dataBeanList = new ArrayList<>();
+        dataBeanList.add(new KeyValueDataBean("已准备续费", 41));
+        dataBeanList.add(new KeyValueDataBean("有续费意愿", 42));
+        dataBeanList.add(new KeyValueDataBean("订单质量低", 43));
+        dataBeanList.add(new KeyValueDataBean("服务态度差", 44));
+        dataBeanList.add(new KeyValueDataBean("收费太高", 45));
+        dataBeanList.add(new KeyValueDataBean("其他", 99));
+        return dataBeanList;
+    }
 
     /**
      * 无效(无效原因)

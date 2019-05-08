@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:paddingLeft="@dimen/d22"
-    android:paddingTop="@dimen/d19"
+    android:paddingTop="@dimen/d20"
     android:paddingRight="@dimen/d25">
 
     <RelativeLayout
@@ -51,14 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/d29"
-        android:layout_marginTop="@dimen/d14"
+        android:layout_marginTop="@dimen/d15"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID:"
+            android:text="ID"
             android:textColor="@color/FC_999999"
             android:textSize="@dimen/s13" />
 
@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/d29"
-        android:layout_marginTop="@dimen/d13"
+        android:layout_marginTop="@dimen/d15"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -108,7 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/d29"
-        android:layout_marginTop="@dimen/d13"
+        android:layout_marginTop="@dimen/d15"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/d1"
         android:layout_marginLeft="@dimen/d4"
-        android:layout_marginTop="@dimen/d19"
+        android:layout_marginTop="@dimen/d20"
         android:layout_marginRight="@dimen/d1"
         android:background="@color/FC_EEEEEE" />
 

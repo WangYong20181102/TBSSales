@@ -221,14 +221,13 @@
                                 android:id="@+id/image_positioning"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
+                                android:layout_marginTop="@dimen/d1"
                                 android:src="@mipmap/positioning" />
 
                             <TextView
                                 android:id="@+id/tv_address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/d9"
                                 android:layout_marginRight="@dimen/d20"
                                 android:layout_toLeftOf="@+id/view_line"

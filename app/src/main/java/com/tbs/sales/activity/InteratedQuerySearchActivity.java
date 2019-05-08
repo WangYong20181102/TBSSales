@@ -197,6 +197,7 @@ public class InteratedQuerySearchActivity extends BaseActivity implements TextVi
                                 recyclerView.setVisibility(View.VISIBLE);
                                 linearCanSearch.setVisibility(View.GONE);   //隐藏可以搜索提示
                                 if (dataBean.getList().size() != 0) {
+                                    linearNoData.setVisibility(View.GONE);
                                     if (adapter == null) {
                                         adapter = new InteratedQuerySearchResultAdapter(InteratedQuerySearchActivity.this, beanList);
                                         recyclerView.setAdapter(adapter);
