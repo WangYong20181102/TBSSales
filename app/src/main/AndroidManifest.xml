@@ -110,6 +110,7 @@
         <activity android:name=".activity.InteratedQuerySearchActivity" />
         <activity android:name=".activity.FollowRecordingActivity" />
         <activity android:name=".activity.TransferActivity" />
+        <activity android:name=".activity.SeperateCitySelectActivity" />
         <activity android:name=".activity.ClientMessageQueryActivity" />
         <activity android:name=".activity.SelectReceivePeopleActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"

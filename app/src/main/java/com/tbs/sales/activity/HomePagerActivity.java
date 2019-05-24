@@ -37,6 +37,7 @@ import com.tbs.sales.fragment.HomeBriefingFragment;
 import com.tbs.sales.fragment.HomeEarlyWarningFragment;
 import com.tbs.sales.fragment.HomeMyFragment;
 import com.tbs.sales.fragment.HomeTodayFragment;
+import com.tbs.sales.fragment.SeperateFragment;
 import com.tbs.sales.manager.AppManager;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.DialogUtils;
@@ -78,7 +79,7 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
     View viewTop;   //主要用于popupWindow位置显示
     @BindView(R.id.view_line)
     View viewLine;  //首页导航栏下划线
-    private String[] titles = new String[]{"跟进", "今日", "预警", "简报"};
+    private String[] titles = new String[]{"跟进", "今日", "预警", "分单"};
     /*********筛选控件************/
     private PopupWindow popupWindow;
     //客户类型
@@ -324,7 +325,8 @@ public class HomePagerActivity extends BaseActivity implements TabLayout.OnTabSe
         fragmentList.add(myFragment);
         fragmentList.add(new HomeTodayFragment());
         fragmentList.add(new HomeEarlyWarningFragment());
-        fragmentList.add(new HomeBriefingFragment());
+//        fragmentList.add(new HomeBriefingFragment());
+        fragmentList.add(new SeperateFragment());
         viewPagerHome.setOffscreenPageLimit(fragmentList.size());
         HomeViewPagerAdapter adapter = new HomeViewPagerAdapter(getSupportFragmentManager(), this, fragmentList);
         viewPagerHome.setAdapter(adapter);

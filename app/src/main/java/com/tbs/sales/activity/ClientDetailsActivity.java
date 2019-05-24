@@ -39,6 +39,7 @@ import com.tbs.sales.utils.DialogUtils;
 import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.KeyValueUtils;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
@@ -101,8 +102,6 @@ public class ClientDetailsActivity extends BaseActivity {
     /**
      * 电话集合
      */
-    private List<String> phoneList;
-    private List<KeyValueDataBean> dataBeanList;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
     /**
      * 判断上个activity是哪个界面
@@ -116,6 +115,7 @@ public class ClientDetailsActivity extends BaseActivity {
     private Gson gson;
     private static final int REQUEST_CALL_PERMISSION = 10111; //拨号请求码
     private String phone = "";
+    private String data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,16 +124,8 @@ public class ClientDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
         gson = new Gson();
         initIntent();
-        initData();
         initTab();
         initHttpRequest();
-    }
-
-    /**
-     * 初始化数据
-     */
-    private void initData() {
-//        phoneList = new ArrayList<>();
     }
 
     /**
@@ -185,9 +177,6 @@ public class ClientDetailsActivity extends BaseActivity {
                 finish();
                 break;
             case EC.EventCode.UPDATE_CLIENT_DETAIL://更新详情页数据
-//                if (phoneList != null) {//清除电话列表
-//                    phoneList.clear();
-//                }
                 initHttpRequest();
                 break;
         }
@@ -199,14 +188,7 @@ public class ClientDetailsActivity extends BaseActivity {
      * @param dataBean
      */
     private void showUserData(UserInfoDataBean dataBean) {
-        if (!TextUtils.isEmpty(dataBean.getCallphone().trim())) {   //优先展示callphone
-//            phoneList.add(dataBean.getPhone().trim());
-            phone = dataBean.getPhone().trim();
-        } else {
-//            phoneList.add(dataBean.getContacts().trim());
-            phone = dataBean.getContacts().trim();
-        }
-//        dataBeanList = KeyValueUtils.getPhone(phoneList);
+        phone = dataBean.getContacts().trim();
         //公司
         tvCompany.setText(dataBean.getCo_name());
         //id
@@ -297,24 +279,8 @@ public class ClientDetailsActivity extends BaseActivity {
                 DialogUtils.getInstances().showMenuDialog(this, dataBean, type);
                 break;
             case R.id.image_phone:  //打电话
-//                DialogUtils.getInstances().showBottomSelect(this, dataBeanList, new DialogUtils.OnBottomItemSelectListener() {
-//                    @Override
-//                    public void onItemSelect(int position) {
-//                        phone = dataBeanList.get(position).getName();
-//                        call(phone);
-//                    }
-//                });
-                new AlertDialog.Builder(this).setMessage(phone).setPositiveButton("拨打", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        call(phone);
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                requestPhoneHttp();
 
-                    }
-                }).show();
                 break;
             case R.id.image_follow: //客户跟进
                 Intent intent = new Intent(this, ClientEditActivity.class);
@@ -344,6 +310,60 @@ public class ClientDetailsActivity extends BaseActivity {
     }
 
     /**
+     * 小号绑定
+     */
+    private void requestPhoneHttp() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("token", AppInfoUtils.getToekn(this));
+        params.put("telA", phone);
+        params.put("type", "call");
+        params.put("flag", "private");
+        OkHttpUtils.post(Constant.AXB_BINDAXB, params, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    final JSONObject jsonObject = new JSONObject(json);
+                    String code = jsonObject.optString("code");
+                    if (code.equals("0")) {
+                        data = jsonObject.optString("data");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new AlertDialog.Builder(ClientDetailsActivity.this).setMessage(data).setPositiveButton("拨打", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        call(data);
+                                    }
+                                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                }).show();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.toastShort(ClientDetailsActivity.this, jsonObject.optString("message"));
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
      * 检查权限后的回调
      *
      * @param requestCode  请求码
@@ -357,7 +377,7 @@ public class ClientDetailsActivity extends BaseActivity {
                 if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
                     Toast.makeText(this, "请允许拨号权限后再试", Toast.LENGTH_SHORT).show();
                 } else {//成功
-                    call(phone);
+                    call(data);
                 }
                 break;
         }

@@ -4,16 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,7 +19,6 @@ import com.tbs.sales.bean.Event;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
 import com.tbs.sales.utils.EC;
-import com.tbs.sales.utils.ToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -39,7 +34,7 @@ public class HomeBriefingFragment extends BaseFragment implements View.OnTouchLi
     @BindView(R.id.web_view)
     WebView webView;
     Unbinder unbinder;
-//    private boolean b = true;
+    //    private boolean b = true;
     private DisplayMetrics dm;
     private WindowManager manager;
 
@@ -95,11 +90,12 @@ public class HomeBriefingFragment extends BaseFragment implements View.OnTouchLi
         webView.setOnTouchListener(this);
 
 //        webView.setWebChromeClient(webChromeClient);
-        webView.setWebViewClient(webViewClient);
+        webView.setWebViewClient (webViewClient);
         webView.loadUrl(Constant.WXDISTRIBUTE_CUSTOMER_COUNT);
     }
 
     private WebViewClient webViewClient = new WebViewClient() {
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);

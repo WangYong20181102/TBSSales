@@ -111,7 +111,8 @@
             android:id="@+id/relative_help_center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/d52">
+            android:layout_marginTop="@dimen/d52"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -136,13 +137,14 @@
             android:layout_height="@dimen/d1"
             android:layout_marginLeft="@dimen/d24"
             android:layout_marginTop="@dimen/d17"
-            android:background="@color/FC_E8E9EB" />
+            android:background="@color/FC_E8E9EB"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/relative_number_safety"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/d18">
+            android:layout_marginTop="@dimen/d52">
 
             <TextView
                 android:layout_width="wrap_content"

@@ -32,6 +32,10 @@ public class Constant {
 
     //首页信息
     public static final String SALE_GETCOMLIST = HTTP_URL + "/api/sale/getcomlist";
+    //可分订单列表
+    public static final String ORDER_GETWAITDEVIDES = HTTP_URL + "/api/order/getWaitDevides";
+    //用户开放城市
+    public static final String USER_GETUSERCITY = HTTP_URL + "/api/user/getUserCity";
     //登录
     public static final String LOGIN_DOLOGIN = HTTP_URL + "/api/login/dologin";
     //退出登录
@@ -94,6 +98,8 @@ public class Constant {
     public static final String GRAB_CANCELORDER = HTTP_URL + "/api/grab/cancelOrder";
     //申请延期
     public static final String GRAB_DELAYORDER = HTTP_URL + "/api/grab/delayOrder";
+    //小号绑定
+    public static final String AXB_BINDAXB = HTTP_URL + "/api/axb/bindAxb";
 
 
     //详情页
@@ -114,7 +120,8 @@ public class Constant {
 
 
     //简报
-    public static final String WXDISTRIBUTE_CUSTOMER_COUNT = HTTP_URL_H5 + "/wxdistribute/#/customer/count";
+//    public static final String WXDISTRIBUTE_CUSTOMER_COUNT = HTTP_URL_H5 + "/wxdistribute/#/customer/count";
+    public static final String WXDISTRIBUTE_CUSTOMER_COUNT = HTTP_URL_H5 + "/wxdistribute/#/order/wait?plat=app";
     //添加
     public static final String WXDISTRIBUTE_CUSTOMER_ADD = HTTP_URL_H5 + "/wxdistribute/#/customer/add";
     //图片上传
