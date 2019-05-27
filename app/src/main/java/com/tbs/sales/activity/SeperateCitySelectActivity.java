@@ -1,6 +1,8 @@
 package com.tbs.sales.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +14,12 @@ import android.widget.RelativeLayout;
 import com.google.gson.Gson;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.SeperateCitySelectAdapter;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.SeperateCityListBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.EC;
+import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.LogUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 
@@ -51,6 +56,9 @@ public class SeperateCitySelectActivity extends BaseActivity {
     private List<SeperateCityListBean.ListBean> beanList;
     private Gson gson;
     private SeperateCitySelectAdapter adapter;
+    private Handler handler;
+    private SeperateCityListBean cityListBean;
+    private List<String> strListCity;
     /**
      * 城市集合
      */
@@ -72,9 +80,19 @@ public class SeperateCitySelectActivity extends BaseActivity {
      */
     private void initData() {
         beanList = new ArrayList<>();
+        strListCity = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                if (msg.what == 10) {
+                    changeCitySelectType();
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -97,13 +115,14 @@ public class SeperateCitySelectActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
                     if (code.equals("0")) {
-                        final SeperateCityListBean cityListBean = gson.fromJson(jsonObject.optString("data"), SeperateCityListBean.class);
+                        cityListBean = gson.fromJson(jsonObject.optString("data"), SeperateCityListBean.class);
                         beanList.addAll(cityListBean.getList());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                changeCitySelectType();
                                 if (adapter == null) {
-                                    adapter = new SeperateCitySelectAdapter(SeperateCitySelectActivity.this, beanList,cityListBean);
+                                    adapter = new SeperateCitySelectAdapter(SeperateCitySelectActivity.this, beanList, cityListBean);
                                     recyclerView.setAdapter(adapter);
                                 }
                             }
@@ -114,6 +133,35 @@ public class SeperateCitySelectActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    /**
+     * 更改城市选择状态
+     */
+    private void changeCitySelectType() {
+        for (int i = 0; i < cityList.size(); i++) {
+            for (int j = 0; j < beanList.size(); j++) {
+                int n = beanList.get(j).getCity().size();
+                for (int h = 0; h < n; h++) {
+                    if (cityList.get(i).equals(beanList.get(j).getCity().get(h).getCity_id() + "")) {
+                        beanList.get(j).getCity().get(h).setbSelect(true);
+                        continue;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < beanList.size(); i++) {
+            if (beanList.get(i).getCity().toString().contains("false")) {
+                beanList.get(i).setbAreaName(false);
+            } else {
+                beanList.get(i).setbAreaName(true);
+            }
+        }
+        if (beanList.toString().contains("false")) {
+            cityListBean.setbAll(false);
+        } else {
+            cityListBean.setbAll(true);
+        }
     }
 
     /**
@@ -130,8 +178,23 @@ public class SeperateCitySelectActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.linear_clear://清空
+                if (adapter != null) {
+                    adapter.clearAllSelectCity();
+                }
+                if (!strListCity.isEmpty()) {
+                    strListCity.clear();
+                }
                 break;
             case R.id.linear_sure://确定
+                for (int i = 0; i < beanList.size(); i++) {
+                    for (int j = 0; j < beanList.get(i).getCity().size(); j++) {
+                        if (beanList.get(i).getCity().get(j).isbSelect()) {
+                            strListCity.add(beanList.get(i).getCity().get(j).getCity_id() + "");
+                        }
+                    }
+                }
+                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_FENDAN_MESSAGE, strListCity));
+                finish();
                 break;
         }
     }

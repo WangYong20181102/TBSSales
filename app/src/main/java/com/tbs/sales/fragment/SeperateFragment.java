@@ -16,13 +16,16 @@ import android.widget.LinearLayout;
 import com.google.gson.Gson;
 import com.tbs.sales.R;
 import com.tbs.sales.adapter.SeperateFragmentAdapter;
+import com.tbs.sales.bean.Event;
 import com.tbs.sales.bean.SeperateDateBean;
 import com.tbs.sales.constant.Constant;
 import com.tbs.sales.utils.AppInfoUtils;
+import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.MoveDistanceUtils;
 import com.tbs.sales.utils.OkHttpUtils;
 import com.tbs.sales.utils.ToastUtils;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,6 +61,7 @@ public class SeperateFragment extends BaseFragment {
     private int pageSize = 20;
     private boolean isDownRefresh = false;//是否是下拉刷新
     private List<SeperateDateBean.ListBean> beanList;
+    private String sel_city = "";
 
     @Nullable
     @Override
@@ -70,16 +74,33 @@ public class SeperateFragment extends BaseFragment {
         return view;
     }
 
+    @Subscribe
+    @Override
+    public boolean isRegisterEventBus() {
+        return true;
+    }
+    @Subscribe
+    @Override
+    public void receiveEvent(Event event) {
+        super.receiveEvent(event);
+        switch (event.getCode()) {
+            case EC.EventCode.UPDATE_FENDAN_MESSAGE:
+                sel_city = event.getData().toString().replace("[","").replace("]","");
+                initData();
+                break;
+        }
+    }
+
     /**
      * 初始化网络请求
      */
     private void initHttpRequest() {
-        HashMap<String,Object> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("token", AppInfoUtils.getToekn(getActivity()));
         params.put("page", mPage);
-        params.put("page_size",pageSize);
+        params.put("page_size", pageSize);
         params.put("filter_city", "");
-        params.put("sel_city", "");
+        params.put("sel_city", sel_city);
         OkHttpUtils.get(Constant.ORDER_GETWAITDEVIDES, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -99,14 +120,14 @@ public class SeperateFragment extends BaseFragment {
                 try {
                     final JSONObject jsonObject = new JSONObject(json);
                     String code = jsonObject.optString("code");
-                    if (code.equals("0")){
-                        final SeperateDateBean dateBean = gson.fromJson(jsonObject.optString("data"),SeperateDateBean.class);
+                    if (code.equals("0")) {
+                        final SeperateDateBean dateBean = gson.fromJson(jsonObject.optString("data"), SeperateDateBean.class);
                         beanList.addAll(dateBean.getList());
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (adapter == null){
-                                    adapter = new SeperateFragmentAdapter(getActivity(),beanList,dateBean.getCity_str(),dateBean.getCity());
+                                if (adapter == null) {
+                                    adapter = new SeperateFragmentAdapter(getActivity(), beanList, dateBean.getCity_str(), dateBean.getCity());
                                     recyclerView.setAdapter(adapter);
                                 }
                                 if (dateBean.getList().size() != 0) {
@@ -133,7 +154,7 @@ public class SeperateFragment extends BaseFragment {
                             }
                         });
 
-                    }else {
+                    } else {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -221,6 +242,7 @@ public class SeperateFragment extends BaseFragment {
         initHttpRequest();
 
     }
+
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {

@@ -106,6 +106,10 @@ public class Constant {
     public static final String CUSTOMER_MY_DETAIL = HTTP_URL_H5 + "/wxdistribute#/customer/my/detail";
     //成交续费
     public static final String BUSINESS_CONTRACT = HTTP_URL_H5 + "/wxdistribute#/business/contract";
+    //分单详情页
+    public static final String ORDER_DETAIL = HTTP_URL_H5 + "/wxdistribute#/order/detail";
+    //审批
+    public static final String BUSINESS_CONTRACTDETAIL = HTTP_URL_H5 + "/wxdistribute#/business/contractDetail";
 
 
     /********************************************************           榜单         ****************************************************************/

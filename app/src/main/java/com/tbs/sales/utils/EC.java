@@ -16,5 +16,6 @@ public class EC {
         public static final int CLOSE_DETAIL = 0x000010;    //关闭详情页
         public static final int UPDATE_CITY_MESSAGE = 0x000011;    //更新城市信息
         public static final int UPDATE_CLIENT_DETAIL = 0x000012;    //更新客户详情页数据
+        public static final int UPDATE_FENDAN_MESSAGE = 0x000013;    //更新分单信息
     }
 }

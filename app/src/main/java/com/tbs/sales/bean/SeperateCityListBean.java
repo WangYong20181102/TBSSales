@@ -11,7 +11,7 @@ public class SeperateCityListBean {
     /**
      * 全选
      */
-    private boolean bAll = true;
+    private boolean bAll = false;
     private List<ListBean> list;
 
     public boolean isbAll() {
@@ -40,7 +40,7 @@ public class SeperateCityListBean {
 
         private int area_id;
         private String area_name;
-        private boolean bAreaName = true;
+        private boolean bAreaName = false;
         private List<CityBean> city;
 
         public boolean isbAreaName() {
@@ -88,7 +88,7 @@ public class SeperateCityListBean {
             /**
              * 是否选中
              */
-            private boolean bSelect = true;
+            private boolean bSelect = false;
 
             public boolean isbSelect() {
                 return bSelect;
@@ -144,4 +144,11 @@ public class SeperateCityListBean {
         }
     }
 
+    @Override
+    public String toString() {
+        return "SeperateCityListBean{" +
+                "bAll=" + bAll +
+                ", list=" + list +
+                '}';
+    }
 }

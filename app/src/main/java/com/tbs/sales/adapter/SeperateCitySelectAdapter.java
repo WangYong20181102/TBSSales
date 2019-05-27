@@ -73,7 +73,7 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
                                 beanList.get(i).getCity().get(j).setbSelect(false);
                             }
                         }
-                    }else {
+                    } else {
                         cityListBean.setbAll(true);
                         ((MyViewHolder1) holder).imageSelect.setImageResource(R.mipmap.xuanzhong);
                         for (int i = 0; i < h; i++) {
@@ -87,10 +87,17 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
                     notifyDataSetChanged();
                 }
             });
+            if (cityListBean.isbAll()) {
+                ((MyViewHolder1) holder).imageSelect.setImageResource(R.mipmap.xuanzhong);
+            } else {
+                ((MyViewHolder1) holder).imageSelect.setImageResource(R.mipmap.un_xuanzhong);
+            }
+
+
         } else if (holder instanceof MyViewHolder2) {
             ((MyViewHolder2) holder).textSelect.setText(beanList.get(position - 1).getArea_name());
             if (hashMap.get(position - 1) == null) {
-                adapter = new GridViewBaseAdapter(context, beanList.get(position - 1).getCity());
+                adapter = new GridViewBaseAdapter(context, beanList.get(position - 1).getCity(), cityListBean);
                 hashMap.put(position - 1, adapter);
                 gridViewHashMap.put(position - 1, ((MyViewHolder2) holder).gridView);
                 ((MyViewHolder2) holder).gridView.setAdapter(adapter);
@@ -119,11 +126,23 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                 }
             });
+            hashMap.get(position - 1).setOnItemClickAllListener(new GridViewBaseAdapter.OnItemClickAllListener() {
+                @Override
+                public void onClick(boolean b) {
+                    if (b) {
+                        cityListBean.setbAll(true);
+                    } else {
+                        cityListBean.setbAll(false);
+                    }
+                    notifyDataSetChanged();
+                }
+            });
 
 
         }
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -160,6 +179,14 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                 }
                 hashMap.get((Integer) v.getTag(R.id.tag_first)).notifyDataSetChanged();
+                if (beanList.toString().contains("false")){
+                    cityListBean.setbAll(false);
+                    notifyDataSetChanged();
+                }else {
+                    cityListBean.setbAll(true);
+                    notifyDataSetChanged();
+                }
+
                 break;
         }
     }
@@ -192,5 +219,21 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    /**
+     * 清空所有选择的城市
+     */
+    public void clearAllSelectCity(){
+        int h = beanList.size();
+        cityListBean.setbAll(false);
+        for (int i = 0; i < h; i++) {
+            beanList.get(i).setbAreaName(false);
+            int k = beanList.get(i).getCity().size();
+            for (int j = 0; j < k; j++) {
+                beanList.get(i).getCity().get(j).setbSelect(false);
+            }
+        }
+        notifyDataSetChanged();
     }
 }

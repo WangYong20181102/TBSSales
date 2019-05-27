@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.tbs.sales.R;
 import com.tbs.sales.activity.SeperateCitySelectActivity;
+import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.bean.SeperateDateBean;
+import com.tbs.sales.constant.Constant;
 
 import java.util.List;
 
@@ -25,10 +27,10 @@ import butterknife.ButterKnife;
 public class SeperateFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<SeperateDateBean.ListBean> beanList;
-    private  String city_str;
+    private String city_str;
     private String city;
 
-    public SeperateFragmentAdapter(Context context, List<SeperateDateBean.ListBean> beanList, String city_str,String city) {
+    public SeperateFragmentAdapter(Context context, List<SeperateDateBean.ListBean> beanList, String city_str, String city) {
         this.context = context;
         this.city_str = city_str;
         this.beanList = beanList;
@@ -49,34 +51,43 @@ public class SeperateFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder1) {
             ((MyViewHolder1) holder).textRegion.setText(city_str);
             ((MyViewHolder1) holder).rlClickGoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context,SeperateCitySelectActivity.class);
-                    intent.putExtra("cityList",city);
+                    Intent intent = new Intent(context, SeperateCitySelectActivity.class);
+                    intent.putExtra("cityList", city);
                     context.startActivity(intent);
                 }
             });
         } else if (holder instanceof MyViewHolder2) {
             //订单id
-            ((MyViewHolder2) holder).textOrder.setText(beanList.get(position - 1).getOrderid()+"");
+            ((MyViewHolder2) holder).textOrder.setText(beanList.get(position - 1).getOrderid() + "");
             //时间
             ((MyViewHolder2) holder).textDateTime.setText(beanList.get(position - 1).getDiff_time());
             //订单状态
-            ((MyViewHolder2) holder).textOrderType.setText(beanList.get(position-1).getStatus_desc());
+            ((MyViewHolder2) holder).textOrderType.setText(beanList.get(position - 1).getStatus_desc());
             //面积
-            ((MyViewHolder2) holder).textArea.setText(beanList.get(position-1).getHousearea()+"㎡");
+            ((MyViewHolder2) holder).textArea.setText(beanList.get(position - 1).getHousearea() + "㎡");
             //区域
-            ((MyViewHolder2) holder).textRegion.setText(beanList.get(position-1).getQu_name());
+            ((MyViewHolder2) holder).textRegion.setText(beanList.get(position - 1).getQu_name());
             //类型
-            ((MyViewHolder2) holder).textHomeType.setText(beanList.get(position-1).getHousetype());
+            ((MyViewHolder2) holder).textHomeType.setText(beanList.get(position - 1).getHousetype());
             //户型
-            ((MyViewHolder2) holder).textHouseType.setText(beanList.get(position-1).getRoomnumber());
+            ((MyViewHolder2) holder).textHouseType.setText(beanList.get(position - 1).getRoomnumber());
             //小区
-            ((MyViewHolder2) holder).textCommunity.setText(beanList.get(position-1).getHousename());
+            ((MyViewHolder2) holder).textCommunity.setText(beanList.get(position - 1).getHousename());
+
+            ((MyViewHolder2) holder).linearSperate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra("mLoadingUrl", Constant.ORDER_DETAIL + "?orderid=" + beanList.get(position - 1).getOrderid());
+                    context.startActivity(intent);
+                }
+            });
 
         }
 
@@ -109,6 +120,8 @@ public class SeperateFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class MyViewHolder2 extends RecyclerView.ViewHolder {
+        @BindView(R.id.linear_sperate)
+        LinearLayout linearSperate;
         @BindView(R.id.text_order_name)
         TextView textOrderName;
         @BindView(R.id.text_order)
@@ -132,7 +145,7 @@ public class SeperateFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public MyViewHolder2(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 

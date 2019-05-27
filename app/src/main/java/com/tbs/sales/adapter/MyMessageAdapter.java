@@ -14,8 +14,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tbs.sales.R;
+import com.tbs.sales.activity.ClientDetailsActivity;
 import com.tbs.sales.activity.NoticeActivity;
+import com.tbs.sales.activity.WebViewActivity;
 import com.tbs.sales.bean.MyMessageBean;
+import com.tbs.sales.constant.Constant;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Mr.Wang on 2019/3/1 13:43.
  */
-public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private List<MyMessageBean> beanList;
     private Context context;
@@ -42,6 +45,8 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.my_message_item, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
+        holder.linearMessage.setOnClickListener(this);
+        holder.relativeLookDetail.setOnClickListener(this);
         return holder;
     }
 
@@ -52,17 +57,17 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 case 1://新订单推送
                     ((MyViewHolder) holder).textTittle.setText("订单");
                     ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_order);
-                    ((MyViewHolder) holder).textClientId.setText("订单号: "+beanList.get(position).getOrder_id());
+                    ((MyViewHolder) holder).textClientId.setText("订单号: " + beanList.get(position).getOrder_id());
                     break;
                 case 10://客户消息
                     ((MyViewHolder) holder).textTittle.setText("客户");
                     ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_client);
-                    ((MyViewHolder) holder).textClientId.setText("客户ID: "+beanList.get(position).getCo_id());
+                    ((MyViewHolder) holder).textClientId.setText("客户ID: " + beanList.get(position).getCo_id());
                     break;
                 case 11://审批消息
                     ((MyViewHolder) holder).textTittle.setText("审批");
                     ((MyViewHolder) holder).imageIcon.setImageResource(R.mipmap.message_approval);
-                    ((MyViewHolder) holder).textClientId.setText("申请人: "+beanList.get(position).getAudit_name());
+                    ((MyViewHolder) holder).textClientId.setText("申请人: " + beanList.get(position).getAudit_name());
                     break;
                 case 12://系统通知
                     ((MyViewHolder) holder).textTittle.setText(beanList.get(position).getTitle());
@@ -81,19 +86,9 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             //时间
             ((MyViewHolder) holder).textData.setText(beanList.get(position).getCreate_time());
             //城市
-            ((MyViewHolder) holder).textCity.setText("城市: "+beanList.get(position).getCity_name());
-            ((MyViewHolder) holder).relativeLookDetail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.putExtra(MyMessageBean.class.getName(),beanList.get(position));
-                    intent.setClass(context,NoticeActivity.class);
-                    activity.startActivity(intent);
-                }
-            });
-
-
-
+            ((MyViewHolder) holder).textCity.setText("城市: " + beanList.get(position).getCity_name());
+            ((MyViewHolder) holder).relativeLookDetail.setTag(position);
+            ((MyViewHolder) holder).linearMessage.setTag(position);
         }
     }
 
@@ -102,7 +97,35 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return beanList.size();
     }
 
+    @Override
+    public void onClick(View v) {
+        int position = (int) v.getTag();
+        switch (v.getId()) {
+            case R.id.linear_message:
+            case R.id.relative_look_detail:
+                Intent intent = null;
+                if (beanList.get(position).getNotice_type() == 11) {//审批
+                    intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra("mLoadingUrl", Constant.BUSINESS_CONTRACTDETAIL + "?exp_id=" + beanList.get(position).getExp_id() + "&type=1");
+                } else if (beanList.get(position).getNotice_type() == 1) {//订单
+                    intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra("mLoadingUrl", Constant.ORDER_DETAIL + "?orderid=" + beanList.get(position).getOrder_id());
+                } else if (beanList.get(position).getNotice_type() == 10) {//客户
+                    intent = new Intent(context, ClientDetailsActivity.class);
+                    intent.putExtra("type", 3);
+                    intent.putExtra("co_id", beanList.get(position).getCo_id());
+                }else {//系统通知
+                    intent = new Intent(context,NoticeActivity.class);
+                    intent.putExtra(MyMessageBean.class.getName(), beanList.get(position));
+                }
+                context.startActivity(intent);
+                break;
+        }
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.linear_message)
+        LinearLayout linearMessage;
         @BindView(R.id.image_icon)
         ImageView imageIcon;
         @BindView(R.id.text_tittle)

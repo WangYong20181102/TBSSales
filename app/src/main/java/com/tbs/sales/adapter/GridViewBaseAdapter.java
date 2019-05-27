@@ -23,14 +23,17 @@ public class GridViewBaseAdapter extends BaseAdapter {
     private Context context;
     private List<SeperateCityListBean.ListBean.CityBean> cityBeanList;
     private LayoutInflater inflater = null;
+    private SeperateCityListBean cityListBean;
 
-    public GridViewBaseAdapter(Context context, List<SeperateCityListBean.ListBean.CityBean> cityBeanList) {
+    public GridViewBaseAdapter(Context context, List<SeperateCityListBean.ListBean.CityBean> cityBeanList, SeperateCityListBean cityListBean) {
         this.context = context;
         this.cityBeanList = cityBeanList;
+        this.cityListBean = cityListBean;
         inflater = LayoutInflater.from(context);
     }
 
     private OnItemClickListener onItemClickListener;
+    private OnItemClickAllListener onItemClickAllListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -38,6 +41,14 @@ public class GridViewBaseAdapter extends BaseAdapter {
 
     interface OnItemClickListener {
         void onClick(boolean b);
+    }
+
+    interface OnItemClickAllListener {
+        void onClick(boolean b);
+    }
+
+    public void setOnItemClickAllListener(OnItemClickAllListener onItemClickAllListener) {
+        this.onItemClickAllListener = onItemClickAllListener;
     }
 
     /**
@@ -97,14 +108,22 @@ public class GridViewBaseAdapter extends BaseAdapter {
                     gradientDrawable.setCornerRadius(4);
                     finalHolder.linearBg.setBackgroundDrawable(gradientDrawable);
                 }
-                int numSize = cityBeanList.size();
-                if (cityBeanList.toString().contains("false")){
+                if (cityBeanList.toString().contains("false")) {
                     if (onItemClickListener != null) {
                         onItemClickListener.onClick(false);
                     }
-                }else {
+                } else {
                     if (onItemClickListener != null) {
                         onItemClickListener.onClick(true);
+                    }
+                }
+                if (cityListBean.getList().toString().contains("false")) {
+                    if (onItemClickAllListener != null) {
+                        onItemClickAllListener.onClick(false);
+                    }
+                } else {
+                    if (onItemClickAllListener != null) {
+                        onItemClickAllListener.onClick(true);
                     }
                 }
             }
