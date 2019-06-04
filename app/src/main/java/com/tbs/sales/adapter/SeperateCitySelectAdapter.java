@@ -1,5 +1,6 @@
 package com.tbs.sales.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,13 +14,11 @@ import com.tbs.sales.R;
 import com.tbs.sales.bean.SeperateCityListBean;
 import com.tbs.sales.widget.MyGridView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Mr.Wang on 2019/5/24 09:19.
@@ -27,16 +26,15 @@ import butterknife.OnClick;
 public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
     private Context context;
     private List<SeperateCityListBean.ListBean> beanList;
-    private GridViewBaseAdapter adapter;
     private SeperateCityListBean cityListBean;
+    //存放GridView适配器，防止重复new一个adapter
     private HashMap<Integer, GridViewBaseAdapter> hashMap;
-    private HashMap<Integer, MyGridView> gridViewHashMap;
 
+    @SuppressLint("UseSparseArrays")
     public SeperateCitySelectAdapter(Context context, List<SeperateCityListBean.ListBean> beanList, SeperateCityListBean cityListBean) {
         this.context = context;
         this.beanList = beanList;
         hashMap = new HashMap<>();
-        gridViewHashMap = new HashMap<>();
         this.cityListBean = cityListBean;
     }
 
@@ -44,8 +42,7 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == 0) {
             View view = LayoutInflater.from(context).inflate(R.layout.top_select_all, parent, false);
-            MyViewHolder1 holder1 = new MyViewHolder1(view);
-            return holder1;
+            return new MyViewHolder1(view);
         } else {
             View view = LayoutInflater.from(context).inflate(R.layout.seperate_city_select_item, parent, false);
             MyViewHolder2 holder2 = new MyViewHolder2(view);
@@ -59,17 +56,20 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder1) {
+            //全选按钮点击事件
             ((MyViewHolder1) holder).linearSelect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int h = beanList.size();
-                    if (cityListBean.isbAll()) {
+                    if (cityListBean.isbAll()) {//判断全选状态，等于true是全选
                         cityListBean.setbAll(false);
                         ((MyViewHolder1) holder).imageSelect.setImageResource(R.mipmap.un_xuanzhong);
                         for (int i = 0; i < h; i++) {
+                            //将所有区域置为false（即非全选状态）
                             beanList.get(i).setbAreaName(false);
                             int k = beanList.get(i).getCity().size();
                             for (int j = 0; j < k; j++) {
+                                //将区域下边所有城市置为false（即非选择状态）
                                 beanList.get(i).getCity().get(j).setbSelect(false);
                             }
                         }
@@ -87,6 +87,7 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
                     notifyDataSetChanged();
                 }
             });
+            //用于notifyDataSetChanged来判断选中状态
             if (cityListBean.isbAll()) {
                 ((MyViewHolder1) holder).imageSelect.setImageResource(R.mipmap.xuanzhong);
             } else {
@@ -95,25 +96,28 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
 
 
         } else if (holder instanceof MyViewHolder2) {
+            //区域名称
             ((MyViewHolder2) holder).textSelect.setText(beanList.get(position - 1).getArea_name());
+            //判断hashmap对应位置adapter是否为空，为空添加一个adapter
             if (hashMap.get(position - 1) == null) {
-                adapter = new GridViewBaseAdapter(context, beanList.get(position - 1).getCity(), cityListBean);
+                GridViewBaseAdapter adapter = new GridViewBaseAdapter(context, beanList.get(position - 1).getCity(), cityListBean);
                 hashMap.put(position - 1, adapter);
-                gridViewHashMap.put(position - 1, ((MyViewHolder2) holder).gridView);
                 ((MyViewHolder2) holder).gridView.setAdapter(adapter);
-            } else {
+            } else {//不为空，直接setAdapter（有效避免重复new一个Adapter）
                 ((MyViewHolder2) holder).gridView.setAdapter(hashMap.get(position - 1));
             }
-
+            //用于notifyDataSetChanged来判断区域全选按钮状态
             if (beanList.get(position - 1).isbAreaName()) {
                 ((MyViewHolder2) holder).imageSelect.setImageResource(R.mipmap.xuanzhong);
             } else {
                 ((MyViewHolder2) holder).imageSelect.setImageResource(R.mipmap.un_xuanzhong);
             }
+            //记录当前position位置信息
             ((MyViewHolder2) holder).linearSelect.setTag(R.id.tag_first, position - 1);
             ((MyViewHolder2) holder).linearSelect.setTag(R.id.tag_second, holder);
             ((MyViewHolder2) holder).imageSelect.setTag(R.id.tag_first, position - 1);
             ((MyViewHolder2) holder).imageSelect.setTag(R.id.tag_second, holder);
+
             hashMap.get(position - 1).setOnItemClickListener(new GridViewBaseAdapter.OnItemClickListener() {
                 @Override
                 public void onClick(boolean b) {
@@ -126,6 +130,7 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                 }
             });
+            //用于顶部全选按钮回调显示
             hashMap.get(position - 1).setOnItemClickAllListener(new GridViewBaseAdapter.OnItemClickAllListener() {
                 @Override
                 public void onClick(boolean b) {
@@ -164,28 +169,31 @@ public class SeperateCitySelectAdapter extends RecyclerView.Adapter<RecyclerView
             case R.id.image_select:
             case R.id.text_select:
             case R.id.linear_select:
-                int numSize = beanList.get((Integer) v.getTag(R.id.tag_first)).getCity().size();
-                if (beanList.get((Integer) v.getTag(R.id.tag_first)).isbAreaName()) {
-                    ((MyViewHolder2) v.getTag(R.id.tag_second)).imageSelect.setImageResource(R.mipmap.un_xuanzhong);
-                    beanList.get((Integer) v.getTag(R.id.tag_first)).setbAreaName(false);
+                //位置
+                int position = (int) v.getTag(R.id.tag_first);
+                MyViewHolder2 holder2 = (MyViewHolder2) v.getTag(R.id.tag_second);
+                //区域城市集合数量
+                int numSize = beanList.get(position).getCity().size();
+                //判断选中状态
+                if (beanList.get(position).isbAreaName()) {
+                    (holder2).imageSelect.setImageResource(R.mipmap.un_xuanzhong);
+                    beanList.get(position).setbAreaName(false);
                     for (int i = 0; i < numSize; i++) {
-                        beanList.get((Integer) v.getTag(R.id.tag_first)).getCity().get(i).setbSelect(false);
+                        beanList.get(position).getCity().get(i).setbSelect(false);
                     }
                 } else {
-                    ((MyViewHolder2) v.getTag(R.id.tag_second)).imageSelect.setImageResource(R.mipmap.xuanzhong);
-                    beanList.get((Integer) v.getTag(R.id.tag_first)).setbAreaName(true);
+                    (holder2).imageSelect.setImageResource(R.mipmap.xuanzhong);
+                    beanList.get(position).setbAreaName(true);
                     for (int i = 0; i < numSize; i++) {
-                        beanList.get((Integer) v.getTag(R.id.tag_first)).getCity().get(i).setbSelect(true);
+                        beanList.get(position).getCity().get(i).setbSelect(true);
                     }
                 }
-                hashMap.get((Integer) v.getTag(R.id.tag_first)).notifyDataSetChanged();
                 if (beanList.toString().contains("false")){
                     cityListBean.setbAll(false);
-                    notifyDataSetChanged();
                 }else {
                     cityListBean.setbAll(true);
-                    notifyDataSetChanged();
                 }
+                notifyDataSetChanged();
 
                 break;
         }

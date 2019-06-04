@@ -27,7 +27,9 @@ import butterknife.ButterKnife;
 public class SeperateFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<SeperateDateBean.ListBean> beanList;
+    //城市名称集
     private String city_str;
+    //城市id集
     private String city;
 
     public SeperateFragmentAdapter(Context context, List<SeperateDateBean.ListBean> beanList, String city_str, String city) {
@@ -53,7 +55,9 @@ public class SeperateFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof MyViewHolder1) {
-            ((MyViewHolder1) holder).textRegion.setText(city_str);
+            //当前筛选城市信息
+            ((MyViewHolder1) holder).textRegion.setText("当前区域："+city_str);
+            //跳转城市选择界面
             ((MyViewHolder1) holder).rlClickGoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,6 +84,7 @@ public class SeperateFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
             //小区
             ((MyViewHolder2) holder).textCommunity.setText(beanList.get(position - 1).getHousename());
 
+            //分单详情页（H5）
             ((MyViewHolder2) holder).linearSperate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

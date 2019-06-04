@@ -22,6 +22,7 @@ import com.tbs.sales.utils.EC;
 import com.tbs.sales.utils.EventBusUtil;
 import com.tbs.sales.utils.LogUtils;
 import com.tbs.sales.utils.OkHttpUtils;
+import com.tbs.sales.utils.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +57,6 @@ public class SeperateCitySelectActivity extends BaseActivity {
     private List<SeperateCityListBean.ListBean> beanList;
     private Gson gson;
     private SeperateCitySelectAdapter adapter;
-    private Handler handler;
     private SeperateCityListBean cityListBean;
     private List<String> strListCity;
     /**
@@ -84,15 +84,6 @@ public class SeperateCitySelectActivity extends BaseActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
-        handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what == 10) {
-                    changeCitySelectType();
-                }
-                return false;
-            }
-        });
     }
 
     /**
@@ -139,8 +130,10 @@ public class SeperateCitySelectActivity extends BaseActivity {
      * 更改城市选择状态
      */
     private void changeCitySelectType() {
-        for (int i = 0; i < cityList.size(); i++) {
-            for (int j = 0; j < beanList.size(); j++) {
+        int numCityId =  cityList.size();
+        int numCityArea = beanList.size();
+        for (int i = 0; i < numCityId; i++) {
+            for (int j = 0; j < numCityArea; j++) {
                 int n = beanList.get(j).getCity().size();
                 for (int h = 0; h < n; h++) {
                     if (cityList.get(i).equals(beanList.get(j).getCity().get(h).getCity_id() + "")) {
@@ -150,7 +143,7 @@ public class SeperateCitySelectActivity extends BaseActivity {
                 }
             }
         }
-        for (int i = 0; i < beanList.size(); i++) {
+        for (int i = 0; i < numCityArea; i++) {
             if (beanList.get(i).getCity().toString().contains("false")) {
                 beanList.get(i).setbAreaName(false);
             } else {
@@ -186,15 +179,20 @@ public class SeperateCitySelectActivity extends BaseActivity {
                 }
                 break;
             case R.id.linear_sure://确定
-                for (int i = 0; i < beanList.size(); i++) {
-                    for (int j = 0; j < beanList.get(i).getCity().size(); j++) {
-                        if (beanList.get(i).getCity().get(j).isbSelect()) {
-                            strListCity.add(beanList.get(i).getCity().get(j).getCity_id() + "");
+                if (!beanList.toString().contains("true")){
+                    ToastUtils.toastShort(this,"请选择城市");
+                }else {
+                    int numCityArea = beanList.size();
+                    for (int i = 0; i < numCityArea; i++) {
+                        for (int j = 0; j < beanList.get(i).getCity().size(); j++) {
+                            if (beanList.get(i).getCity().get(j).isbSelect()) {
+                                strListCity.add(beanList.get(i).getCity().get(j).getCity_id() + "");
+                            }
                         }
                     }
+                    EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_FENDAN_MESSAGE, strListCity));
+                    finish();
                 }
-                EventBusUtil.sendEvent(new Event(EC.EventCode.UPDATE_FENDAN_MESSAGE, strListCity));
-                finish();
                 break;
         }
     }

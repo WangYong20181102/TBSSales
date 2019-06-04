@@ -32,12 +32,10 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private List<MyMessageBean> beanList;
     private Context context;
-    private Activity activity;
 
     public MyMessageAdapter(Context context, List<MyMessageBean> beanList) {
         this.beanList = beanList;
         this.context = context;
-        activity = (Activity) context;
     }
 
     @NonNull
@@ -105,8 +103,24 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             case R.id.relative_look_detail:
                 Intent intent = null;
                 if (beanList.get(position).getNotice_type() == 11) {//审批
+                    String value = "";
+                    int wf_type = beanList.get(position).getWf_type();
+                    switch (wf_type) {
+                        case 1://合同
+                            value = Constant.BUSINESS_CONTRACTDETAIL + "?exp_id=" + beanList.get(position).getExp_id() + "&type=1";
+                            break;
+                        case 2://收款
+                            value = Constant.BUSINESS_RECEIPTDETAIL + "?exp_id=" + beanList.get(position).getExp_id() + "&type=1";
+                            break;
+                        case 3://推广
+                            value = Constant.BUSINESS_EXPANDDETAIL + "?exp_id=" + beanList.get(position).getExp_id() + "&type=1";
+                            break;
+                        case 4://费用
+                            value = Constant.BUSINESS_PAYMENTDETAIL + "?exp_id=" + beanList.get(position).getExp_id() + "&type=1";
+                            break;
+                    }
                     intent = new Intent(context, WebViewActivity.class);
-                    intent.putExtra("mLoadingUrl", Constant.BUSINESS_CONTRACTDETAIL + "?exp_id=" + beanList.get(position).getExp_id() + "&type=1");
+                    intent.putExtra("mLoadingUrl", value);
                 } else if (beanList.get(position).getNotice_type() == 1) {//订单
                     intent = new Intent(context, WebViewActivity.class);
                     intent.putExtra("mLoadingUrl", Constant.ORDER_DETAIL + "?orderid=" + beanList.get(position).getOrder_id());
@@ -114,8 +128,8 @@ public class MyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     intent = new Intent(context, ClientDetailsActivity.class);
                     intent.putExtra("type", 3);
                     intent.putExtra("co_id", beanList.get(position).getCo_id());
-                }else {//系统通知
-                    intent = new Intent(context,NoticeActivity.class);
+                } else {//系统通知
+                    intent = new Intent(context, NoticeActivity.class);
                     intent.putExtra(MyMessageBean.class.getName(), beanList.get(position));
                 }
                 context.startActivity(intent);

@@ -94,35 +94,44 @@ public class ClientViewPagerAdapter extends PagerAdapter {
     private void showHeadIcon(int num, String icon, String member) {
         switch (num) {
             case 0:
+                imageNoOne.setVisibility(View.VISIBLE);
+                tvNo1.setVisibility(View.GONE);
                 if (TextUtils.isEmpty(icon)) {
-                    imageNoOne.setVisibility(View.GONE);
-                    tvNo1.setVisibility(View.VISIBLE);
-                    tvNo1.setText(member.substring(0, 1));
+//                    imageNoOne.setVisibility(View.GONE);
+//                    tvNo1.setVisibility(View.VISIBLE);
+//                    tvNo1.setText(member.substring(0, 1));
+                    GlideUtils.glideLoaderBitmap(context,R.mipmap.img_moren,imageNoOne);
                 } else {
-                    imageNoOne.setVisibility(View.VISIBLE);
-                    tvNo1.setVisibility(View.GONE);
+//                    imageNoOne.setVisibility(View.VISIBLE);
+//                    tvNo1.setVisibility(View.GONE);
                     GlideUtils.glideLoader(context, icon, imageNoOne);
                 }
                 break;
             case 1:
+                imageNoTwo.setVisibility(View.VISIBLE);
+                tvNo2.setVisibility(View.GONE);
                 if (TextUtils.isEmpty(icon)) {
-                    imageNoTwo.setVisibility(View.GONE);
-                    tvNo2.setVisibility(View.VISIBLE);
-                    tvNo2.setText(member.substring(0, 1));
+//                    imageNoTwo.setVisibility(View.GONE);
+//                    tvNo2.setVisibility(View.VISIBLE);
+//                    tvNo2.setText(member.substring(0, 1));
+                    GlideUtils.glideLoaderBitmap(context,R.mipmap.img_moren,imageNoTwo);
                 } else {
-                    imageNoTwo.setVisibility(View.VISIBLE);
-                    tvNo2.setVisibility(View.GONE);
+//                    imageNoTwo.setVisibility(View.VISIBLE);
+//                    tvNo2.setVisibility(View.GONE);
                     GlideUtils.glideLoader(context, icon, imageNoTwo);
                 }
                 break;
             case 2:
+                imageNoThree.setVisibility(View.VISIBLE);
+                tvNo3.setVisibility(View.GONE);
                 if (TextUtils.isEmpty(icon)) {
-                    imageNoThree.setVisibility(View.GONE);
-                    tvNo3.setVisibility(View.VISIBLE);
-                    tvNo3.setText(member.substring(0, 1));
+//                    imageNoThree.setVisibility(View.GONE);
+//                    tvNo3.setVisibility(View.VISIBLE);
+//                    tvNo3.setText(member.substring(0, 1));
+                    GlideUtils.glideLoaderBitmap(context,R.mipmap.img_moren,imageNoThree);
                 } else {
-                    imageNoThree.setVisibility(View.VISIBLE);
-                    tvNo3.setVisibility(View.GONE);
+//                    imageNoThree.setVisibility(View.VISIBLE);
+//                    tvNo3.setVisibility(View.GONE);
                     GlideUtils.glideLoader(context, icon, imageNoThree);
                 }
                 break;

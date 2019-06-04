@@ -20,8 +20,7 @@
         android:layout_marginLeft="@dimen/d40"
         android:layout_marginRight="@dimen/d60"
         android:ellipsize="end"
-        android:singleLine="true"
-        android:text="当前区域：武汉/仙桃/宜昌/荆门/襄阳/孝感/深圳/河北" />
+        android:singleLine="true"/>
 
     <ImageView
         android:layout_width="wrap_content"

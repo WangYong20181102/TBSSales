@@ -85,7 +85,7 @@ public class SeperateFragment extends BaseFragment {
         super.receiveEvent(event);
         switch (event.getCode()) {
             case EC.EventCode.UPDATE_FENDAN_MESSAGE:
-                sel_city = event.getData().toString().replace("[","").replace("]","");
+                sel_city = event.getData().toString().replace("[","").replace("]","").replace(" ","");
                 initData();
                 break;
         }

@@ -34,6 +34,15 @@ public class MyMessageBean implements Serializable {
     private int audit_uid;
     private String audit_name;
     private String create_time;
+    private int wf_type;
+
+    public int getWf_type() {
+        return wf_type;
+    }
+
+    public void setWf_type(int wf_type) {
+        this.wf_type = wf_type;
+    }
 
     public int getId() {
         return id;

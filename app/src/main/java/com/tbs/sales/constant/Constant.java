@@ -108,8 +108,15 @@ public class Constant {
     public static final String BUSINESS_CONTRACT = HTTP_URL_H5 + "/wxdistribute#/business/contract";
     //分单详情页
     public static final String ORDER_DETAIL = HTTP_URL_H5 + "/wxdistribute#/order/detail";
-    //审批
+    /*************审批**************/
+    //合同
     public static final String BUSINESS_CONTRACTDETAIL = HTTP_URL_H5 + "/wxdistribute#/business/contractDetail";
+    //收款
+    public static final String BUSINESS_RECEIPTDETAIL = HTTP_URL_H5 + "/wxdistribute#/business/receiptDetail";
+    //推广
+    public static final String BUSINESS_EXPANDDETAIL = HTTP_URL_H5 + "/wxdistribute#/business/expandDetail";
+    //费用
+    public static final String BUSINESS_PAYMENTDETAIL = HTTP_URL_H5 + "/wxdistribute#/business/payMentDetail";
 
 
     /********************************************************           榜单         ****************************************************************/

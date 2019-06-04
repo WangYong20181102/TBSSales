@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.tbs.sales.R;
 import com.tbs.sales.bean.SeperateCityListBean;
-import com.tbs.sales.utils.ToastUtils;
 
 import java.util.List;
 
@@ -51,15 +50,6 @@ public class GridViewBaseAdapter extends BaseAdapter {
         this.onItemClickAllListener = onItemClickAllListener;
     }
 
-    /**
-     * 更改数据
-     *
-     * @param list
-     */
-    public void changeCityList(List<SeperateCityListBean.ListBean.CityBean> list) {
-        cityBeanList = list;
-    }
-
     @Override
     public int getCount() {
         return cityBeanList.size();
@@ -87,6 +77,7 @@ public class GridViewBaseAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        //城市名称
         holder.tvCityName.setText(cityBeanList.get(position).getCity_name());
         final ViewHolder finalHolder = holder;
         holder.linearBg.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +99,8 @@ public class GridViewBaseAdapter extends BaseAdapter {
                     gradientDrawable.setCornerRadius(4);
                     finalHolder.linearBg.setBackgroundDrawable(gradientDrawable);
                 }
+
+                //判断当前区域城市列表字符串是否包含false，包含将区域置为false（非全选状态）
                 if (cityBeanList.toString().contains("false")) {
                     if (onItemClickListener != null) {
                         onItemClickListener.onClick(false);
@@ -117,6 +110,7 @@ public class GridViewBaseAdapter extends BaseAdapter {
                         onItemClickListener.onClick(true);
                     }
                 }
+                //判断所有区域城市信息中是否包含false字段，包含证明是非全选状态
                 if (cityListBean.getList().toString().contains("false")) {
                     if (onItemClickAllListener != null) {
                         onItemClickAllListener.onClick(false);

@@ -44,6 +44,9 @@ public class GlideUtils {
     public static void glideLoaderGif(Context context, String imgUrl,ImageView imageView) {
         Glide.with(context).load(imgUrl).asGif().placeholder(R.drawable.iamge_loading).error(R.drawable.iamge_loading).into(imageView);
     }
+    public static void glideLoaderBitmap(Context context, int imgUrl,ImageView imageView) {
+        Glide.with(context).load(imgUrl).asBitmap().into(imageView);
+    }
 
     /**
      * 处理圆角图片或者圆形图片
